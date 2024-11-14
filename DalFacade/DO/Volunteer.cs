@@ -2,19 +2,19 @@
 namespace DO;
 
 public record Volunteer(
-    int idVol=0,
-    string? adress = null,
-    string name="",
-    string email = "",
-    int phoneNumber = 0,
-    string? password = null,
-    double? latitude=null,
-    double? longitude=null,
+    int idVol,
+    string adress,
+    string name,
+    string email ,
+    double phoneNumber ,
+    string password ,
+    double latitude,
+    double longitude,
+    double limitDestenation,
     bool isActive = false,
-    double? limitDestenation = null,
-    Hamal role=0,
-    Hamal distanceType = 0
+    Hamal? role=null,
+    Hamal? distanceType = null
 )
 {
-  
+  public Volunteer() : this(0, "", "", "", 0, "", 0, 0, 0) { }
 }

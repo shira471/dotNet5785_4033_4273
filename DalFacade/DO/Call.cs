@@ -4,13 +4,14 @@ namespace DO;
 public record Call
     (
     int id,
-    Hamal callType,
     string detail,
     string adress,
     double latitude,
     double longitude,
-    DateTime startTime,
-    DateTime maximumTime
+    Hamal? callType = null,
+    DateTime? startTime = null,
+    DateTime? maximumTime = null
     )
 {
+    public Call(): this(0, "", "", 0, 0) { }
 }

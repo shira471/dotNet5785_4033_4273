@@ -10,7 +10,7 @@ public class VolunteerImplementation : Ivolunteer
     {
         if (Read(item.idVol) != null)
         {
-            throw new Exception($"volunteer object with this ID already exissts");
+            throw new Exception($"volunteer object with this ID={item.idVol} already exissts");
         }
         else
         {
@@ -26,7 +26,7 @@ public class VolunteerImplementation : Ivolunteer
         }
         else
         {
-            throw new Exception($"volunteer with this ID does not exists");
+            throw new Exception($"volunteer with this ID={id} does not exists");
         }
     }
 
@@ -37,7 +37,15 @@ public class VolunteerImplementation : Ivolunteer
 
     public Volunteer? Read(int id)
     {
-        return DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol==id);
+        var newId= DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol==id);
+        if (newId != null)
+        {
+            return newId;
+        }
+        else
+        {
+            throw new Exception($"volunteer with this ID={id} does not exists");
+        }
     }
 
     public List<Volunteer> ReadAll()
@@ -55,7 +63,7 @@ public class VolunteerImplementation : Ivolunteer
         }
         else
         {
-            throw new Exception($"volunteer with this ID does not exists");
+            throw new Exception($"volunteer with this ID={item.idVol} does not exists");
         }
     }
 }
