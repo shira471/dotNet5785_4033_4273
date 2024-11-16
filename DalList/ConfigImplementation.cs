@@ -70,6 +70,7 @@ public class ConfigImplementation : Iconfig
         return Config.nextCallId;
     }
 
+
     /// <summary>
     /// קבלת מזהה שיוך הבא
     /// </summary>
