@@ -1,5 +1,4 @@
-﻿
-namespace DalTest;
+﻿namespace DalTest;
 using System.Buffers.Text;
 
 using System;
@@ -17,7 +16,49 @@ public static class Initialization
                                          // Random instance for generating values
     private static readonly Random s_rand = new Random();
 
-private static void creatVolunteer()
+    //private static void creatVolunteer()
+    //    {
+    //        Random s_rand = new Random();
+    //        // Random name from a predefined list
+    //        string[] names = { "Dani Levy", "Eli Amar", "Yair Cohen", "Ariela Levin", "Dina Klein", "Shira Israelof" };
+    //        string name = names[s_rand.Next(names.Length)];
+
+    //        // Random ID
+    //        int id = s_rand.Next(1000000, 9999999); // Assuming 7-digit IDs
+
+    //        // Random address
+    //        string[] streets = { "Main St", "Second Ave", "Highland Rd", "Maple Dr", "Oak St" };
+    //        string address = $"{s_rand.Next(1, 1000)} {streets[s_rand.Next(streets.Length)]}";
+
+    //        // Random email
+    //        string email = $"{name.Replace(" ", ".").ToLower()}@example.com";
+
+    //        // Random phone number (10 digits)
+    //        //double phoneNumber = s_rand.Next(1000000000, int.MaxValue) + s_rand.NextDouble();
+    //        string phoneNumber = $"{s_rand.Next(100000000, 1000000000)}"; // Generate a 10-digit phone number as a string
+
+    //        // Random password (alphanumeric, length between 6 and 10)
+    //        string password = GenerateRandomPassword(6, 10);
+
+    //        // Random limit of destination (between 5 and 50 kilometers)
+    //        double limitDestination = Math.Round(s_rand.NextDouble() * 45 + 5, 2);
+
+    //        // Random active status
+    //        bool isActive = s_rand.Next(0, 2) == 1;
+
+    //        // Random latitude and longitude (within reasonable bounds for a location)
+    //        double latitude = s_rand.NextDouble() * 180 - 90;  // Latitude between -90 and 90
+    //        double longitude = s_rand.NextDouble() * 360 - 180;  // Longitude between -180 and 180
+
+    //        // Random role and distance type (if the Hamal enum is defined)
+    //        Hamal? role = GetRandomHamalValue();
+    //        Hamal? distanceType = GetRandomHamalValue();
+
+    //        // Create the volunteer with random values and save it in the database
+    //        s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
+    //    }
+
+    private static void creatVolunteer()
     {
         Random s_rand = new Random();
         // Random name from a predefined list
@@ -35,7 +76,7 @@ private static void creatVolunteer()
         string email = $"{name.Replace(" ", ".").ToLower()}@example.com";
 
         // Random phone number (10 digits)
-        double phoneNumber = s_rand.Next(1000000000, int.MaxValue) + s_rand.NextDouble();
+        string phoneNumber = $"{s_rand.Next(100000000, 1000000000)}"; // Generate a 10-digit phone number as a string
 
         // Random password (alphanumeric, length between 6 and 10)
         string password = GenerateRandomPassword(6, 10);
@@ -57,7 +98,6 @@ private static void creatVolunteer()
         // Create the volunteer with random values and save it in the database
         s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
     }
-
 
 
     // Helper method to generate a random alphanumeric password

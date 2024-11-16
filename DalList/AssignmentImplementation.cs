@@ -1,5 +1,4 @@
-﻿
-namespace Dal;
+﻿namespace Dal;
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
