@@ -78,6 +78,7 @@ public class ConfigImplementation : Iconfig
         return Config.GetNextAssignId;
     }
 
+
     /// <summary>
     /// איפוס כל נתוני התצורה
     /// </summary>
