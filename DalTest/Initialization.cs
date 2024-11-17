@@ -146,9 +146,34 @@ public static class Initialization
         // Create the call with random values and save it in the database
         s_dalCall!.Create(new Call(id, detail, address, latitude, longitude, callType ,startTime, maximumTime));
     }
+    //private static void creatAssignment()
+    //{
+    //   Random s_rand = new Random();
+    //    // Random ID for the assignment
+    //    int id = s_rand.Next(1000, 9999); // Assuming 4-digit IDs for assignments
+
+    //    // Random callId (you may want to ensure this call ID exists)
+    //    int callId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing call ID
+
+    //    // Random volunteerId (you may want to ensure this volunteer ID exists)
+    //    int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
+
+    //    // Random start time (within the past 30 days)
+    //    DateTime startTime = DateTime.Now.AddDays(s_rand.Next(-30, 1)); // Start within the last 30 days
+
+    //    // Random finish time (between 30 minutes and 2 hours after start time)
+    //    DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121)); // 30 minutes to 2 hours later
+
+    //    // Random endOfAssign (Hamal enum)
+    //    Hamal? endOfAssign = GetRandomHamalValue(); // This gives either a Hamal value or null
+
+    //    // Create the assignment with random values and save it in the database
+    //    s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
+    //}
+
     private static void creatAssignment()
     {
-       Random s_rand = new Random();
+        Random s_rand = new Random();
         // Random ID for the assignment
         int id = s_rand.Next(1000, 9999); // Assuming 4-digit IDs for assignments
 
@@ -158,11 +183,20 @@ public static class Initialization
         // Random volunteerId (you may want to ensure this volunteer ID exists)
         int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
 
-        // Random start time (within the past 30 days)
-        DateTime startTime = DateTime.Now.AddDays(s_rand.Next(-30, 1)); // Start within the last 30 days
+        // Check if s_dalConfig.Clock is set to a valid DateTime
+        if (s_dalconfig.clock == DateTime.MinValue)
+        {
+            // If not, set it to a valid default value (e.g., January 1, 2022)
+            s_dalconfig.clock = new DateTime(2022, 1, 1);
+        }
+
+        // Random start time (using the system clock from s_dalConfig)
+        DateTime start = new DateTime(s_dalconfig.clock.Year - 2, 1, 1); // Make sure the start date is valid
+        int range = (s_dalconfig.clock - start).Days; // Calculate the range of days from start to current clock time
+        DateTime startTime = start.AddDays(s_rand.Next(range)); // Randomly pick a start time within this range
 
         // Random finish time (between 30 minutes and 2 hours after start time)
-        DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121)); // 30 minutes to 2 hours later
+        DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121)); // Finish between 30 minutes and 2 hours later
 
         // Random endOfAssign (Hamal enum)
         Hamal? endOfAssign = GetRandomHamalValue(); // This gives either a Hamal value or null
@@ -170,6 +204,8 @@ public static class Initialization
         // Create the assignment with random values and save it in the database
         s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
     }
+
+
 
     public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
     {
@@ -179,11 +215,11 @@ public static class Initialization
         s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL Link cannot be null!");
         s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
 
-        // הוספת הקוד לוודא שהשעה תקינה לפני החישוב
-        if (s_dalconfig.clock == DateTime.MinValue)
-        {
-            s_dalconfig.clock = new DateTime(2022, 1, 1); // שנה/חודש/יום חוקיים
-        }
+        //// הוספת הקוד לוודא שהשעה תקינה לפני החישוב
+        //if (s_dalconfig.clock == DateTime.MinValue)
+        //{
+        //    s_dalconfig.clock = new DateTime(2022, 1, 1); // שנה/חודש/יום חוקיים
+        //}
 
         // הצגת הודעת התחלה
         Console.WriteLine("Reset Configuration values and List values...");
