@@ -143,6 +143,7 @@ private static void creatVolunteer()
         // איפוס נתוני התצורה
         s_dalconfig.Reset(); // איפוס התצורה
 
+
         // איפוס הרשימות
         s_dalvolunteer.DeleteAll(); // מחיקת כל המתנדבים
         s_dalCall.DeleteAll(); // מחיקת כל הקריאות
