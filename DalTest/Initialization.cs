@@ -136,7 +136,9 @@ public static class Initialization
         Hamal? callType = GetRandomHamalValue(); // This will give either a Hamal value or null
 
         // Random start time (within the past month)
-        DateTime start = new DateTime(s_dalconfig.clock.Year - 2, 1, 1); //stage 1
+        //DateTime start = new DateTime(s_dalconfig.clock.Year - 2, 1, 1); //stage 1
+        DateTime start = new DateTime(DateTime.Now.Year - 2, 1, 1); // השתמש בשנה הנוכחית
+
         int range = (s_dalconfig.clock - start).Days; //stage 1
         DateTime startTime= start.AddDays(s_rand.Next(range));
         DateTime maximumTime = start.AddMinutes(s_rand.Next(1, 60)); // Maximum time between 1 and 60 minutes after start time
@@ -169,33 +171,39 @@ public static class Initialization
         s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
     }
 
-    public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
-    {
-        // הצבת הממשקים שהתקבלו בפרמטרים למשתנים פנימיים
-        s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
-        s_dalCall = dalCall ?? throw new NullReferenceException("DAL Course cannot be null!");
-        s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL Link cannot be null!");
-        s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
+    //    public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
+    //    {
+    //        // הצבת הממשקים שהתקבלו בפרמטרים למשתנים פנימיים
+    //        s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
+    //        s_dalCall = dalCall ?? throw new NullReferenceException("DAL Course cannot be null!");
+    //        s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL Link cannot be null!");
+    //        s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
 
-        // הצגת הודעת התחלה
-        Console.WriteLine("Reset Configuration values and List values...");
+    //        // הוספת הקוד לוודא שהשעה תקינה לפני החישוב
+    //        if (s_dalconfig.clock == DateTime.MinValue)
+    //        {
+    //            s_dalconfig.clock = new DateTime(2022, 1, 1); // שנה/חודש/יום חוקיים
+    //        }
 
-        // איפוס נתוני התצורה
-        s_dalconfig.Reset(); // איפוס התצורה
+    //        // הצגת הודעת התחלה
+    //        Console.WriteLine("Reset Configuration values and List values...");
 
-        // איפוס הרשימות
-        s_dalvolunteer.DeleteAll(); // מחיקת כל המתנדבים
-        s_dalCall.DeleteAll(); // מחיקת כל הקריאות
-        s_dalAssignment.DeleteAll(); // מחיקת כל המשימות
+    //        // איפוס נתוני התצורה
+    //        s_dalconfig.Reset(); // איפוס התצורה
 
-        // אתחול הרשימות
-        Console.WriteLine("Initializing Students list ...");
-        creatVolunteer(); // יצירת מתנדבים
-        Console.WriteLine("Initializing Courses list ...");
-        creatAssignment(); // יצירת משימות
-        Console.WriteLine("Initializing Links list ...");
-        creatCall(); // יצירת קריאות
-    }
-}
+    //        // איפוס הרשימות
+    //        s_dalvolunteer.DeleteAll(); // מחיקת כל המתנדבים
+    //        s_dalCall.DeleteAll(); // מחיקת כל הקריאות
+    //        s_dalAssignment.DeleteAll(); // מחיקת כל המשימות
 
+    //        // אתחול הרשימות
+    //        Console.WriteLine("Initializing Students list ...");
+    //        creatVolunteer(); // יצירת מתנדבים
+    //        Console.WriteLine("Initializing Courses list ...");
+    //        creatAssignment(); // יצירת משימות
+    //        Console.WriteLine("Initializing Links list ...");
+    //        creatCall(); // יצירת קריאות
+    //    }
+    //}
 
+    
