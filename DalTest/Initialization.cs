@@ -114,38 +114,7 @@ public static class Initialization
         Array values = Enum.GetValues(typeof(Hamal));
         return s_rand.Next(0, 2) == 1 ? (Hamal)values.GetValue(s_rand.Next(values.Length)) : (Hamal?)null;
     }
-    //private static void creatCall()
-    //{
-    //    Random s_rand = new Random();
-    //    // Random ID for the call
-    //    int id = s_rand.Next(1000, 9999); // Assuming 4-digit IDs for calls
 
-    //    // Random call details
-    //    string[] details = { "Call for assistance", "Emergency call", "Routine check-in", "Follow-up call", "Service request" };
-    //    string detail = details[s_rand.Next(details.Length)];
-
-    //    // Random address
-    //    string[] addresses = { "123 Main St", "456 Oak Ave", "789 Maple Dr", "101 Pine Rd", "202 Birch Blvd" };
-    //    string address = addresses[s_rand.Next(addresses.Length)];
-
-    //    // Random latitude and longitude (within reasonable bounds for a location)
-    //    double latitude = s_rand.NextDouble() * 180 - 90;  // Latitude between -90 and 90
-    //    double longitude = s_rand.NextDouble() * 360 - 180;  // Longitude between -180 and 180
-
-    //    // Random call type (Hamal enum)
-    //    Hamal? callType = GetRandomHamalValue(); // This will give either a Hamal value or null
-
-    //    // Random start time (within the past month)
-    //    DateTime start = new DateTime(s_dalconfig.clock.Year - 2, 1, 1); //stage 1
-    //    //DateTime start = new DateTime(DateTime.Now.Year - 2, 1, 1); // השתמש בשנה הנוכחית
-
-    //    int range = (s_dalconfig.clock - start).Days; //stage 1
-    //    DateTime startTime = start.AddDays(s_rand.Next(range));
-    //    DateTime maximumTime = start.AddMinutes(s_rand.Next(1, 60)); // Maximum time between 1 and 60 minutes after start time
-
-    //    // Create the call with random values and save it in the database
-    //    s_dalCall!.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));
-    //}
     private static void creatCall()
     {
         Random s_rand = new Random();
@@ -167,16 +136,17 @@ public static class Initialization
         // Random call type (Hamal enum)
         Hamal? callType = GetRandomHamalValue(); // This will give either a Hamal value or null
 
-        // Random start time (within the past month)
-        DateTime systemNow = DateTime.Now; // Get the current system time (local time)
-        DateTime start = new DateTime(systemNow.Year - 2, 1, 1); // Start date 2 years ago based on system year
-        int range = (int)(systemNow - start).TotalDays; // Calculate the range of days from start to current system time
+        // Use system clock from s_dalConfig.Clock
+        DateTime systemClock = s_dalconfig.clock; // The system clock provided by s_dalConfig
+        DateTime start = new DateTime(systemClock.Year - 2, 1, 1); // Start date two years ago from system clock year
+        int range = (systemClock - start).Days; // Calculate the range of days from start to current system clock time
         DateTime startTime = start.AddDays(s_rand.Next(range)); // Randomly pick a start time within this range
         DateTime maximumTime = startTime.AddMinutes(s_rand.Next(1, 60)); // Maximum time between 1 and 60 minutes after start time
 
         // Create the call with random values and save it in the database
         s_dalCall!.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));
     }
+
 
     //private static void creatAssignment()
     //{
@@ -245,9 +215,11 @@ public static class Initialization
         // Random volunteerId (you may want to ensure this volunteer ID exists)
         int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
 
-        // Random start time (using the system clock from s_dalConfig)
-        DateTime systemNow = DateTime.Now; // Current system time (local time)
-        DateTime start = new DateTime(systemNow.Year - 2, 1, 1, 0, 0, 0, DateTimeKind.Local); // Valid start date based on local time
+        // Use s_dalConfig.Clock to get the system clock from s_dalConfig
+        DateTime systemNow = s_dalconfig.clock; // Use the system clock from s_dalConfig
+
+        // Valid start date based on the system clock (2 years ago from the system clock)
+        DateTime start = new DateTime(systemNow.Year - 2, 1, 1); // 2 years ago, first day of the year
         int range = (int)(systemNow - start).TotalDays; // Calculate the range of days from start to current system time
         DateTime startTime = start.AddDays(s_rand.Next(range)); // Randomly pick a start time within this range
 
