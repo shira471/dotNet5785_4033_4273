@@ -75,7 +75,7 @@ using System.Text.RegularExpressions;
 using DalApi;
 using DO;
 
-public class VolunteerImplementation : Ivolunteer
+internal class VolunteerImplementation : Ivolunteer
 {
     /// <summary>
     /// Create a new volunteer and add it to the data source.
@@ -85,12 +85,12 @@ public class VolunteerImplementation : Ivolunteer
         // Validate phone number format
         if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
         {
-            throw new Exception($"Invalid phone number format for volunteer ID={item.idVol}");
+            throw new DalImposiblePhoneNumber($"Invalid phone number format for volunteer ID={item.idVol}");
         }
 
         if (Read(item.idVol) != null)
         {
-            throw new Exception($"volunteer object with this ID={item.idVol} already exists");
+            throw new DalAlreadyExistsException($"volunteer object with this ID={item.idVol} already exists");
         }
         else
         {
@@ -110,7 +110,7 @@ public class VolunteerImplementation : Ivolunteer
         }
         else
         {
-            throw new Exception($"volunteer with this ID={id} does not exist");
+            throw new DalDoesNotExistException($"volunteer with this ID={id} does not exist");
         }
     }
 
@@ -196,7 +196,7 @@ public class VolunteerImplementation : Ivolunteer
         // Validate phone number format
         if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
         {
-            throw new Exception($"Invalid phone number format for volunteer ID={item.idVol}");
+            throw new DalImposiblePhoneNumber($"Invalid phone number format for volunteer ID={item.idVol}");
         }
 
         var isExist = DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol == item.idVol);
@@ -207,7 +207,7 @@ public class VolunteerImplementation : Ivolunteer
         }
         else
         {
-            throw new Exception($"volunteer with this ID={item.idVol} does not exist");
+            throw new DalDoesNotExistException($"volunteer with this ID={item.idVol} does not exist");
         }
     }
 }

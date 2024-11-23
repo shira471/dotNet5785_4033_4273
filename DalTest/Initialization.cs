@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 
 public static class Initialization
 {
-    private static Iassignment? s_dalAssignment; //stage 1
-    private static Icall? s_dalCall; //stage 1
-    private static Ivolunteer? s_dalvolunteer; //stage 1
-    private static Iconfig? s_dalconfig; //stage 1
-                                         // Random instance for generating values
+    //private static Iassignment? s_dalAssignment; //stage 1
+    //private static Icall? s_dalCall; //stage 1
+    //private static Ivolunteer? s_dalvolunteer; //stage 1
+    //private static Iconfig? s_dalconfig; //stage 1
+    private static Idal? s_dal;//stage 2                                   // Random instance for generating values
     private static readonly Random s_rand = new Random();
 
     //private static void creatVolunteer()
@@ -58,7 +58,7 @@ public static class Initialization
     //        s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
     //    }
 
-    private static void creatVolunteer()
+    public static void creatVolunteer()
     {
         Random s_rand = new Random();
         // Random name from a predefined list
@@ -96,7 +96,8 @@ public static class Initialization
         Hamal? distanceType = GetRandomHamalValue();
 
         // Create the volunteer with random values and save it in the database
-        s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
+        //s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
+        s_dal!.volunteer.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));//stage 2
     }
 
 
@@ -137,14 +138,15 @@ public static class Initialization
         Hamal? callType = GetRandomHamalValue(); // This will give either a Hamal value or null
 
         // Use system clock from s_dalConfig.Clock
-        DateTime systemClock = s_dalconfig.clock; // The system clock provided by s_dalConfig
+        DateTime systemClock = s_dal.config.clock;// The system clock provided by s_dalConfig
         DateTime start = new DateTime(systemClock.Year - 2, 1, 1); // Start date two years ago from system clock year
         int range = (systemClock - start).Days; // Calculate the range of days from start to current system clock time
         DateTime startTime = start.AddDays(s_rand.Next(range)); // Randomly pick a start time within this range
         DateTime maximumTime = startTime.AddMinutes(s_rand.Next(1, 60)); // Maximum time between 1 and 60 minutes after start time
 
         // Create the call with random values and save it in the database
-        s_dalCall!.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));
+        // s_dalCall!.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));
+        s_dal.call.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));//stage 2
     }
 
 
@@ -216,7 +218,7 @@ public static class Initialization
         int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
 
         // Use s_dalConfig.Clock to get the system clock from s_dalConfig
-        DateTime systemNow = s_dalconfig.clock; // Use the system clock from s_dalConfig
+        DateTime systemNow = s_dal.config.clock; // Use the system clock from s_dalConfig
 
         // Valid start date based on the system clock (2 years ago from the system clock)
         DateTime start = new DateTime(systemNow.Year - 2, 1, 1); // 2 years ago, first day of the year
@@ -230,21 +232,23 @@ public static class Initialization
         Hamal? endOfAssign = GetRandomHamalValue(); // This gives either a Hamal value or null
 
         // Create the assignment with random values and save it in the database
-        s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
+        //s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
+        s_dal.assignment.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));//stage 2
     }
 
 
 
 
 
-    public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
+    //public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
+    public static void Do(Idal dal) 
     {
         // הצבת הממשקים שהתקבלו בפרמטרים למשתנים פנימיים
-        s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
-        s_dalCall = dalCall ?? throw new NullReferenceException("DAL call cannot be null!");
-        s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL assignment cannot be null!");
-        s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
-
+       // s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
+        //s_dalCall = dalCall ?? throw new NullReferenceException("DAL call cannot be null!");
+        //s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL assignment cannot be null!");
+        //s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
+        s_dal=dal??throw new NullReferenceException("DAL object cannot be null!");//stage 2
         //// הוספת הקוד לוודא שהשעה תקינה לפני החישוב
         //if (s_dalconfig.clock == DateTime.MinValue)
         //{
@@ -255,19 +259,19 @@ public static class Initialization
         Console.WriteLine("Reset Configuration values and List values...");
 
         // איפוס נתוני התצורה
-        s_dalconfig.Reset(); // איפוס התצורה
-
+        //  s_dalconfig.Reset(); // איפוס התצורה
+        s_dal.ResetDB();
         // איפוס הרשימות
-        s_dalvolunteer.DeleteAll(); // מחיקת כל המתנדבים
-        s_dalCall.DeleteAll(); // מחיקת כל הקריאות
-        s_dalAssignment.DeleteAll(); // מחיקת כל המשימות
+       // s_dalvolunteer.DeleteAll(); // מחיקת כל המתנדבים
+        //s_dalCall.DeleteAll(); // מחיקת כל הקריאות
+        //s_dalAssignment.DeleteAll(); // מחיקת כל המשימות
 
         // אתחול הרשימות
         Console.WriteLine("Initializing volunteers list ...");
         creatVolunteer(); // יצירת מתנדבים
-        Console.WriteLine("Initializing call list ...");
-        creatAssignment(); // יצירת משימות
         Console.WriteLine("Initializing assignment list ...");
+        creatAssignment(); // יצירת משימות
+        Console.WriteLine("Initializing call list ...");
         creatCall(); // יצירת קריאות
     }
 }

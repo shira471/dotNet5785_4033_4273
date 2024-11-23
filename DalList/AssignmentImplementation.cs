@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using DalApi;
 using DO;
-public class AssignmentImplementation : Iassignment
+internal class AssignmentImplementation : Iassignment
 {
     public void Create(Assignment item)
     {
@@ -22,7 +22,7 @@ public class AssignmentImplementation : Iassignment
         }
         else
         {
-            throw new Exception($"assignment with this ID={id} does not exists");
+            throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
         }
     }
 
@@ -40,7 +40,7 @@ public class AssignmentImplementation : Iassignment
         }
         else
         {
-            throw new Exception($"assignment with this ID={id} does not exists");
+            throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
         }
     }
 
@@ -59,7 +59,7 @@ public class AssignmentImplementation : Iassignment
         }
         else
         {
-            throw new Exception($"assignment with this ID={item.id} does not exists");
+            throw new DalDoesNotExistException($"assignment with this ID={item.id} does not exists");
         }
 
     }

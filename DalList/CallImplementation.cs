@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using DalApi;
 using DO;
-public class CallImplementation : Icall
+internal class CallImplementation : Icall
 {
     public void Create(Call item)
     {
@@ -21,7 +21,7 @@ public class CallImplementation : Icall
         }
         else
         {
-            throw new Exception($"call with this ID={id} does not exists");
+            throw new DalDoesNotExistException($"call with this ID={id} does not exists");
         }
     }
 
@@ -37,7 +37,7 @@ public class CallImplementation : Icall
             return newId;
         else
         {
-            throw new Exception($"call with this ID={id} does not exists");
+            throw new DalDoesNotExistException($"call with this ID={id} does not exists");
         }
     }
 
@@ -56,7 +56,7 @@ public class CallImplementation : Icall
         }
         else
         {
-            throw new Exception($"call with this ID={item.id} does not exists");
+            throw new DalDoesNotExistException($"call with this ID={item.id} does not exists");
         }
     }
 }
