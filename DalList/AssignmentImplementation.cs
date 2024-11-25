@@ -1,5 +1,6 @@
 ﻿namespace Dal;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using DalApi;
@@ -31,22 +32,50 @@ internal class AssignmentImplementation : Iassignment
         DataSource.assignments.RemoveAll(v => v is DO.Assignment);
     }
 
+    //public Assignment? Read(int id)
+    //{
+    //    var newId = DataSource.assignments.FirstOrDefault(a => a.id == id);
+    //    if (newId != null)
+    //    {
+    //        return newId;
+    //    }
+    //    else
+    //    {
+    //        throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
+    //    }
+    //}
     public Assignment? Read(int id)
     {
-        var newId = DataSource.assignments.FirstOrDefault(a => a.id == id);
-        if (newId != null)
+        // Use LINQ's FirstOrDefault method to find the assignment by ID.
+        var assignment = DataSource.assignments.FirstOrDefault(a => a.id == id);
+
+        // If the assignment is not found, throw an exception.
+        if (assignment == null)
         {
-            return newId;
+            throw new DalDoesNotExistException($"Assignment with ID={id} does not exist.");
         }
-        else
-        {
-            throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
-        }
+
+        // Return the found assignment.
+        return assignment;
     }
 
-    public List<Assignment> ReadAll()
+    public Assignment? Read(Func<Assignment, bool> filter)
     {
-        return DataSource.assignments.ToList();
+        // Use LINQ's FirstOrDefault method to find the first matching volunteer.
+        return DataSource.assignments.FirstOrDefault(filter);
+    }
+    //public List<Assignment> ReadAll()
+    //{
+    //    return DataSource.assignments.ToList();
+    //}
+
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
+    {
+        // If no filter is provided, return all volunteers as an enumerable.
+        // If a filter is provided, return only the volunteers that match the filter using LINQ's Where method.
+        return filter == null
+            ? DataSource.assignments.AsEnumerable() // Return all volunteers as an IEnumerable.
+            : DataSource.assignments.Where(filter); // Apply the filter and return the matching volunteers.
     }
 
     public void Update(Assignment item)

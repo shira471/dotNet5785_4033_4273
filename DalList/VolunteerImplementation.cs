@@ -1,73 +1,4 @@
-﻿//namespace Dal;
-
-//using System.Collections.Generic;
-//using DalApi;
-//using DO;
-//public class VolunteerImplementation : Ivolunteer
-//{
-//    public void Create(Volunteer item)
-//    {
-//        if (Read(item.idVol) != null)
-//        {
-//            throw new Exception($"volunteer object with this ID={item.idVol} already exissts");
-//        }
-//        else
-//        {
-//            DataSource.volunteers.Add(item);
-//        }
-//    }
-//    public void Delete(int id)
-//    {
-//        var isExist = DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol == id);
-//        if (isExist != null)
-//        {
-//            DataSource.volunteers.Remove(isExist);
-//        }
-//        else
-//        {
-//            throw new Exception($"volunteer with this ID={id} does not exists");
-//        }
-//    }
-
-//    public void DeleteAll()
-//    {
-//        DataSource.volunteers.RemoveAll(v => v is DO.Volunteer);
-//    }
-
-//    public Volunteer? Read(int id)
-//    {
-//        var newId= DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol==id);
-//        if (newId != null)
-//        {
-//            return newId;
-//        }
-//        else
-//        {
-//            throw new Exception($"volunteer with this ID={id} does not exists");
-//        }
-//    }
-
-//    public List<Volunteer> ReadAll()
-//    {
-//        return DataSource.volunteers.ToList();
-//    }
-
-//    public void Update(Volunteer item)
-//    {
-//        var isExist = DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol == item.idVol);
-//        if (isExist != null)
-//        {
-//            DataSource.volunteers.Remove(isExist);
-//            DataSource.volunteers.Add(item);
-//        }
-//        else
-//        {
-//            throw new Exception($"volunteer with this ID={item.idVol} does not exists");
-//        }
-//    }
-//}
-
-
+﻿
 namespace Dal;
 
 using System.Collections.Generic;
@@ -121,77 +52,97 @@ internal class VolunteerImplementation : Ivolunteer
     {
         DataSource.volunteers.RemoveAll(v => v is DO.Volunteer);
     }
-
-    /// <summary>
-    /// Read a volunteer by ID.
-    /// </summary>
+    //Read a volunteer
     //public Volunteer? Read(int id)
     //{
-    //    var newId = DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol == id);
-    //    if (newId != null)
+    //    try
     //    {
-    //        return newId;
+    //        // בדיקה אם DataSource.volunteers אינו ריק
+    //        if (DataSource.volunteers == null || !DataSource.volunteers.Any())
+    //        {
+    //            Console.WriteLine("DataSource.volunteers is empty or not initialized.");
+    //            return null;
+    //        }
+
+    //        // הדפסת כל המתנדבים במאגר לצורך בדיקה
+    //        Console.WriteLine("Current volunteers in DataSource:");
+    //        foreach (var volunteer in DataSource.volunteers)
+    //        {
+    //            Console.WriteLine(volunteer);
+    //        }
+
+    //        // חיפוש מתנדב לפי ID
+    //        var volunteerToFind = DataSource.volunteers.FirstOrDefault(v => v.idVol == id);
+
+    //        // אם נמצא מתנדב, להחזיר אותו
+    //        if (volunteerToFind != null)
+    //        {
+    //            Console.WriteLine($"Volunteer found: {volunteerToFind}");
+    //            return volunteerToFind;
+    //        }
+    //        else
+    //        {
+    //            // במקרה של אי-מציאת מתנדב
+    //            Console.WriteLine($"Volunteer with ID={id} does not exist.");
+    //            return null;
+    //        }
     //    }
-    //    else
+    //    catch (Exception ex)
     //    {
-    //        throw new Exception($"volunteer with this ID={id} does not exist");
+    //        // טיפול בחריגות והדפסה למסך
+    //        Console.WriteLine($"Error in Read function: {ex.Message}");
+    //        return null;
     //    }
     //}
     public Volunteer? Read(int id)
     {
-        try
+        // Use LINQ's FirstOrDefault method to find a volunteer by ID.
+        var volunteer = DataSource.volunteers.FirstOrDefault(v => v.idVol == id);
+
+        // Log the result to the console.
+        if (volunteer != null)
         {
-            // בדיקה אם DataSource.volunteers אינו ריק
-            if (DataSource.volunteers == null || !DataSource.volunteers.Any())
-            {
-                Console.WriteLine("DataSource.volunteers is empty or not initialized.");
-                return null;
-            }
-
-            // הדפסת כל המתנדבים במאגר לצורך בדיקה
-            Console.WriteLine("Current volunteers in DataSource:");
-            foreach (var volunteer in DataSource.volunteers)
-            {
-                Console.WriteLine(volunteer);
-            }
-
-            // חיפוש מתנדב לפי ID
-            var volunteerToFind = DataSource.volunteers.FirstOrDefault(v => v.idVol == id);
-
-            // אם נמצא מתנדב, להחזיר אותו
-            if (volunteerToFind != null)
-            {
-                Console.WriteLine($"Volunteer found: {volunteerToFind}");
-                return volunteerToFind;
-            }
-            else
-            {
-                // במקרה של אי-מציאת מתנדב
-                Console.WriteLine($"Volunteer with ID={id} does not exist.");
-                return null;
-            }
+            Console.WriteLine($"Volunteer found: {volunteer}");
         }
-        catch (Exception ex)
+        else
         {
-            // טיפול בחריגות והדפסה למסך
-            Console.WriteLine($"Error in Read function: {ex.Message}");
-            return null;
+            Console.WriteLine($"Volunteer with ID={id} does not exist.");
         }
+
+        // Return the found volunteer or null if not found.
+        return volunteer;
+    }
+
+    public Volunteer? Read(Func<Volunteer, bool> filter)
+    {
+
+        // Use LINQ's FirstOrDefault method to find the first matching volunteer.
+        return DataSource.volunteers.FirstOrDefault(filter);
+
     }
 
 
     /// <summary>
     /// Read all volunteers from the data source.
     /// </summary>
-    public List<Volunteer> ReadAll()
+    //public List<Volunteer> ReadAll()
+    //{
+    //    return DataSource.volunteers.ToList();
+    //}
+
+    public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
-        return DataSource.volunteers.ToList();
+        // If no filter is provided, return all volunteers as an enumerable.
+        // If a filter is provided, return only the volunteers that match the filter using LINQ's Where method.
+        return filter == null
+            ? DataSource.volunteers.AsEnumerable() // Return all volunteers as an IEnumerable.
+            : DataSource.volunteers.Where(filter); // Apply the filter and return the matching volunteers.
     }
 
-    /// <summary>
-    /// Update an existing volunteer.
-    /// </summary>
-    public void Update(Volunteer item)
+        /// <summary>
+        /// Update an existing volunteer.
+        /// </summary>
+        public void Update(Volunteer item)
     {
         // Validate phone number format
         if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
