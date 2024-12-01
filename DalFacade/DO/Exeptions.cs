@@ -19,3 +19,17 @@ public class DalImposiblePhoneNumber : Exception
 {
     public DalImposiblePhoneNumber(string? message) : base(message) { }
 }
+
+
+
+    // Exception thrown when there is an error while loading or creating XML files.
+    public class DalXMLFileLoadCreateException : Exception
+    {
+        // Constructor that takes a message as an argument
+        public DalXMLFileLoadCreateException(string? message) : base(message) { }
+
+        // Constructor that takes both a message and an inner exception
+        public DalXMLFileLoadCreateException(string? message, Exception innerException)
+            : base(message, innerException) { }
+    }
+

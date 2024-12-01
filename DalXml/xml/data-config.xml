@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<NextAssignmentId>1</NextAssignmentId>
+	<!-- מזהה רץ למשימה הבא -->
+	<Clock>2024-12-01T12:00:00</Clock>
+	<!-- שעון המערכת, תאריך ושעה התחלתיים -->
+	<RiskRange>00:00:00</RiskRange>
+	<!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס -->
+</config>
