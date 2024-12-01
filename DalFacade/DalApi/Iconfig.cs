@@ -2,6 +2,7 @@
 namespace DalApi
 {
 
+
     public interface Iconfig
     {
         int getNextCallId();

@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfEnum>
-</ArrayOfEnum>
+<ArrayOfHamal>
+	<Hamal>Breakfast</Hamal>
+	<Hamal>lunch</Hamal>
+	<Hamal>dinner</Hamal>
+	<Hamal>madication</Hamal>
+	<Hamal>medicalEquipment</Hamal>
+	<Hamal>militaryEquipment</Hamal>
+	<Hamal>OriginLocation</Hamal>
+	<Hamal>Role</Hamal>
+</ArrayOfHamal>

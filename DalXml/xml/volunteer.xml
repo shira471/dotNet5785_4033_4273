@@ -1,3 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer>
+	<Volunteer>
+		<idVol>501</idVol>
+		<adress>789 Oak Street, City C</adress>
+		<name>John Doe</name>
+		<email>johndoe@example.com</email>
+		<phoneNumber>123-456-7890</phoneNumber>
+		<password>password123</password>
+		<latitude>34.052235</latitude>
+		<longitude>-118.243683</longitude>
+		<limitDestenation>10.0</limitDestenation>
+		<isActive>true</isActive>
+		<role>Role</role>
+	</Volunteer>
+	<Volunteer>
+		<idVol>502</idVol>
+		<adress>123 Pine Street, City D</adress>
+		<name>Jane Smith</name>
+		<email>janesmith@example.com</email>
+		<phoneNumber>987-654-3210</phoneNumber>
+		<password>mypassword</password>
+		<latitude>34.162235</latitude>
+		<longitude>-118.253683</longitude>
+		<limitDestenation>15.0</limitDestenation>
+		<isActive>false</isActive>
+	</Volunteer>
 </ArrayOfVolunteer>

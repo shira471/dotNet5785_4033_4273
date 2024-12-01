@@ -18,9 +18,8 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
-
 	<ItemGroup>
-		<ProjectReference Include="..\DalFacade\DalFacade.csproj" />
+	  <ProjectReference Include="..\DalFacade\DalFacade.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -6,13 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DalXml; 
 
-//namespace Dal
-//{
-//    internal class Config
-//    {
-//    }
-//}
-//namespace DalXml;
+
 
 internal static class Config
 {
@@ -52,6 +46,9 @@ internal static class Config
         Clock = DateTime.Now; // אתחול השעון
       //  RiskRange = TimeSpan.Zero; // אתחול טווח הזמן
     }
+
+    internal const string s_calls_xml = "calls.xml"; // קובץ קריאות
+    internal const string s_volunteers_xml = "volunteers.xml";   // קובץ מתנדבים
 
 }
 

@@ -1,5 +1,4 @@
-﻿
-namespace DO;
+﻿namespace DO;
 
 public record Call
     (

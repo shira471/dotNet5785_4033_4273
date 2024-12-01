@@ -1,44 +1,43 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+internal class ConfigImplementation : Iconfig
+{
 
-
-namespace Dal
-
-    internal class ConfigImplementation : IConfig
+    private DateTime _clock = DateTime.Now;
+    public DateTime clock
     {
-        private DateTime _clock = DateTime.Now;
-        public DateTime clock
+        get { return _clock; } // מחזיר את הזמן הנוכחי של השעון
+        set
         {
-            get { return _clock; } // מחזיר את הזמן הנוכחי של השעון
-            set
+            // כאן אפשר להוסיף כל בדיקה שצריך, לדוגמה: לא לאפשר להגדיר זמן עבר
+            if (value < DateTime.Now)
             {
-                // כאן אפשר להוסיף כל בדיקה שצריך, לדוגמה: לא לאפשר להגדיר זמן עבר
-                if (value < DateTime.Now)
-                {
-                    throw new ArgumentException("Clock cannot be set to a past time.");
-                }
-
-                _clock = value; // מעדכן את השעון עם הזמן החדש
+                throw new ArgumentException("Clock cannot be set to a past time.");
             }
-        }
 
-
-        public int GetNextCallId()
-        {
-            return Config.nextCallId;
-        }
-
-        public int getNextCallId()
-        {
-            return Config.GetNextAssignId;
-        }
-
-        public void Reset()
-        {
-            Config.Reset();
+            _clock = value; // מעדכן את השעון עם הזמן החדש
         }
     }
+
+
+
+    public int GetNextCallId()
+    {
+        return Config.NextAssignmentId; // מחזיר את הערך של המספר הרץ הבא עבור Assignments מ- Config
+    }
+
+    public int getNextCallId()
+    {
+        return Config.NextAssignmentId; // גם כאן מחזיר את המספר הרץ הבא עבור Assignments
+    }
+
+
+    public void Reset()
+    {
+        Config.Reset();
+    }
+}
 
 
 

@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfException>
+	<Exception>
+		<type>DalDoesNotExistException</type>
+		<message>Entity does not exist in the data source</message>
+	</Exception>
+	<Exception>
+		<type>DalAlreadyExistsException</type>
+		<message>Entity already exists in the data source</message>
+	</Exception>
 </ArrayOfException>

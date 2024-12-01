@@ -1,5 +1,4 @@
-﻿
-using DalApi;
+﻿using DalApi;
 using DO;
 using DalTest;
 namespace Dal;
@@ -10,8 +9,8 @@ internal class Program
     //private static Icall? s_dalCall = new CallImplementation();
     //private static Iassignment? s_dalAssign = new AssignmentImplementation();
     //private static Iconfig? s_dalConfig = new ConfigImplementation();
-    private static readonly Idal s_dal = new DalList(); //stage 2
-
+    //private static readonly Idal s_dal = new DalList(); //stage 2
+    private static readonly Idal s_dal = new DalXml(); //stage 3
     public static void Main(string[] args)
     {
         try

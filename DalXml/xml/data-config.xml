@@ -2,6 +2,10 @@
 <config>
 	<NextAssignmentId>1</NextAssignmentId>
 	<!-- מזהה רץ למשימה הבא -->
+	<NextCallId>1</NextCallId>
+	<!-- מזהה רץ לקריאה הבאה -->
+	<NextVolunteerId>1</NextVolunteerId>
+	<!-- מזהה רץ למתנדב הבא -->
 	<Clock>2024-12-01T12:00:00</Clock>
 	<!-- שעון המערכת, תאריך ושעה התחלתיים -->
 	<RiskRange>00:00:00</RiskRange>
