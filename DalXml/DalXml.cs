@@ -1,10 +1,13 @@
-﻿using DalApi;
+﻿using System.Diagnostics;
+using DalApi;
 using DO;
 
 namespace Dal;
 
-public sealed class DalXml : Idal
+internal sealed class DalXml : Idal
 {
+    public static Idal intance { get; } = new DalXml();
+    private DalXml() { }
     public Iassignment assignment { get; } = new AssignmentImplementation();
 
    // public Iassignment assignment => throw new NotImplementedException();

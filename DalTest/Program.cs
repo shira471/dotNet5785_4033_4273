@@ -9,15 +9,17 @@ internal class Program
     //private static Icall? s_dalCall = new CallImplementation();
     //private static Iassignment? s_dalAssign = new AssignmentImplementation();
     //private static Iconfig? s_dalConfig = new ConfigImplementation();
-    //private static readonly Idal s_dal = new DalList(); //stage 2
-    private static readonly Idal s_dal = new DalXml(); //stage 3
+     static readonly Idal s_dal = Dallist.intance;  //stage 2
+    //private static readonly Idal s_dal = new DalXml(); //stage 3
+  
     public static void Main(string[] args)
     {
         try
         {
             // אתחול הנתונים באמצעות המחלקה Initialization
             //Initialization.Do(s_dalAssign, s_dalvolunteer, s_dalCall, s_dalConfig);
-            Initialization.Do(s_dal);
+            //Initialization.Do(s_dal);//stage 2
+            Initialization.Do();//stage 4
             // הצגת התפריט הראשי
             ShowMainMenu();
         }

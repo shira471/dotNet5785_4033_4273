@@ -241,14 +241,16 @@ public static class Initialization
 
 
     //public static void Do(Iassignment? dalAssign, Ivolunteer? dalVolunteer, Icall? dalCall, Iconfig? dalconfig)
-    public static void Do(Idal dal) 
+    //public static void Do(Idal dal) //stage 2
+    public static void Do() //stage 4
     {
         // הצבת הממשקים שהתקבלו בפרמטרים למשתנים פנימיים
-       // s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
+        // s_dalvolunteer = dalVolunteer ?? throw new NullReferenceException("DAL volunteer cannot be null!");
         //s_dalCall = dalCall ?? throw new NullReferenceException("DAL call cannot be null!");
         //s_dalAssignment = dalAssign ?? throw new NullReferenceException("DAL assignment cannot be null!");
         //s_dalconfig = dalconfig ?? throw new NullReferenceException("DAL Config cannot be null!");
-        s_dal=dal??throw new NullReferenceException("DAL object cannot be null!");//stage 2
+        //s_dal=dal??throw new NullReferenceException("DAL object cannot be null!");//stage 2
+        s_dal = DalApi.Factory.Get;
         //// הוספת הקוד לוודא שהשעה תקינה לפני החישוב
         //if (s_dalconfig.clock == DateTime.MinValue)
         //{

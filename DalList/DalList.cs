@@ -2,8 +2,10 @@
 namespace Dal;
 using DalApi;
 
-sealed public class DalList : Idal
+sealed internal class Dallist : Idal
 {
+    public static Idal intance { get; } = new Dallist();
+    private Dallist() { }
     public Ivolunteer volunteer { get; }= new VolunteerImplementation();
 
     public Icall call { get; } = new CallImplementation();
