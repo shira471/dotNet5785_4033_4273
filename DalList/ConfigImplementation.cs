@@ -1,30 +1,18 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+
 internal class ConfigImplementation : Iconfig
 {
-    //public DateTime clock
-    //{
-    //    get { return clock; }
-    //    set
-    //    {
-    //        if (value >= DateTime.Now) // Optional validation
-    //        {
-    //            clock = value;
-    //        }
-    //        else
-    //        {
-    //            throw new ArgumentException("Clock cannot be set to a past time.");
-    //        }
-    //    }
-    //}
-    private DateTime _clock=DateTime.Now;
+    // שעון המערכת
+    private DateTime _clock = DateTime.Now;
+
     public DateTime clock
     {
         get { return _clock; } // מחזיר את הזמן הנוכחי של השעון
         set
         {
-            // כאן אפשר להוסיף כל בדיקה שצריך, לדוגמה: לא לאפשר להגדיר זמן עבר
+            // בדיקה אם הזמן החדש הוא בעבר
             if (value < DateTime.Now)
             {
                 throw new ArgumentException("Clock cannot be set to a past time.");
@@ -34,20 +22,24 @@ internal class ConfigImplementation : Iconfig
         }
     }
 
+    // טווח זמן סיכון
+    private TimeSpan _riskTimeRange = TimeSpan.Zero;
 
-    public int GetNextCallId()
+    public TimeSpan RiskTimeRange
     {
-        return Config.nextCallId;
+        get { return _riskTimeRange; } // מחזיר את טווח הזמן הנוכחי
+        set { _riskTimeRange = value; } // מעדכן את טווח הזמן
     }
 
     public int getNextCallId()
     {
-        return Config.GetNextAssignId;
+        return Config.nextCallId;
     }
 
     public void Reset()
     {
         Config.Reset();
+        _clock = DateTime.Now; // מאתחל את השעון לזמן הנוכחי
+        _riskTimeRange = TimeSpan.Zero; // מאתחל את טווח הזמן
     }
 }
-
