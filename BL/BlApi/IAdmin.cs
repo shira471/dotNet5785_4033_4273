@@ -5,46 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using BO.Enums;
 
+namespace BlApi;
 
-namespace BlApi
+/// <summary>
+/// ממשק עבור ניהול מערכת
+/// </summary>
+public interface IAdmin
 {
-    /// <summary>
-    /// ממשק עבור ניהול מערכת
-    /// </summary>
-    public interface IAdmin
-    {
-        /// <summary>
-        /// קבלת שעון המערכת
-        /// </summary>
-        /// <returns>הזמן הנוכחי של המערכת</returns>
-        DateTime GetClock();
+    // 1. בקשת שעון המערכת
+    // מחזירה את ערכו הנוכחי של שעון המערכת מטיפוס DateTime.
+    DateTime GetSystemClock();
 
-        /// <summary>
-        /// קידום שעון המערכת
-        /// </summary>
-        /// <param name="unit">יחידת זמן לקידום</param>
-        void ForwardClock(BO.Enums.TimeUnit unit);
+    // 2. קידום שעון המערכת
+    // מקבלת פרמטר מטיפוס ENUM המייצג יחידת זמן (דקה, שעה, יום, חודש, שנה).
+    // מקדמת את שעון המערכת לפי יחידת הזמן ומעדכנת את השעון באמצעות ClockManager.UpdateClock().
+    void AdvanceSystemClock(TimeUnit timeUnit);
 
-        /// <summary>
-        /// קבלת טווח זמן סיכון
-        /// </summary>
-        /// <returns>טווח זמן סיכון</returns>
-        TimeSpan GetRiskTimeRange();
+    // 3. בקשת טווח זמן סיכון
+    // מחזירה את הערך הנוכחי של משתנה התצורה "טווח זמן סיכון" מטיפוס TimeSpan.
+    TimeSpan GetRiskTimeSpan();
 
-        /// <summary>
-        /// הגדרת טווח זמן סיכון
-        /// </summary>
-        /// <param name="riskTime">טווח זמן סיכון</param>
-        void SetRiskTimeRange(TimeSpan riskTime);
+    // 4. הגדרת טווח זמן סיכון
+    // מקבלת פרמטר מטיפוס TimeSpan ומעדכנת את ערך משתנה התצורה "טווח זמן סיכון".
+    void SetRiskTimeSpan(TimeSpan riskTimeSpan);
 
-        /// <summary>
-        /// אתחול בסיס נתונים
-        /// </summary>
-        void InitializeDB();
+    // 5. איפוס בסיס הנתונים
+    // מאפסת את כל נתוני התצורה ומנקה את כל הישויות (רשימות הנתונים).
+    void ResetDatabase();
 
-        /// <summary>
-        /// איפוס בסיס נתונים
-        /// </summary>
-        void ResetDB();
-    }
+    // 6. אתחול בסיס הנתונים
+    // מאפסת את בסיס הנתונים ולאחר מכן מאתחלת אותו עם נתוני ברירת מחדל.
+    void InitializeDatabase();
 }

@@ -5,7 +5,7 @@ public static class Config
     internal const int nextCallId = 0;
     private static int nextAssinmentId = 0;
     internal static int GetNextAssignId { get { return nextAssinmentId++; } }
-    internal static DateTime clock { set; get; } = DateTime.Now;
+    public static DateTime clock { set; get; } = DateTime.Now;
     internal static void Reset()
     {
         nextAssinmentId = GetNextAssignId;

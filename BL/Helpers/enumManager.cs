@@ -7,6 +7,8 @@ namespace BL.Helpers
 {
     internal static class EnumManager
     {
+       
+       
         // ניתן להוסיף מתודות עזר לטיפול באנומרציות אם יהיה צורך
     }
 }

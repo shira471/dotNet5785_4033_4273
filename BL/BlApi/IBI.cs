@@ -19,7 +19,7 @@ namespace BlApi;
         /// <summary>
         /// גישה ליישות שירות לוגית קריאות
         /// </summary>
-        Icall Call { get; }
+        ICall Call { get; }
 
         /// <summary>
         /// גישה ליישות שירות לוגית ניהול

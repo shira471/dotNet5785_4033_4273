@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DalApi;
 using DO;
 
-namespace BL.Helpers;
+using BL.Helpers;
 
 internal static class VolunteerManager
 {
@@ -18,7 +18,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="oldClock">השעון הקודם</param>
     /// <param name="newClock">השעון החדש</param>
-    internal static void PeriodicVolunteerUpdates(DateTime oldClock, DateTime newClock)
+    internal static void PeriodicVolunteersUpdates(DateTime oldClock, DateTime newClock)
     {
         var volunteers = s_dal.volunteer.ReadAll().ToList();
 

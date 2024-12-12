@@ -31,16 +31,7 @@ internal class CallImplementation : Icall
         DataSource.calls.RemoveAll(v => v is DO.Call);
     }
 
-    //public Call? Read(int id)
-    //{
-    //    var newId = DataSource.calls.FirstOrDefault(a => a.id == id);
-    //    if (newId != null)
-    //        return newId;
-    //    else
-    //    {
-    //        throw new DalDoesNotExistException($"call with this ID={id} does not exists");
-    //    }
-    //}
+   
     public Call? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find a volunteer by ID.

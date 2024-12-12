@@ -22,6 +22,8 @@ internal sealed class DalXml : Idal
 
     public Iconfig config { get; } = new ConfigImplementation();
 
+    public object Config => throw new NotImplementedException();
+
     //public Iconfig config => throw new NotImplementedException();
 
     public void ResetDB()

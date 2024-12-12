@@ -12,7 +12,7 @@ namespace DalApi
         Icall call { get; }
         Iassignment assignment { get; }
         Iconfig config { get; }
-        object Config { get; }
+        //object Config { get; }
 
         void ResetDB();//the method will reset the data base
     }

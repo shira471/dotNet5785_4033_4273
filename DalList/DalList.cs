@@ -14,6 +14,8 @@ sealed internal class Dallist : Idal
 
     public Iconfig config {  get; } = new ConfigImplementation();
 
+    public object Config => throw new NotImplementedException();
+
     public void ResetDB()
     {
         volunteer.DeleteAll();

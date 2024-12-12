@@ -20,7 +20,7 @@ internal class ConfigImplementation : Iconfig
         }
     }
 
-
+    public TimeSpan RiskTimeRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public int GetNextCallId()
     {

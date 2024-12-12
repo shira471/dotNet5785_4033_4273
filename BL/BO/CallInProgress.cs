@@ -3,43 +3,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BO.Enums;
+namespace BO;
 
-namespace BO
-{
-    public enum CallStatus
-    {
-        InProgress,       // בטיפול כרגע
-        AtRisk            // בטיפול בסיכון
-    }
     public class CallInProgress
     {
-        // Properties
-        int Id; // מספר מזהה של ישות ההקצאה
-        int CallId; // מספר מזהה של הקריאה
-        string CallType; // סוג הקריאה
-        string Description; // תיאור מילולי
-        string Address;// כתובת מלאה של הקריאה
-        DateTime OpenTime; // זמן פתיחה
-        DateTime? MaxCompletionTime; // זמן מקסימלי לסיום הקריאה
-         DateTime AssignmentStartTime; // זמן כניסה לטיפול
-        double DistanceFromVolunteer; // מרחק מהמתנדב
-        CallStatus Status; // סטטוס הקריאה
+        /// <summary>
+        /// מספר מזהה של ישות ההקצאה
+        /// </summary>
+        public int Id { get; init; }
 
-        // Constructor
-        public CallInProgress(int id, int callId, string callType, string description, string address,
-            DateTime openTime, DateTime? maxCompletionTime, DateTime assignmentStartTime, double distanceFromVolunteer, CallStatus status)
-        {
-            Id = id;
-            CallId = callId;
-            CallType = callType;
-            Description = description;
-            Address = address;
-            OpenTime = openTime;
-            MaxCompletionTime = maxCompletionTime;
-            AssignmentStartTime = assignmentStartTime;
-            DistanceFromVolunteer = distanceFromVolunteer;
-            Status = status;
-        }
+        /// <summary>
+        /// מספר מזהה רץ של ישות הקריאה
+        /// </summary>
+        public int CallId { get; init; }
+
+        /// <summary>
+        /// סוג הקריאה (ENUM)
+        /// </summary>
+        public CallType CallType { get; set; }
+
+        /// <summary>
+        /// תיאור מילולי
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
+        /// כתובת מלאה של הקריאה
+        /// </summary>
+        public string FullAddress { get; set; }
+
+        /// <summary>
+        /// זמן פתיחה של הקריאה
+        /// </summary>
+        public DateTime OpenTime { get; set; }
+
+        /// <summary>
+        /// זמן מקסימלי לסיום הקריאה
+        /// </summary>
+        public DateTime? MaxCloseTime { get; set; }
+
+        /// <summary>
+        /// זמן כניסה לטיפול
+        /// </summary>
+        public DateTime EntryTime { get; set; }
+
+        /// <summary>
+        /// מרחק הקריאה מהמתנדב המטפל
+        /// </summary>
+        public double DistanceFromVolunteer { get; set; }
+
+        /// <summary>
+        /// סטטוס הקריאה
+        /// </summary>
+        public CallStatus Status { get; set; }
     }
-}
-    
+
+    /// <summary>
+    /// סטטוס הקריאה
+    /// </summary>
+    public enum CallStatus
+    {
+        InProgress,
+        InProgressAtRisk
+    }

@@ -53,47 +53,7 @@ internal class VolunteerImplementation : Ivolunteer
         DataSource.volunteers.RemoveAll(v => v is DO.Volunteer);
     }
     //Read a volunteer
-    //public Volunteer? Read(int id)
-    //{
-    //    try
-    //    {
-    //        // בדיקה אם DataSource.volunteers אינו ריק
-    //        if (DataSource.volunteers == null || !DataSource.volunteers.Any())
-    //        {
-    //            Console.WriteLine("DataSource.volunteers is empty or not initialized.");
-    //            return null;
-    //        }
-
-    //        // הדפסת כל המתנדבים במאגר לצורך בדיקה
-    //        Console.WriteLine("Current volunteers in DataSource:");
-    //        foreach (var volunteer in DataSource.volunteers)
-    //        {
-    //            Console.WriteLine(volunteer);
-    //        }
-
-    //        // חיפוש מתנדב לפי ID
-    //        var volunteerToFind = DataSource.volunteers.FirstOrDefault(v => v.idVol == id);
-
-    //        // אם נמצא מתנדב, להחזיר אותו
-    //        if (volunteerToFind != null)
-    //        {
-    //            Console.WriteLine($"Volunteer found: {volunteerToFind}");
-    //            return volunteerToFind;
-    //        }
-    //        else
-    //        {
-    //            // במקרה של אי-מציאת מתנדב
-    //            Console.WriteLine($"Volunteer with ID={id} does not exist.");
-    //            return null;
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // טיפול בחריגות והדפסה למסך
-    //        Console.WriteLine($"Error in Read function: {ex.Message}");
-    //        return null;
-    //    }
-    //}
+   
     public Volunteer? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find a volunteer by ID.
@@ -122,14 +82,7 @@ internal class VolunteerImplementation : Ivolunteer
     }
 
 
-    /// <summary>
-    /// Read all volunteers from the data source.
-    /// </summary>
-    //public List<Volunteer> ReadAll()
-    //{
-    //    return DataSource.volunteers.ToList();
-    //}
-
+   
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         // If no filter is provided, return all volunteers as an enumerable.

@@ -9,6 +9,7 @@ namespace BL.Helpers
 {
     internal static class Tools
     {
+
         // פונקציה זו יוצרת מחרוזת המפרטת את כל התכונות של אובייקט מסוים
         // כולל ערכיהן, ואף נכנסת לעומק אם מדובר באוספים
         public static string ToStringProperty<T>(this T t)

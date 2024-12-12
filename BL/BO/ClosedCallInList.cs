@@ -3,59 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace BO
+using BO.Enums;
+namespace BO;
+public class ClosedCallInList
 {
-    internal class ClosedCallInList
+    // מספר מזהה רץ של ישות הקריאה
+    public int Id { get; init; }
+
+    // סוג הקריאה
+    public CallType CallType { get; init; }
+
+    // כתובת מלאה של הקריאה
+    public string Address { get; init; }
+
+    // זמן פתיחה
+    public DateTime OpenTime { get; init; }
+
+    // זמן כניסה לטיפול
+    public DateTime AssignmentStartTime { get; init; }
+
+    // זמן סיום הטיפול בפועל (אופציונלי)
+    public DateTime? ActualEndTime { get; init; }
+
+    // סוג סיום הטיפול (אופציונלי)
+    public EndType? EndType { get; init; }
+
+    // קונסטרוקטור
+    public ClosedCallInList(int id, CallType callType, string address, DateTime openTime,
+                            DateTime assignmentStartTime, DateTime? actualEndTime, EndType? endType)
     {
-        // מזהה קריאה ייחודי
-        int Id; // לקוח מישות DO.Call
-
-        /// סוג הקריאה (לדוגמה: חירום, טכנית וכו')
-        CallTypeEnum CallType;// לקוח מישות DO.Call
-
-        // כתובת מלאה של הקריאה
-        string FullAddress; // לקוח מישות DO.Call
-
-        
-        // זמן פתיחה של הקריאה
-        
-        DateTime OpenTime; // לקוח מישות DO.Call
-
-        
-        // זמן כניסה לטיפול
-       
-        DateTime EntryTime; // לקוח מישות DO.Assignment
-
-        
-        // זמן סיום הטיפול בפועל (יכול להיות null אם לא הושלם)
-        
-        DateTime? CloseTime; // לקוח מישות DO.Assignment
-
-
-        // סוג סיום הטיפול (לדוגמה: הושלם, בוטל, פג תוקף)
-
-        CallEndTypeEnum? EndType;// לקוח מישות DO.Assignment
-    }
-
-    
-    // Enum עבור סוגי קריאות
-    
-    public enum CallTypeEnum
-    {
-        Emergency, // קריאת חירום
-        Standard,  // קריאה רגילה
-        Technical  // קריאה טכנית
-    }
-
-    
-    // Enum עבור סוגי סיום טיפול
-    
-    public enum CallEndTypeEnum
-    {
-        Handled,    // הקריאה טופלה
-        Cancelled,  // הקריאה בוטלה
-        Expired     // הקריאה פג תוקפה
+        Id = id;
+        CallType = callType;
+        Address = address;
+        OpenTime = openTime;
+        AssignmentStartTime = assignmentStartTime;
+        ActualEndTime = actualEndTime;
+        EndType = endType;
     }
 }
+
+
+// Enum לסוג סיום הטיפול
+public enum EndType
+{
+    Completed,   // טיפול הושלם
+    Cancelled,   // טיפול בוטל
+    Expired      // טיפול פג תוקף
+}
+
 

@@ -8,54 +8,64 @@ using DO;
 using DalApi;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BO.Enums;
+namespace BlApi;
 
-namespace BlApi
+/// <summary>
+/// ממשק עבור ניהול מתנדבים
+/// </summary>
+public interface IVolunteer
 {
     /// <summary>
-    /// ממשק עבור ניהול מתנדבים
+    /// מתודת כניסה למערכת
     /// </summary>
-    public interface IVolunteer
-    {
-        /// <summary>
-        /// מתודת כניסה למערכת
-        /// </summary>
-        /// <param name="username">שם משתמש</param>
-        /// <param name="password">סיסמה</param>
-        /// <returns>תפקיד המשתמש</returns>
-        BO.Role Login(string username, string password);
+    /// <param name="username">שם המשתמש</param>
+    /// <param name="password">סיסמה</param>
+    /// <returns>תפקיד המשתמש</returns>
+    /// <exception cref="InvalidCredentialsException">נזרקת אם שם המשתמש או הסיסמה שגויים</exception>
+    string Login(string username, string password);
 
-        /// <summary>
-        /// בקשת רשימת מתנדבים
-        /// </summary>
-        /// <param name="isActiveFilter">סינון לפי פעיל/לא פעיל</param>
-        /// <param name="sortField">שדה מיון</param>
-        /// <returns>רשימת מתנדבים</returns>
-        IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActiveFilter, BO.VolunteerSortField? sortField);
+    /// <summary>
+    /// בקשת רשימת מתנדבים
+    /// </summary>
+    /// <param name="isActive">מסנן לפי מתנדבים פעילים/לא פעילים (nullable)</param>
+    /// <param name="sortBy">שדה מיון לפי ENUM (nullable)</param>
+    /// <returns>רשימה מסוננת וממוינת של מתנדבים</returns>
+    IEnumerable<BO.VolunteerInList> GetVolunteersList(bool? isActive = null, VolunteerSortBy? sortBy = null);
 
-        /// <summary>
-        /// בקשת פרטי מתנדב
-        /// </summary>
-        /// <param name="id">מזהה מתנדב</param>
-        /// <returns>פרטי מתנדב</returns>
-        BO.Volunteer GetVolunteerDetails(int id);
+    /// <summary>
+    /// בקשת פרטי מתנדב
+    /// </summary>
+    /// <param name="volunteerId">מספר תעודת זהות של המתנדב</param>
+    /// <returns>אובייקט מתנדב</returns>
+    /// <exception cref="NotFoundException">נזרקת אם לא נמצא מתנדב עם תעודת הזהות שנמסרה</exception>
+    BO.Volunteer GetVolunteerDetails(int volunteerId);
 
-        /// <summary>
-        /// עדכון פרטי מתנדב
-        /// </summary>
-        /// <param name="id">מזהה מתנדב</param>
-        /// <param name="volunteer">פרטי מתנדב לעדכון</param>
-        void UpdateVolunteer(int id, BO.Volunteer volunteer);
+    /// <summary>
+    /// עדכון פרטי מתנדב
+    /// </summary>
+    /// <param name="requesterId">ת.ז של המבקש לעדכן</param>
+    /// <param name="volunteer">אובייקט מתנדב עם הפרטים המעודכנים</param>
+    /// <exception cref="UnauthorizedAccessException">נזרקת אם למבקש אין הרשאה</exception>
+    /// <exception cref="InvalidDataException">נזרקת אם הפרטים אינם תקינים</exception>
+    void UpdateVolunteer(int requesterId, BO.Volunteer volunteer);
 
-        /// <summary>
-        /// מחיקת מתנדב
-        /// </summary>
-        /// <param name="id">מזהה מתנדב</param>
-        void DeleteVolunteer(int id);
+    /// <summary>
+    /// בקשת מחיקת מתנדב
+    /// </summary>
+    /// <param name="volunteerId">מספר תעודת זהות של המתנדב</param>
+    /// <exception cref="InvalidOperationException">נזרקת אם לא ניתן למחוק את המתנדב</exception>
+    void DeleteVolunteer(int volunteerId);
 
-        /// <summary>
-        /// הוספת מתנדב
-        /// </summary>
-        /// <param name="volunteer">פרטי מתנדב חדש</param>
-        void AddVolunteer(BO.Volunteer volunteer);
-    }
+    /// <summary>
+    /// הוספת מתנדב חדש
+    /// </summary>
+    /// <param name="volunteer">אובייקט מתנדב עם הפרטים</param>
+    /// <exception cref="InvalidDataException">נזרקת אם הפרטים אינם תקינים</exception>
+    /// <exception cref="DuplicateException">נזרקת אם כבר קיים מתנדב עם תעודת הזהות</exception>
+    void AddVolunteer(BO.Volunteer volunteer);
 }
+
+   
+
+

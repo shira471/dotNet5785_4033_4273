@@ -3,40 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace BO
+using BO.Enums;
+namespace BO;
+public class VolunteerInList
 {
-    public enum CallType
-    {
-        Emergency,
-        Assistance,
-        Transport,
-        None // למקרה שאין קריאה בטיפול
-    }
-    internal class VolunteerInList
-    {
-        // Properties
-        int Id; // ת.ז מתנדב
-        string FullName; // שם מלא
-        bool IsActive; // האם פעיל
-        int TotalHandledCalls; // סך הקריאות שטופלו
-        int TotalCancelledCalls; // סך הקריאות שבוטלו
-        int TotalExpiredCalls; // סך הקריאות שפג תוקפן
-        int? CurrentCallId; // מספר מזהה של הקריאה בטיפולו
-        CallType CurrentCallType; // סוג הקריאה בטיפולו
+    // ת.ז מתנדב (לא ניתן לעדכון)
+    public int Id { get; init; }
 
-        // Constructor
-        public VolunteerInList(int id, string fullName, bool isActive, int totalHandledCalls,
-            int totalCancelledCalls, int totalExpiredCalls, int? currentCallId, CallType currentCallType)
-        {
-            Id = id;
-            FullName = fullName;
-            IsActive = isActive;
-            TotalHandledCalls = totalHandledCalls;
-            TotalCancelledCalls = totalCancelledCalls;
-            TotalExpiredCalls = totalExpiredCalls;
-            CurrentCallId = currentCallId;
-            CurrentCallType = currentCallType;
-        }
+    // שם מלא (פרטי ומשפחה)
+    public string FullName { get; init; }
+
+    // האם המתנדב פעיל
+    public bool IsActive { get; init; }
+
+    // סך קריאות שטופלו על ידי המתנדב
+    public int TotalCallsHandled { get; init; }
+
+    // סך קריאות שבוטלו על ידי המתנדב
+    public int TotalCallsCancelled { get; init; }
+
+    // סך קריאות שפג תוקפן על ידי המתנדב
+    public int TotalExpiredCalls { get; init; }
+
+    // מספר מזהה של הקריאה בטיפולו (אם קיימת)
+    public int? CurrentCallId { get; init; }
+
+    // סוג הקריאה שבטיפולו (אם לא קיימת קריאה בטיפולו, יהיה ערך None)
+    public CallType CurrentCallType { get; init; }
+
+    // קונסטרוקטור
+    public VolunteerInList(int id, string fullName, bool isActive, int totalCallsHandled,
+                            int totalCallsCancelled, int totalExpiredCalls, int? currentCallId,
+                            CallType currentCallType)
+    {
+        Id = id;
+        FullName = fullName;
+        IsActive = isActive;
+        TotalCallsHandled = totalCallsHandled;
+        TotalCallsCancelled = totalCallsCancelled;
+        TotalExpiredCalls = totalExpiredCalls;
+        CurrentCallId = currentCallId;
+        if (currentCallType == null)// ברירת מחדל אם אין קריאה בטיפולו
+            CurrentCallType = CallType.None;
+        else CurrentCallType = currentCallType;
     }
 }
+

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace BL.Helpers
+
+namespace BO
 {
     internal static class ExceptionsManager
     {

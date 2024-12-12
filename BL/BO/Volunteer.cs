@@ -4,90 +4,68 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BO.Enums;
+namespace BO;
 
-namespace BO
+public class Volunteer
 {
-    public enum Role
+    // ת.ז. מתנדב (לא ניתן לעדכון לאחר ההוספה)
+    public int Id { get; init; }
+
+    // שם מלא (פרטי ומשפחה)
+    public string FullName { get; set; }
+
+    // טלפון סלולרי
+    public string Phone { get; set; }
+
+    // אימייל
+    public string Email { get; set; }
+
+    // סיסמה (עם הצפנה ותקינות)
+    public string? Password { get; set; }
+
+    // כתובת מלאה נוכחית
+    public string? Address { get; set; }
+
+    // קו רוחב
+    public double? Latitude { get; set; }
+
+    // קו אורך
+    public double? Longitude { get; set; }
+
+    // תפקיד
+    public Role Role { get; set; }
+
+    // האם המתנדב פעיל
+    public bool IsActive { get; set; }
+
+    // מרחק מרבי לקבלת קריאה
+    public double? MaxDistance { get; set; }
+
+    // סוג המרחק
+    public DistanceType DistanceType { get; set; }
+
+    // סך הקריאות שטיפל בהן
+    public int TotalCallsHandled { get; set; }
+
+    // סך הקריאות שביטל
+    public int TotalCallsCancelled { get; set; }
+
+    // סך הקריאות שבחר לטפל ופג תוקפן
+    public int TotalExpiredCalls { get; set; }
+
+    // קריאה בטיפול מתנדב
+    public CallInProgress? CurrentCall { get; set; }
+
+    // קונסטרוקטור
+    public Volunteer(int id, string fullName, string phone, string email,bool active)
     {
-        Manager,
-        volunteer
-    }
-    public enum distanceType
-    {
-        Air,
-        Walking,
-        Driving
-    }
-    internal class Volunteer
-    {
-        int Id;
-        string FullName;
-        string PhoneNumber;
-        string Email;
-        string? password=null;
-        string? CurrentAddress=null;
-        double?Latitude=null;
-        double?Longitude=null;
-        Role VolunteerRole;
-        Boolean IsActive;
-        distanceType DistanceCalculationType;
-        double? MaxDistance=null;
-        int TotalHandledCalls;
-        int TotalCancelledCalls;
-        int? TotalExpiredCalls = null;
-        CallProgress CurrentCall;
-        public Volunteer(int id, string fullName, string phoneNumber, string email, Role role)
-        {
-            if (!IsValidId(id)) throw new ArgumentException("Invalid ID.");
-            if (string.IsNullOrWhiteSpace(fullName)) throw new ArgumentException("Full name cannot be empty.");
-            if (!IsValidPhoneNumber(phoneNumber)) throw new ArgumentException("Invalid phone number.");
-            if (!IsValidEmail(email)) throw new ArgumentException("Invalid email format.");
-
-            Id = id;
-            FullName = fullName;
-            PhoneNumber = phoneNumber;
-            email = Email;
-            VolunteerRole = role;
-            IsActive = true; // Default to active
-            DistanceCalculationType =distanceType.Air; // Default distance type
-        }
-        // Validation Methods
-        private bool IsValidId(int id) => id > 0;
-
-        private bool IsValidPhoneNumber(string phoneNumber) =>
-            Regex.IsMatch(phoneNumber, @"^\+?\d{10,15}$");
-
-        private bool IsValidEmail(string email) =>
-            Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-
-        private bool IsStrongPassword(string password) =>
-            password.Length >= 8 &&
-            Regex.IsMatch(password, @"[A-Z]") && // At least one uppercase
-            Regex.IsMatch(password, @"[a-z]") && // At least one lowercase
-            Regex.IsMatch(password, @"\d") &&    // At least one digit
-            Regex.IsMatch(password, @"[@$!%*?&]"); // At least one special character
-
-        // Methods
-        public void UpdateAddress(string address, double? latitude, double? longitude)
-        {
-            if (string.IsNullOrWhiteSpace(address) || latitude == null || longitude == null)
-                throw new ArgumentException("Invalid address or coordinates.");
-
-            CurrentAddress = address;
-            Latitude = latitude;
-            Longitude = longitude;
-        }
-
-        public void IncrementHandledCalls() => TotalHandledCalls++;
-        public void IncrementCancelledCalls() => TotalCancelledCalls++;
-        public void IncrementExpiredCalls() => TotalExpiredCalls++;
-    }
-
-    // Placeholder for CallInProgress entity
-    public class CallProgress
-    {
-        public int CallId { get; set; }
-        public string Details { get; set; }
+        Id = id;
+        FullName = fullName;
+        Phone = phone;
+        Email = email;
+        IsActive = true;
+        DistanceType = DistanceType.AirDistance; // ברירת מחדל
     }
 }
 

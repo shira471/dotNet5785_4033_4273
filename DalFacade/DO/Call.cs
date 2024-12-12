@@ -5,8 +5,8 @@ public record Call
     int id,
     string detail,
     string adress,
-    double latitude,
-    double longitude,
+    double? latitude=null,
+    double? longitude = null,
     Hamal? callType = null,
     DateTime? startTime = null,
     DateTime? maximumTime = null
