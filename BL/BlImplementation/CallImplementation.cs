@@ -9,7 +9,7 @@ using DalApi;
 using Helpers;
 
 
-internal class CallImplementation : ICall
+public class CallImplementation : ICall
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 

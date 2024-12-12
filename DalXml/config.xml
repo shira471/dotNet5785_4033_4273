@@ -1,0 +1,6 @@
+<dal-config>
+	<dal-name>XmlDal</dal-name>
+	<dal-packages>
+		<package name="DalXml" namespace="DalList" class="DalXml" />
+	</dal-packages>
+</dal-config>

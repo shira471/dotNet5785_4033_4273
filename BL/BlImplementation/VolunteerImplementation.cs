@@ -6,7 +6,7 @@ using BlApi;
 using BO;
 using BO.Enums;
 
-internal class VolunteerImplementation : IVolunteer
+public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
