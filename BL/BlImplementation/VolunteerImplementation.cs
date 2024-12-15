@@ -149,13 +149,148 @@ public class VolunteerImplementation : IVolunteer
     }
 
 
+    
     public string Login(string username, string password)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // שליפת כל המתנדבים מ-DAL
+            var volunteers = _dal.volunteer.ReadAll();
+
+            // חיפוש מתנדב לפי שם משתמש וסיסמה
+            var volunteer = volunteers.FirstOrDefault(v => v.email == username && v.password == password);
+
+            if (volunteer == null)
+            {
+                // אם לא נמצא מתנדב עם שם משתמש וסיסמה תואמים, נזרוק חריגה
+                throw new UnauthorizedAccessException("שם משתמש או סיסמה שגויים.");
+            }
+
+            // החזרת תפקיד המשתמש
+
+            return volunteer.role switch
+            {
+                DO.Role.Manager => "Manager",     // תפקיד: מנהל
+                DO.Role.Volunteer => "Volunteer", // תפקיד: מתנדב
+                _ => throw new InvalidOperationException("Invalid role")
+            };
+
+
+        }
+        catch (Exception ex)
+        {
+            // טיפול בשגיאות
+            Console.WriteLine($"Error during login: {ex.Message}");
+            throw;
+        }
     }
 
-    public void UpdateVolunteer(int requesterId, Volunteer volunteer)
+
+
+
+
+    public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
-        throw new NotImplementedException();
+        // בדיקה ראשונית האם האובייקט שהתקבל הוא null
+        if (volunteer == null)
+            throw new ArgumentNullException(nameof(volunteer), "Volunteer object cannot be null");
+
+        // בדיקת הרשאות: רק מנהל או המתנדב עצמו יכולים לעדכן את הפרטים
+        if (requesterId != volunteer.Id && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
+            throw new UnauthorizedAccessException("Only managers or the volunteer themselves can update details.");
+
+        // בדיקת פורמט תקינות בסיסי (לדוגמה: פורמט אימייל תקין)
+        if (!IsValidEmail(volunteer.Email))
+            throw new ArgumentException("Invalid email format");
+
+        // בדיקת תקינות מספר טלפון (שדה מספרי)
+        if (!IsValidPhoneNumber(volunteer.Phone))
+            throw new ArgumentException("Invalid phone number");
+
+        // בדיקת תקינות תעודת זהות (מספרי עם ספרת ביקורת תקינה)
+        if (!IsValidId(volunteer.Id))
+            throw new ArgumentException("Invalid ID number");
+
+        // בקשת הרשומה המקורית משכבת הנתונים
+        var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
+            ?? throw new KeyNotFoundException($"Volunteer with ID {volunteer.Id} not found");
+
+        // בדיקת שדות שניתן לעדכן רק על ידי מנהל
+        if (existingVolunteer.role != volunteer.Role && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
+            throw new UnauthorizedAccessException("Only a manager can update the volunteer's role.");
+
+        // עדכון שדות קווי אורך ורוחב על פי כתובת חדשה (אם הכתובת השתנתה)
+        if (existingVolunteer.adress != volunteer.Address)
+        {
+            var coordinates = GetCoordinatesFromAddress(volunteer.Address);
+            if (coordinates == null)
+                throw new ArgumentException("Invalid address provided");
+            volunteer.Latitude = coordinates.Value.Latitude;
+            volunteer.Longitude = coordinates.Value.Longitude;
+        }
+
+        // המרת אובייקט BO.Volunteer ל-DO.Volunteer
+        var updatedVolunteer = new DO.Volunteer(
+            idVol: volunteer.Id,
+            adress: volunteer.Address,
+            name: volunteer.FullName,
+            email: volunteer.Email,
+            phoneNumber: volunteer.Phone,
+            password: volunteer.Password ?? existingVolunteer.password,
+            latitude: volunteer.Latitude ?? existingVolunteer.latitude,
+            longitude: volunteer.Longitude ?? existingVolunteer.longitude,
+            limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
+            isActive: volunteer.IsActive,
+            role: (DO.Role?)volunteer.Role,
+            distanceType: (DO.Hamal?)volunteer.DistanceType
+        );
+
+        // ניסיון לעדכן את המתנדב בשכבת הנתונים
+        try
+        {
+            _dal.volunteer.Update(updatedVolunteer);
+        }
+        catch (Exception ex)
+        {
+            // תפיסת חריגה משכבת הנתונים והשלכת חריגה מתאימה לשכבת התצוגה
+            throw new Exception("Failed to update the volunteer details.", ex);
+        }
     }
+
+    // פונקציה פרטית לבדיקה האם אימייל תקין
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var mail = new System.Net.Mail.MailAddress(email);
+            return mail.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    // פונקציה פרטית לבדיקה האם מספר טלפון תקין
+    private bool IsValidPhoneNumber(string phoneNumber)
+    {
+        return phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 7;
+    }
+
+    // פונקציה פרטית לבדיקה האם תעודת זהות תקינה
+    private bool IsValidId(int id)
+    {
+        // לוגיקת בדיקת ספרת ביקורת
+        return id > 0 && id.ToString().Length == 9; // לדוגמה בלבד
+    }
+
+    // פונקציה פרטית להמרת כתובת לקואורדינטות
+    private (double Latitude, double Longitude)? GetCoordinatesFromAddress(string address)
+    {
+        // לוגיקה ליישום המרה של כתובת לקואורדינטות
+        // אפשר להיעזר ב-API חיצוני כמו Google Maps
+        return (Latitude: 32.0853, Longitude: 34.7818); // תל אביב לדוגמה
+    }
+
+
 }

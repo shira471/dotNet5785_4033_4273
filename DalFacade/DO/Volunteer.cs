@@ -11,7 +11,8 @@ public record Volunteer(
     double longitude,              // קו אורך
     double limitDestenation,       // מגבלת המרחק
     bool isActive = false,         // האם פעיל
-    Hamal? role = null,            // תפקיד
+    //Hamal? role = null,  
+    Role? role = null, // תפקיד
     Hamal? distanceType = null     // סוג המרחק
 )
 {
