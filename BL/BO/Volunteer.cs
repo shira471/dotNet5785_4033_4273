@@ -34,7 +34,7 @@ public class Volunteer
     public double? Longitude { get; set; }
 
     // תפקיד
-    public Role Role { get; set; }
+    public Role? Role { get; set; }
 
     // האם המתנדב פעיל
     public bool IsActive { get; set; }

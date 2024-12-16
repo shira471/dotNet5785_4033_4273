@@ -52,7 +52,7 @@ public static class Initialization
         double longitude = s_rand.NextDouble() * 360 - 180;  // Longitude between -180 and 180
 
         // Random role and distance type (if the Hamal enum is defined)
-        Role? role = GetRandomHamalValue();
+        Role? role = GetRandomRoleValue();
         Hamal? distanceType = GetRandomHamalValue();
 
         // Create the volunteer with random values and save it in the database
@@ -73,6 +73,11 @@ public static class Initialization
     {
         Array values = Enum.GetValues(typeof(Hamal));
         return s_rand.Next(0, 2) == 1 ? (Hamal)values.GetValue(s_rand.Next(values.Length)) : (Hamal?)null;
+    }
+    private static Role? GetRandomRoleValue()
+    {
+        Array values = Enum.GetValues(typeof(Role));
+        return s_rand.Next(0, 2) == 1 ? (Role)values.GetValue(s_rand.Next(values.Length)) : (Role?)null;
     }
 
     private static void creatCall()

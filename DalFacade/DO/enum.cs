@@ -12,7 +12,7 @@
         medicalEquipment,     // חמל לציוד רפואי
         militaryEquipment,    // חמל לציוד צבאי
         OriginLocation,       // מיקום המקור
-      //  role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
+        //role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
     }
 
     /// <summary>

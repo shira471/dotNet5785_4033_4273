@@ -216,8 +216,11 @@ public class VolunteerImplementation : IVolunteer
             ?? throw new KeyNotFoundException($"Volunteer with ID {volunteer.Id} not found");
 
         // בדיקת שדות שניתן לעדכן רק על ידי מנהל
-        if (existingVolunteer.role != volunteer.role && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
+        if (!object.Equals(existingVolunteer.role, volunteer.Role) &&
+            !object.Equals(_dal.volunteer.Read(requesterId).role, DO.Role.Manager))
+        {
             throw new UnauthorizedAccessException("Only a manager can update the volunteer's role.");
+        }
 
         // עדכון שדות קווי אורך ורוחב על פי כתובת חדשה (אם הכתובת השתנתה)
         if (existingVolunteer.adress != volunteer.Address)
