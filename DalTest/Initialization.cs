@@ -16,47 +16,7 @@ public static class Initialization
     private static Idal? s_dal;//stage 2                                   // Random instance for generating values
     private static readonly Random s_rand = new Random();
 
-    //private static void creatVolunteer()
-    //    {
-    //        Random s_rand = new Random();
-    //        // Random name from a predefined list
-    //        string[] names = { "Dani Levy", "Eli Amar", "Yair Cohen", "Ariela Levin", "Dina Klein", "Shira Israelof" };
-    //        string name = names[s_rand.Next(names.Length)];
-
-    //        // Random ID
-    //        int id = s_rand.Next(1000000, 9999999); // Assuming 7-digit IDs
-
-    //        // Random address
-    //        string[] streets = { "Main St", "Second Ave", "Highland Rd", "Maple Dr", "Oak St" };
-    //        string address = $"{s_rand.Next(1, 1000)} {streets[s_rand.Next(streets.Length)]}";
-
-    //        // Random email
-    //        string email = $"{name.Replace(" ", ".").ToLower()}@example.com";
-
-    //        // Random phone number (10 digits)
-    //        //double phoneNumber = s_rand.Next(1000000000, int.MaxValue) + s_rand.NextDouble();
-    //        string phoneNumber = $"{s_rand.Next(100000000, 1000000000)}"; // Generate a 10-digit phone number as a string
-
-    //        // Random password (alphanumeric, length between 6 and 10)
-    //        string password = GenerateRandomPassword(6, 10);
-
-    //        // Random limit of destination (between 5 and 50 kilometers)
-    //        double limitDestination = Math.Round(s_rand.NextDouble() * 45 + 5, 2);
-
-    //        // Random active status
-    //        bool isActive = s_rand.Next(0, 2) == 1;
-
-    //        // Random latitude and longitude (within reasonable bounds for a location)
-    //        double latitude = s_rand.NextDouble() * 180 - 90;  // Latitude between -90 and 90
-    //        double longitude = s_rand.NextDouble() * 360 - 180;  // Longitude between -180 and 180
-
-    //        // Random role and distance type (if the Hamal enum is defined)
-    //        Hamal? role = GetRandomHamalValue();
-    //        Hamal? distanceType = GetRandomHamalValue();
-
-    //        // Create the volunteer with random values and save it in the database
-    //        s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
-    //    }
+   
 
     public static void creatVolunteer()
     {
@@ -92,11 +52,10 @@ public static class Initialization
         double longitude = s_rand.NextDouble() * 360 - 180;  // Longitude between -180 and 180
 
         // Random role and distance type (if the Hamal enum is defined)
-        Hamal? role = GetRandomHamalValue();
+        Role? role = GetRandomHamalValue();
         Hamal? distanceType = GetRandomHamalValue();
 
         // Create the volunteer with random values and save it in the database
-        //s_dalvolunteer!.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));
         s_dal!.volunteer.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));//stage 2
     }
 
@@ -149,62 +108,6 @@ public static class Initialization
         s_dal.call.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));//stage 2
     }
 
-
-    //private static void creatAssignment()
-    //{
-    //   Random s_rand = new Random();
-    //    // Random ID for the assignment
-    //    int id = s_rand.Next(1000, 9999); // Assuming 4-digit IDs for assignments
-
-    //    // Random callId (you may want to ensure this call ID exists)
-    //    int callId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing call ID
-
-    //    // Random volunteerId (you may want to ensure this volunteer ID exists)
-    //    int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
-
-    //    // Random start time (within the past 30 days)
-    //    DateTime startTime = DateTime.Now.AddDays(s_rand.Next(-30, 1)); // Start within the last 30 days
-
-    //    // Random finish time (between 30 minutes and 2 hours after start time)
-    //    DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121)); // 30 minutes to 2 hours later
-
-    //    // Random endOfAssign (Hamal enum)
-    //    Hamal? endOfAssign = GetRandomHamalValue(); // This gives either a Hamal value or null
-
-    //    // Create the assignment with random values and save it in the database
-    //    s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
-    //}
-
-    //private static void creatAssignment()
-    //{
-    //    Random s_rand = new Random();
-    //    // Random ID for the assignment
-    //    int id = s_rand.Next(1000, 9999); // Assuming 4-digit IDs for assignments
-
-    //    // Random callId (you may want to ensure this call ID exists)
-    //    int callId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing call ID
-
-    //    // Random volunteerId (you may want to ensure this volunteer ID exists)
-    //    int volunteerId = s_rand.Next(1000, 9999); // Replace with actual logic to get an existing volunteer ID
-
-
-    //    // Random start time (using the system clock from s_dalConfig)
-    //    //Console.WriteLine(s_dalconfig);
-    //    //DateTime start = new DateTime(s_dalconfig.clock.Year - 2, 1, 1); // Make sure the start date is valid
-    //    DateTime utcNow = DateTime.UtcNow; // שעון המערכת ב-UTC
-    //    DateTime start = new DateTime(utcNow.Year - 2, 1, 1, 0, 0, 0, DateTimeKind.Utc); // תאריך התחלה חוקי מבוסס UTC
-    //    int range = (s_dalconfig.clock - start).Days; // Calculate the range of days from start to current clock time
-    //    DateTime startTime = start.AddDays(s_rand.Next(range)); // Randomly pick a start time within this range
-
-    //    // Random finish time (between 30 minutes and 2 hours after start time)
-    //    DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121)); // Finish between 30 minutes and 2 hours later
-
-    //    // Random endOfAssign (Hamal enum)
-    //    Hamal? endOfAssign = GetRandomHamalValue(); // This gives either a Hamal value or null
-
-    //    // Create the assignment with random values and save it in the database
-    //    s_dalAssignment!.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
-    //}
     private static void creatAssignment()
     {
         Random s_rand = new Random();

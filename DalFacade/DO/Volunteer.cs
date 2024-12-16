@@ -10,8 +10,7 @@ public record Volunteer(
     double latitude,               // קו רוחב
     double longitude,              // קו אורך
     double limitDestenation,       // מגבלת המרחק
-    bool isActive = false,         // האם פעיל
-    //Hamal? role = null,  
+    bool isActive = false,         // האם פעיל  
     Role? role = null, // תפקיד
     Hamal? distanceType = null     // סוג המרחק
 )
