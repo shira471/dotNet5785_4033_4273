@@ -54,16 +54,16 @@ namespace BlTest
                 Console.WriteLine($"Call Details: {callDetails.Description}, {callDetails.Address}, {callDetails.OpenTime}");
 
                 // שיוך קריאה למתנדב
-                callManager.AssignCallToVolunteer(1, 1);
+                callManager.AssignCallToVolunteer(volunteer.Id, call.Id);
 
                 // סגירת קריאה
-                callManager.CloseCallAssignment(1, 1);
+                callManager.CloseCallAssignment(volunteer.Id,call.Id);
 
                 // מחיקת קריאה
-                callManager.DeleteCall(1);
+                callManager.DeleteCall(call.Id);
 
                 // מחיקת מתנדב
-                volunteerManager.DeleteVolunteer(1);
+                volunteerManager.DeleteVolunteer(volunteer.Id);
             }
             catch (Exception ex)
             {
