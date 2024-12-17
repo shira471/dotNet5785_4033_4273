@@ -40,11 +40,11 @@ internal class CallImplementation : Icall
         // Log the result to the console.
         if (call != null)
         {
-            Console.WriteLine($"Volunteer found: {call}");
+            Console.WriteLine($"Call found: {call}");
         }
         else
         {
-            Console.WriteLine($"Volunteer with ID={id} does not exist.");
+            Console.WriteLine($"Call with ID={id} does not exist.");
         }
 
         // Return the found volunteer or null if not found.
@@ -57,11 +57,6 @@ internal class CallImplementation : Icall
         return DataSource.calls.FirstOrDefault(filter);
 
     }
-
-    //public List<Call> ReadAll()
-    //{
-    //    return DataSource.calls.ToList();
-    //}
 
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {

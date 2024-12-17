@@ -88,12 +88,15 @@ public class VolunteerImplementation : IVolunteer
     volunteerDO.name,
     volunteerDO.phoneNumber,
     volunteerDO.email,
+    //volunteerDO.adress,
     true // Assuming the volunteer is active, set this as needed
 );
             dalVolunteer.Address = volunteerDO.adress;
             dalVolunteer.Password = volunteerDO.password;
             dalVolunteer.Latitude = volunteerDO.latitude;
             dalVolunteer.Longitude = volunteerDO.longitude;
+            dalVolunteer.Phone = volunteerDO.phoneNumber;
+            //dalVolunteer.Role = volunteerDO.role;
             return dalVolunteer;
         }
         catch (Exception ex)

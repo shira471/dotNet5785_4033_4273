@@ -2,7 +2,7 @@
 
 public static class Config
 {
-    internal const int nextCallId = 0;
+    internal static int nextCallId { get; }
     private static int nextAssinmentId = 0;
     internal static int GetNextAssignId { get { return nextAssinmentId++; } }
     public static DateTime clock { set; get; } = DateTime.Now;

@@ -4,7 +4,7 @@ using DalApi;
 
 sealed internal class Dallist : Idal
 {
-    public static Idal intance { get; } = new Dallist();
+    public static Idal Instance { get; } = new Dallist();
     private Dallist() { }
     public Ivolunteer volunteer { get; }= new VolunteerImplementation();
 

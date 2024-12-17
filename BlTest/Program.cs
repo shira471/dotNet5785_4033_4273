@@ -20,9 +20,11 @@ namespace BlTest
                 {
                     Phone = "050-1234567",
                     Password = "password123",
+                    //Address= "תל אביב",
                     Latitude = 32.0853,
                     Longitude = 34.7818,
                     MaxDistance = 10,
+                    Role=Role.Manager,
                     DistanceType = DistanceType.DrivingDistance
                 };
 
@@ -31,7 +33,7 @@ namespace BlTest
 
                 // קבלת פרטי המתנדב
                 var volunteerDetails = volunteerManager.GetVolunteerDetails(1);
-                Console.WriteLine($"Volunteer Details: {volunteerDetails.FullName}, {volunteerDetails.Address}, {volunteerDetails.Email}");
+                Console.WriteLine($"Volunteer Details: {volunteerDetails.FullName}, {volunteerDetails.Address}, {volunteerDetails.Email},{volunteerDetails.Role}");
 
                 // יצירת קריאה חדשה
                 Call call = new Call
@@ -48,7 +50,7 @@ namespace BlTest
                 callManager.AddCall(call);
 
                 // קבלת פרטי קריאה
-                var callDetails = callManager.GetCallDetails(1);
+                var callDetails = callManager.GetCallDetails(call.Id);
                 Console.WriteLine($"Call Details: {callDetails.Description}, {callDetails.Address}, {callDetails.OpenTime}");
 
                 // שיוך קריאה למתנדב

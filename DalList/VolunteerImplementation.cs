@@ -13,11 +13,11 @@ internal class VolunteerImplementation : Ivolunteer
     /// </summary>
     public void Create(Volunteer item)
     {
-        // Validate phone number format
-        if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
-        {
-            throw new DalImposiblePhoneNumber($"Invalid phone number format for volunteer ID={item.idVol}");
-        }
+        //// Validate phone number format
+        //if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
+        //{
+        //    throw new DalImposiblePhoneNumber($"Invalid phone number format for volunteer ID={item.idVol}");
+        //}
 
         if (Read(item.idVol) != null)
         {
