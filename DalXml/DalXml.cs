@@ -10,7 +10,7 @@ internal sealed class DalXml : Idal
     private DalXml() { }
     public Iassignment assignment { get; } = new AssignmentImplementation();
 
-   // public Iassignment assignment => throw new NotImplementedException();
+    // public Iassignment assignment => throw new NotImplementedException();
 
     public Icall call { get; } = new CallImplementation();
 
