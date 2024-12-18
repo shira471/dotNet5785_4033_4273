@@ -158,7 +158,7 @@ namespace VolunteerCallAssignment
 
             // Get the call details and display them
             var call = bl.Call.GetCallDetails(callId);
-            Console.WriteLine($"\nCall Details:\n{call}");
+            Console.WriteLine($"\nCall Details:\n{call.CallType}\n{call.Id}\n{call.Address}");
         }
 
         // Method to list all open calls for a specific volunteer
