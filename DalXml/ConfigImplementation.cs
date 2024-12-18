@@ -24,7 +24,7 @@ internal class ConfigImplementation : Iconfig
 
     public int GetNextCallId()
     {
-        return Config.NextAssignmentId; // מחזיר את הערך של המספר הרץ הבא עבור Assignments מ- Config
+        return (int)Config.NextAssignmentId; // מחזיר את הערך של המספר הרץ הבא עבור Assignments מ- Config
     }
 
     public int getNextCallId()

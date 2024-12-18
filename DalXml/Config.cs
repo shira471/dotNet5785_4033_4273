@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ internal static class Config
     }
 
     // תכונה לניהול טווח הזמן (Risk Range)
-  
+
     internal static DateTime RiskRange
     {
         get => XMLTools.GetConfigDateVal(s_data_config_xml, "RiskRange");
@@ -43,7 +44,7 @@ internal static class Config
     {
         NextAssignmentId = 1; // אתחול המספר הרץ
         Clock = DateTime.Now; // אתחול השעון
-      //  RiskRange = TimeSpan.Zero; // אתחול טווח הזמן
+        // RiskRange = TimeSpan.Zero; // אתחול טווח הזמן
     }
 
     internal const string s_calls_xml = "call.xml"; // קובץ קריאות

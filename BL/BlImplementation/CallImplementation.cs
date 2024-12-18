@@ -22,7 +22,7 @@ public class CallImplementation : ICall
         try
         {
             var doCall = new DO.Call(
-                id: 0, // ייווצר מזהה חדש ב-DAL
+                id: _dal.config.getNextCallId(), // ייווצר מזהה חדש ב-DAL
             detail: call.Description,
             adress: call.Address,
             latitude: call.Latitude,
@@ -48,7 +48,7 @@ public class CallImplementation : ICall
         //שליפת המתנדב ממאגר הנתונים
         var volunteer = _dal.volunteer.Read(volunteerId) ??
            throw new Exception($"Volunterr with ID={volunteerId} does not exist.");
-        var dis = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude , volunteer.longitude );
+        var dis = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
         if (dis > volunteer.limitDestenation)
         {
             throw new Exception($"Call is out of volunteer's range (Distance: {dis} > Limit: {volunteer.limitDestenation}).");
@@ -395,4 +395,3 @@ public class CallImplementation : ICall
     }
 
 }
-
