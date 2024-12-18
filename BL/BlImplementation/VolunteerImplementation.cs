@@ -1,6 +1,6 @@
 ﻿namespace BlImplementation;
 
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Net;
 using BlApi;
 using BO;
@@ -88,9 +88,11 @@ public class VolunteerImplementation : IVolunteer
     volunteerDO.name,
     volunteerDO.phoneNumber,
     volunteerDO.email,
-    //volunteerDO.adress,
-    true // Assuming the volunteer is active, set this as needed
+    volunteerDO.adress,
+    volunteerDO.isActive
+    //true // Assuming the volunteer is active, set this as needed
 );
+           // dalVolunteer.IsActive = volunteerDO.isActive;
             dalVolunteer.Address = volunteerDO.adress;
             dalVolunteer.Password = volunteerDO.password;
             dalVolunteer.Latitude = volunteerDO.latitude;

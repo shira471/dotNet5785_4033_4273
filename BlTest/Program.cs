@@ -86,11 +86,11 @@ namespace VolunteerCallAssignment
             string phone = Console.ReadLine(); // Get volunteer phone number
             Console.Write("Email: ");
             string email = Console.ReadLine(); // Get volunteer email
-            Console.Write("Volunteer Status (0=Active, 1=Inactive): ");
+            Console.Write("Volunteer Status (true=Active, false=Inactive): ");
             var status = bool.Parse(Console.ReadLine()); // Get volunteer status (active/inactive)
 
             // Create a new Volunteer object and add it to the system
-            var volunteer = new Volunteer(id, Name, address, email, status) { };
+            var volunteer = new Volunteer(id, Name,phone, address, email, status) { };
 
             bl.Volunteer.AddVolunteer(volunteer); // Add the volunteer to the system via the business logic layer
             Console.WriteLine("Volunteer added successfully.");
@@ -152,7 +152,7 @@ namespace VolunteerCallAssignment
 
             // Get the volunteer details and display them
             var volunteer = bl.Volunteer.GetVolunteerDetails(volunteerId);
-            Console.WriteLine($"\nVolunteer Details:\n{volunteer}");
+            Console.WriteLine($"\nVolunteer Details:\n{volunteer.Id}\n{volunteer.FullName}\n{volunteer.Phone}\n{volunteer.Address}");
         }
 
         // Method to view the details of a specific call

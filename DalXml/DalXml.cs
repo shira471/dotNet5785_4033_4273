@@ -6,7 +6,7 @@ namespace Dal;
 
 internal sealed class DalXml : Idal
 {
-    public static Idal intance { get; } = new DalXml();
+    public static Idal Instance { get; } = new DalXml();
     private DalXml() { }
     public Iassignment assignment { get; } = new AssignmentImplementation();
 

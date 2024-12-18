@@ -13,12 +13,6 @@ internal class VolunteerImplementation : Ivolunteer
     /// </summary>
     public void Create(Volunteer item)
     {
-        //// Validate phone number format
-        //if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
-        //{
-        //    throw new DalImposiblePhoneNumber($"Invalid phone number format for volunteer ID={item.idVol}");
-        //}
-
         if (Read(item.idVol) != null)
         {
             throw new DalAlreadyExistsException($"volunteer object with this ID={item.idVol} already exists");
@@ -53,7 +47,7 @@ internal class VolunteerImplementation : Ivolunteer
         DataSource.volunteers.RemoveAll(v => v is DO.Volunteer);
     }
     //Read a volunteer
-   
+
     public Volunteer? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find a volunteer by ID.
@@ -82,7 +76,7 @@ internal class VolunteerImplementation : Ivolunteer
     }
 
 
-   
+
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
         // If no filter is provided, return all volunteers as an enumerable.
@@ -92,10 +86,10 @@ internal class VolunteerImplementation : Ivolunteer
             : DataSource.volunteers.Where(filter); // Apply the filter and return the matching volunteers.
     }
 
-        /// <summary>
-        /// Update an existing volunteer.
-        /// </summary>
-        public void Update(Volunteer item)
+    /// <summary>
+    /// Update an existing volunteer.
+    /// </summary>
+    public void Update(Volunteer item)
     {
         // Validate phone number format
         if (string.IsNullOrWhiteSpace(item.phoneNumber) || !Regex.IsMatch(item.phoneNumber, @"^\d{9,10}$"))
