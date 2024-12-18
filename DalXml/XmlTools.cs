@@ -30,6 +30,31 @@ static class XMLTools
         }
     }
     public static List<T> LoadListFromXMLSerializer<T>(string xmlFileName) where T : class
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     {
         string xmlFilePath = s_xmlDir + xmlFileName;
 
