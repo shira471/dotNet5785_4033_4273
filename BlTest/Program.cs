@@ -104,10 +104,6 @@ namespace VolunteerCallAssignment
             string description = Console.ReadLine(); // Get call description
             Console.Write("Address: ");
             string address = Console.ReadLine(); // Get call address
-            Console.Write("Latitude: ");
-            double latitude = double.Parse(Console.ReadLine()); // Get call latitude
-            Console.Write("Longitude: ");
-            double longitude = double.Parse(Console.ReadLine()); // Get call longitude
             Console.Write("Call Type (0=Fire, 1=Medical, 2=Other): ");
             CallType callType = (CallType)int.Parse(Console.ReadLine()); // Get the call type (Fire, Medical, Other)
             Console.Write("Maximum End Time (yyyy-MM-dd HH:mm): ");
@@ -118,8 +114,6 @@ namespace VolunteerCallAssignment
             {
                 Description = description,
                 Address = address,
-                Latitude = latitude,
-                Longitude = longitude,
                 CallType = callType,
                 OpenTime = DateTime.Now, // Set the current time as the call's open time
                 MaxEndTime = maxEndTime

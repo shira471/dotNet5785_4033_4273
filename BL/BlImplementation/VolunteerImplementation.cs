@@ -1,11 +1,14 @@
 ﻿namespace BlImplementation;
-
-//using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
 using BlApi;
 using BO;
 using BO.Enums;
+//using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
+//using Newtonsoft.Json.Linq;
 public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
@@ -19,6 +22,7 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
+            var temp = GetCoordinatesFromAddress(volunteer.Address);
             // המרה מ-BO.Volunteer ל-DO.Volunteer
             var dalVolunteer = new DO.Volunteer
             {
@@ -90,9 +94,9 @@ public class VolunteerImplementation : IVolunteer
     volunteerDO.email,
     volunteerDO.adress,
     volunteerDO.isActive
-    //true // Assuming the volunteer is active, set this as needed
+//true // Assuming the volunteer is active, set this as needed
 );
-           // dalVolunteer.IsActive = volunteerDO.isActive;
+            // dalVolunteer.IsActive = volunteerDO.isActive;
             dalVolunteer.Address = volunteerDO.adress;
             dalVolunteer.Password = volunteerDO.password;
             dalVolunteer.Latitude = volunteerDO.latitude;
@@ -154,7 +158,7 @@ public class VolunteerImplementation : IVolunteer
     }
 
 
-    
+
     public string Login(string username, string password)
     {
         try
@@ -233,8 +237,8 @@ public class VolunteerImplementation : IVolunteer
             var coordinates = GetCoordinatesFromAddress(volunteer.Address);
             if (coordinates == null)
                 throw new ArgumentException("Invalid address provided");
-            volunteer.Latitude = coordinates.Value.Latitude;
-            volunteer.Longitude = coordinates.Value.Longitude;
+            //volunteer.Latitude = coordinates.Value.Latitude;
+            //volunteer.Longitude = coordinates.Value.Longitude;
         }
 
         // המרת אובייקט BO.Volunteer ל-DO.Volunteer
@@ -293,12 +297,79 @@ public class VolunteerImplementation : IVolunteer
     }
 
     // פונקציה פרטית להמרת כתובת לקואורדינטות
-    private (double Latitude, double Longitude)? GetCoordinatesFromAddress(string address)
+    private async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddress(string address)
     {
-        // לוגיקה ליישום המרה של כתובת לקואורדינטות
-        // אפשר להיעזר ב-API חיצוני כמו Google Maps
-        return (Latitude: 32.0853, Longitude: 34.7818); // תל אביב לדוגמה
+        return null;
     }
-
-
 }
+        //    try
+        //    {
+        //        string apiKey = "ca35ef16ddbc489e8a74ea1172a3b733"; // הכנס כאן את המפתח שלך
+        //        var url = $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={apiKey}";
+
+        //        using HttpClient client = new HttpClient();
+        //        var response = await client.GetStringAsync(url);
+
+        //        var jsonDocument = JsonDocument.Parse(response);
+        //        var root = jsonDocument.RootElement;
+
+        //        if (root.GetProperty("status").GetString() == "OK")
+        //        {
+        //            var location = root.GetProperty("results")[0]
+        //                .GetProperty("geometry")
+        //                .GetProperty("location");
+
+        //            double latitude = location.GetProperty("lat").GetDouble();
+        //            double longitude = location.GetProperty("lng").GetDouble();
+
+        //            return (latitude, longitude);
+        //        }
+        //        else
+        //        {
+        //            return null; // כתובת לא נמצאה
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+  //      return null; // במקרה של שגיאה
+                     //    }
+ //   }
+
+
+    /// <summary>
+    /// Converts a given address to geographic coordinates (latitude and longitude).
+    /// </summary>
+    /// <param name="address">The address to convert.</param>
+    /// <returns>Tuple containing latitude and longitude.</returns>
+    /// <exception cref="ArgumentException">Thrown when the address is invalid or the service fails.</exception>
+//    public static async Task<(double Latitude, double Longitude)> GetCoordinatesAsync(string address)
+//    {
+//        if (string.IsNullOrWhiteSpace(address))
+//            throw new ArgumentException("Address cannot be null or empty.", nameof(address));
+
+//        // Example using OpenCage Geocoder API
+//        const string apiKey = "ca35ef16ddbc489e8a74ea1172a3b733"; // Replace with your OpenCage API key
+//        var apiUrl = $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={apiKey}";
+
+//        using var httpClient = new HttpClient();
+//        var response = await httpClient.GetAsync(apiUrl);
+
+//        if (!response.IsSuccessStatusCode)
+//            throw new ArgumentException("Failed to fetch coordinates. Please check the address and try again.");
+
+//        var responseContent = await response.Content.ReadAsStringAsync();
+//        var jsonResponse = JObject.Parse(responseContent);
+
+//        if (jsonResponse["results"]?.HasValues != true)
+//            throw new ArgumentException("No valid coordinates found for the given address.");
+
+//        var firstResult = jsonResponse["results"][0];
+//        var latitude = (double)firstResult["geometry"]["lat"];
+//        var longitude = (double)firstResult["geometry"]["lng"];
+
+//        return (latitude, longitude);
+//    }
+//}
+
+
+
