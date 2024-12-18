@@ -1,7 +1,0 @@
-﻿<config>
-	<dal>list</dal>
-	<dal-packages>
-		<list namespace="Dal" class="Dallist">Dallist</list>
-		<xml>DalXml</xml>
-	</dal-packages>
-</config>

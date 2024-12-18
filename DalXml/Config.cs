@@ -11,8 +11,8 @@ internal static class Config
 {
     // שמות קובצי ה-XML שיאחסנו את הנתונים
     internal const string s_data_config_xml = "data-config.xml"; // קובץ תצורה מרכזי
-    internal const string s_students_xml = "students.xml";       // קובץ סטודנטים
-    internal const string s_assignments_xml = "assignments.xml"; // קובץ משימות
+    internal const string s_volunteer_xml = "volunteer.xml";       // קובץ סטודנטים
+    internal const string s_assignments_xml = "assignment.xml"; // קובץ משימות
 
     // תכונה לניהול המספר הרץ עבור Assignments
     internal static int NextAssignmentId
@@ -46,8 +46,8 @@ internal static class Config
       //  RiskRange = TimeSpan.Zero; // אתחול טווח הזמן
     }
 
-    internal const string s_calls_xml = "calls.xml"; // קובץ קריאות
-    internal const string s_volunteers_xml = "volunteers.xml";   // קובץ מתנדבים
+    internal const string s_calls_xml = "call.xml"; // קובץ קריאות
+    internal const string s_volunteers_xml = "volunteer.xml";   // קובץ מתנדבים
 
 }
 
