@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfCall>
-	<Call>
-		<id>101</id>
-		<detail>Medical equipment needed urgently</detail>
-		<adress>123 Main Street, City A</adress>
-		<latitude>34.052235</latitude>
-		<longitude>-118.243683</longitude>
-		<callType>medicalEquipment</callType>
-		<startTime>2024-12-01T09:00:00</startTime>
-		<maximumTime>2024-12-01T12:00:00</maximumTime>
-	</Call>
-	<Call>
-		<id>102</id>
-		<detail>Food delivery request</detail>
-		<adress>456 Elm Street, City B</adress>
-		<latitude>34.152235</latitude>
-		<longitude>-118.343683</longitude>
-		<callType>lunch</callType>
-	</Call>
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <id>101</id>
+    <detail>Medical equipment needed urgently</detail>
+    <adress>123 Main Street, City A</adress>
+    <latitude>34.052235</latitude>
+    <longitude>-118.243683</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2024-12-01T09:00:00</startTime>
+    <maximumTime>2024-12-01T12:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>102</id>
+    <detail>Food delivery request</detail>
+    <adress>456 Elm Street, City B</adress>
+    <latitude>34.152235</latitude>
+    <longitude>-118.343683</longitude>
+    <callType>lunch</callType>
+    <startTime xsi:nil="true" />
+    <maximumTime xsi:nil="true" />
+  </Call>
+  <Call>
+    <id>1</id>
+    <detail>1</detail>
+    <adress>1</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>lunch</callType>
+    <startTime>2024-12-18T21:23:03.8681598+02:00</startTime>
+    <maximumTime>2025-06-02T12:22:00</maximumTime>
+  </Call>
+  <Call>
+    <id>2</id>
+    <detail>1</detail>
+    <adress>1</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>lunch</callType>
+    <startTime>2024-12-18T21:24:03.0359459+02:00</startTime>
+    <maximumTime>2025-02-04T12:22:00</maximumTime>
+  </Call>
 </ArrayOfCall>

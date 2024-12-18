@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 static class XMLTools
 {
-    const string s_xmlDir = @"\..xml\";
+    const string s_xmlDir = @"..\xml\";
     static XMLTools()
     {
         if (!Directory.Exists(s_xmlDir))
@@ -30,9 +30,6 @@ static class XMLTools
         }
     }
     public static List<T> LoadListFromXMLSerializer<T>(string xmlFileName) where T : class
-
-
-
     {
         string xmlFilePath = s_xmlDir + xmlFileName;
 
@@ -104,6 +101,24 @@ static class XMLTools
         DateTime dt = root.ToDateTimeNullable(elemName) ?? throw new FormatException($"can't convert:  {xmlFileName}, {elemName}");
         return dt;
     }
+
+    public static TimeSpan GetConfigTimeSpanVal(string xmlFileName, string elemName)
+    {
+        XElement root = LoadListFromXMLElement(xmlFileName);
+        string? timeSpanStr = root.Element(elemName)?.Value;
+
+        if (TimeSpan.TryParse(timeSpanStr, out TimeSpan timeSpan))
+            return timeSpan;
+
+        throw new FormatException($"Invalid TimeSpan value for {elemName} in {xmlFileName}");
+    }
+
+    public static void SetConfigTimeSpanVal(string xmlFileName, string elemName, TimeSpan elemVal)
+    {
+        XElement root = LoadListFromXMLElement(xmlFileName);
+        root.Element(elemName)?.SetValue(elemVal.ToString());
+        SaveListToXMLElement(root, xmlFileName);
+    }
     public static void SetConfigIntVal(string xmlFileName, string elemName, int elemVal)
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
@@ -131,4 +146,3 @@ static class XMLTools
     #endregion
 
 }
-
