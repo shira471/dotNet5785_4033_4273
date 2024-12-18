@@ -2,6 +2,7 @@
 
 //using System.Collections.Generic;
 using System.Net;
+using System.Text.Json;
 using BlApi;
 using BO;
 using BO.Enums;
@@ -19,6 +20,7 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
+            var temp=GetCoordinatesFromAddress(volunteer.Address);
             // המרה מ-BO.Volunteer ל-DO.Volunteer
             var dalVolunteer = new DO.Volunteer
             {
@@ -233,8 +235,8 @@ public class VolunteerImplementation : IVolunteer
             var coordinates = GetCoordinatesFromAddress(volunteer.Address);
             if (coordinates == null)
                 throw new ArgumentException("Invalid address provided");
-            volunteer.Latitude = coordinates.Value.Latitude;
-            volunteer.Longitude = coordinates.Value.Longitude;
+            //volunteer.Latitude = coordinates.Value.Latitude;
+            //volunteer.Longitude = coordinates.Value.Longitude;
         }
 
         // המרת אובייקט BO.Volunteer ל-DO.Volunteer
@@ -293,11 +295,39 @@ public class VolunteerImplementation : IVolunteer
     }
 
     // פונקציה פרטית להמרת כתובת לקואורדינטות
-    private (double Latitude, double Longitude)? GetCoordinatesFromAddress(string address)
+    private async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddress(string address)
     {
-        // לוגיקה ליישום המרה של כתובת לקואורדינטות
-        // אפשר להיעזר ב-API חיצוני כמו Google Maps
-        return (Latitude: 32.0853, Longitude: 34.7818); // תל אביב לדוגמה
+        try
+        {
+            string apiKey = "YourGoogleMapsApiKey"; // הכנס כאן את המפתח שלך
+            string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
+
+            using HttpClient client = new HttpClient();
+            var response = await client.GetStringAsync(url);
+
+            var jsonDocument = JsonDocument.Parse(response);
+            var root = jsonDocument.RootElement;
+
+            if (root.GetProperty("status").GetString() == "OK")
+            {
+                var location = root.GetProperty("results")[0]
+                    .GetProperty("geometry")
+                    .GetProperty("location");
+
+                double latitude = location.GetProperty("lat").GetDouble();
+                double longitude = location.GetProperty("lng").GetDouble();
+
+                return (latitude, longitude);
+            }
+            else
+            {
+                return null; // כתובת לא נמצאה
+            }
+        }
+        catch (Exception)
+        {
+            return null; // במקרה של שגיאה
+        }
     }
 
 
