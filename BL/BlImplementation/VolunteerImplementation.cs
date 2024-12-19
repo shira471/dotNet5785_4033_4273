@@ -7,6 +7,7 @@ using BO.Enums;
 //using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Helpers;
 
 //using Newtonsoft.Json.Linq;
 public class VolunteerImplementation : IVolunteer
@@ -296,10 +297,37 @@ public class VolunteerImplementation : IVolunteer
         return id > 0 && id.ToString().Length == 9; // לדוגמה בלבד
     }
 
+
     // פונקציה פרטית להמרת כתובת לקואורדינטות
-    private async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddress(string address)
+    public static async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddress(string address)
     {
-        return null;
+
+        //if (string.IsNullOrWhiteSpace(address))
+        //    throw new ArgumentException("Address cannot be null or empty.", nameof(address));
+        //const string apiKey = "ca35ef16ddbc489e8a74ea1172a3b733"; // Replace with your OpenCage API key
+        //var apiUrl = $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={apiKey}";
+
+        //using var httpClient = new HttpClient();
+        //var response = await httpClient.GetAsync(apiUrl);
+
+        //if (!response.IsSuccessStatusCode)
+        //    throw new ArgumentException("Failed to fetch coordinates. Please check the address and try again.");
+
+        //var responseContent = await response.Content.ReadAsStringAsync();
+        //var res = JsonConvert.DeserializeObject<API>(responseContent);
+        //var firstResult = res.results?.ElementAt(0);
+        //if (firstResult != null)
+        //{
+        //    var latitude = firstResult.geometry.lat;
+        //    var longitude = firstResult.geometry.lng;
+        //    return firstResult.geometry;
+        //}
+        //else
+        //{
+            return null;
+        //}
+
+
     }
 }
         //    try

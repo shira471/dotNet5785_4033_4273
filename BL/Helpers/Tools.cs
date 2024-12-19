@@ -60,5 +60,11 @@ namespace BL.Helpers
             // ממיר את ה-JSON בחזרה לאובייקט
             return System.Text.Json.JsonSerializer.Deserialize<T>(json);
         }
+
     }
+
+
+
+
+   
 }
