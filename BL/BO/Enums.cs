@@ -62,11 +62,7 @@
     public enum Status
     {
         Open = 1,
-        InProgress = 2,
-        Closed = 3,
-        Expired = 4,
-        OpenAtRisk = 5,
-        InProgressAtRisk = 6
+        Closed = 2,
     }
 
     /// <summary>

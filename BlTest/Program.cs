@@ -129,11 +129,11 @@ namespace VolunteerCallAssignment
             Console.WriteLine("\n--- Assign Call to Volunteer ---");
             Console.Write("Volunteer ID: ");
             int volunteerId = int.Parse(Console.ReadLine()); // Get volunteer ID
-            Console.Write("Call ID: ");
-            int callId = int.Parse(Console.ReadLine()); // Get call ID
+            Console.Write("Call Description: ");
+            string callDes = Console.ReadLine(); // Get call Description
 
             // Assign the call to the volunteer
-            bl.Call.AssignCallToVolunteer(volunteerId, callId);
+            bl.Call.AssignCallToVolunteer(volunteerId, callDes);
             Console.WriteLine("Call assigned successfully.");
         }
 
@@ -153,11 +153,11 @@ namespace VolunteerCallAssignment
         static void GetCallDetails(IBl bl)
         {
             Console.WriteLine("\n--- Get Call Details ---");
-            Console.Write("Call ID: ");
-            int callId = int.Parse(Console.ReadLine()); // Get call ID
+            Console.Write("Call Description: ");
+            string callDes = Console.ReadLine(); // Get call description
 
             // Get the call details and display them
-            var call = bl.Call.GetCallDetails(callId);
+            var call = bl.Call.GetCallDetails(callDes);
             Console.WriteLine($"\nCall Details:\n{call.CallType}\n{call.Id}\n{call.Address}");
         }
 
@@ -169,7 +169,7 @@ namespace VolunteerCallAssignment
             int volunteerId = int.Parse(Console.ReadLine()); // Get volunteer ID
 
             // Get and display all open calls assigned to the volunteer
-            var calls = bl.Call.GetOpenCallsByVolunteer(volunteerId, null, null);
+            var calls = bl.Call.GetOpenCallsByVolunteer(volunteerId,null,null);
             foreach (var call in calls)
             {
                 Console.WriteLine(call); // Print each open call

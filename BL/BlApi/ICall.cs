@@ -25,7 +25,7 @@ public interface ICall
     // 3. בקשת פרטי קריאה
     // מקבלת מזהה קריאה, מחזירה את פרטי הקריאה כולל רשימת ההקצאות.
     // אם הקריאה לא קיימת, נזרקת חריגה לשכבת התצוגה.
-    BO.Call GetCallDetails(int callId);
+    BO.Call GetCallDetails(string calldes);
 
     // 4. עדכון פרטי קריאה
     // מקבלת אובייקט קריאה מעודכן, מבצעת בדיקות תקינות נתונים (פורמט ולוגיקה) ומעדכנת את הקריאה בשכבת הנתונים.
@@ -50,7 +50,7 @@ public interface ICall
     // 8. רשימת קריאות פתוחות לפי מתנדב
     // מחזירה קריאות פתוחות לבחירה עבור מתנדב מסוים, כולל חישוב מרחק מהמתנדב.
     // מאפשרת סינון לפי סוג קריאה ומיון לפי שדה מסוים.
-    IEnumerable<BO.OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType, Enum? sortField);
+    IEnumerable<BO.OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? Status, Enum? sortField);
 
     // 9. עדכון "סיום טיפול" בקריאה
     // מסיימת טיפול בקריאה על ידי מתנדב, מעדכנת את זמן הסיום וסוג הסיום כ"טופלה".
@@ -66,5 +66,5 @@ public interface ICall
     // 11. בחירת קריאה לטיפול
     // מקצה קריאה למתנדב, מעדכנת את זמן הכניסה לטיפול.
     // אם הקריאה לא מתאימה לטיפול (למשל, כבר טופלה או פג תוקפה), נזרקת חריגה.
-    void AssignCallToVolunteer(int volunteerId, int callId);
+    void AssignCallToVolunteer(int volunteerId, string callDes);
 }

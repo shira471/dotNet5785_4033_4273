@@ -40,4 +40,24 @@
     <startTime>2024-12-18T21:24:03.0359459+02:00</startTime>
     <maximumTime>2025-02-04T12:22:00</maximumTime>
   </Call>
+  <Call>
+    <id>3</id>
+    <detail>clothes</detail>
+    <adress>jerusalem</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>dinner</callType>
+    <startTime>2024-12-19T18:40:19.3292745+02:00</startTime>
+    <maximumTime>2024-12-19T20:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>4</id>
+    <detail>dress</detail>
+    <adress>jeru</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>dinner</callType>
+    <startTime>2024-12-19T18:47:00.8850002+02:00</startTime>
+    <maximumTime>2024-12-28T20:00:00</maximumTime>
+  </Call>
 </ArrayOfCall>

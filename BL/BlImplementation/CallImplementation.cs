@@ -15,10 +15,19 @@ public class CallImplementation : ICall
 
     public void AddCall(Call call)
     {
+        var calls = _dal.call.ReadAll();
+        foreach (var call2 in calls)
+        {
+            if (call2.detail == call.Description)
+            {
+                throw new Exception("this call is already exist");
+            }
+        }
         if (call == null)
         {
             throw new ArgumentNullException("Call cannot be null.");
         }
+
         try
         {
             var doCall = new DO.Call(
@@ -32,6 +41,7 @@ public class CallImplementation : ICall
             maximumTime: call.MaxEndTime
                 );
             _dal.call.Create(doCall);
+            call.Status = Status.Open;
         }
         catch (DO.DalAlreadyExistsException ex)
         {
@@ -40,9 +50,18 @@ public class CallImplementation : ICall
     }
 
 
-    public void AssignCallToVolunteer(int volunteerId, int callId)
+    public void AssignCallToVolunteer(int volunteerId, string calldes)
     {
         //שליפת הקריאה ממאגר הנתונים
+        var calls = _dal.call.ReadAll();
+        int callId=0;
+        foreach (var call2 in calls)
+        {
+            if (call2.detail == calldes)
+            {
+                callId = call2.id;
+            }
+        }
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
         //שליפת המתנדב ממאגר הנתונים
@@ -154,6 +173,7 @@ public class CallImplementation : ICall
     }
     public int[] GetCallCountsByStatus()
     {
+
         // רשימת כל הקריאות
         var calls = _dal.call.ReadAll(); // קריאה לשכבת ה-DAL לקבלת הקריאות
 
@@ -171,11 +191,11 @@ public class CallImplementation : ICall
                 // אם זמן המקסימום חלף, הקריאה נסגרת
                 status = Status.Closed;
             }
-            else if (call.startTime.HasValue)
-            {
-                // אם יש זמן התחלה אך עדיין לא הסתיימה
-                status = Status.InProgress;
-            }
+            //else if (call.startTime.HasValue)
+            //{
+            //    // אם יש זמן התחלה אך עדיין לא הסתיימה
+            //    status = Status.InProgress;
+            //}
             else
             {
                 // אחרת, הקריאה ממתינה לטיפול
@@ -189,8 +209,17 @@ public class CallImplementation : ICall
         return statusCounts; // החזרת המערך
     }
 
-    public Call GetCallDetails(int callId)
+    public Call GetCallDetails(string calld)
     {
+        var calls = _dal.call.ReadAll();
+        int callId = 0;
+        foreach (var call2 in calls)
+        {
+            if (call2.detail == calld)
+            {
+                callId = call2.id;
+            }
+        }
         // קריאת הקריאה הספציפית משכבת ה-DAL לפי המזהה
         var call = _dal.call.Read(callId);
 
@@ -260,7 +289,7 @@ public class CallImplementation : ICall
     {
         // קבלת כל השיוכים של המתנדב לקריאות שטרם נסגרו
         var assignments = _dal.assignment.ReadAll()
-            .Where(assign => assign.volunteerId == volunteerId && assign.finishTime == null); // קריאות פתוחות
+            .Where(assign => assign.volunteerId == volunteerId);// && assign.finishTime == null); // קריאות פתוחות
 
         var callIds = assignments.Select(assign => assign.callId);
         var calls = _dal.call.ReadAll(c => callIds.Contains(c.id)); // קריאות פתוחות המתאימות למתנדב
@@ -304,6 +333,7 @@ public class CallImplementation : ICall
 
         return openCalls;
     }
+
 
     public void UpdateCallDetails(Call call)
     {
