@@ -42,4 +42,32 @@
     <role>Volunteer</role>
     <distanceType>Breakfast</distanceType>
   </Volunteer>
+  <Volunteer>
+    <idVol>325004273</idVol>
+    <adress>jerusalem</adress>
+    <name>ahuvi</name>
+    <email>a@gmail.com</email>
+    <phoneNumber>0507678050</phoneNumber>
+    <password />
+    <latitude>0</latitude>
+    <longitude>0</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>3</idVol>
+    <adress>machon lev</adress>
+    <name>a</name>
+    <email>a@gmail.com</email>
+    <phoneNumber>0</phoneNumber>
+    <password />
+    <latitude>31.7650471</latitude>
+    <longitude>35.1911197</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
 </ArrayOfVolunteer>

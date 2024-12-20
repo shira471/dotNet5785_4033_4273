@@ -6,6 +6,7 @@ using BlApi;
 using BO;
 using BO.Enums;
 using DalApi;
+
 using Helpers;
 
 
@@ -30,12 +31,13 @@ public class CallImplementation : ICall
 
         try
         {
+            var temp = VolunteerManager.GetCoordinatesFromGoogle(call.Address);
             var doCall = new DO.Call(
                 id: _dal.config.getNextCallId(), // ייווצר מזהה חדש ב-DAL
             detail: call.Description,
             adress: call.Address,
-            latitude: call.Latitude,
-            longitude: call.Longitude,
+            latitude: temp[0],
+            longitude: temp[1],
             callType: (DO.Hamal?)call.CallType,
             startTime: call.OpenTime,
             maximumTime: call.MaxEndTime

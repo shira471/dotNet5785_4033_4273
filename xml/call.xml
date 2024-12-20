@@ -60,4 +60,24 @@
     <startTime>2024-12-19T18:47:00.8850002+02:00</startTime>
     <maximumTime>2024-12-28T20:00:00</maximumTime>
   </Call>
+  <Call>
+    <id>5</id>
+    <detail>food</detail>
+    <adress>a</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>lunch</callType>
+    <startTime>2024-12-20T11:31:32.1591441+02:00</startTime>
+    <maximumTime>2025-01-01T12:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>6</id>
+    <detail>foog</detail>
+    <adress>machon lev</adress>
+    <latitude>31.7650471</latitude>
+    <longitude>35.1911197</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2024-12-20T13:30:25.6279403+02:00</startTime>
+    <maximumTime>2025-01-01T12:00:00</maximumTime>
+  </Call>
 </ArrayOfCall>

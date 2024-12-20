@@ -25,7 +25,7 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
-            //var temp = GetCoordinatesFromAddress(volunteer.Address);
+            var temp = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
             // המרה מ-BO.Volunteer ל-DO.Volunteer
             var dalVolunteer = new DO.Volunteer
             {
@@ -35,8 +35,8 @@ public class VolunteerImplementation : IVolunteer
                 email = volunteer.Email,                // דוא"ל המתנדב
                 phoneNumber = volunteer.Phone,          // מספר טלפון המתנדב
                 password = volunteer.Password ?? "",    // סיסמת המתנדב
-                latitude = volunteer.Latitude ?? 0,     // קו רוחב
-                longitude = volunteer.Longitude ?? 0,   // קו אורך
+                latitude = temp[0] ,     // קו רוחב
+                longitude = temp[1],   // קו אורך
                 limitDestenation = volunteer.MaxDistance ?? 0, // מגבלת המרחק
                 isActive = volunteer.IsActive,          // האם פעיל
            //     role = DO.Role.Volunteer,
@@ -237,7 +237,7 @@ public class VolunteerImplementation : IVolunteer
         // עדכון שדות קווי אורך ורוחב על פי כתובת חדשה (אם הכתובת השתנתה)
         if (existingVolunteer.adress != volunteer.Address)
         {
-            var coordinates = GetCoordinatesFromAddress(volunteer.Address);
+            var coordinates = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
             if (coordinates == null)
                 throw new ArgumentException("Invalid address provided");
             //volunteer.Latitude = coordinates.Value.Latitude;
@@ -299,32 +299,71 @@ public class VolunteerImplementation : IVolunteer
         return id > 0 && id.ToString().Length == 9; // לדוגמה בלבד
     }
     // פונקציה פרטית להמרת כתובת לקואורדינטות
-    public static async Task<(double Latitude, double Longitude)?> GetCoordinatesFromAddress(string address)
-    {
+    //public static double[]? GetCoordinatesFromGoogle(string address)
+    //{
+    //    // Step 1: Validate the input
+    //    if (string.IsNullOrWhiteSpace(address))
+    //        throw new ArgumentException("Address cannot be null or empty.", nameof(address));
 
-        //if (string.IsNullOrWhiteSpace(address))
-        //    throw new ArgumentException("Address cannot be null or empty.", nameof(address));
-        //const string apiKey = "ca35ef16ddbc489e8a74ea1172a3b733"; // Replace with your OpenCage API key
-        //var apiUrl = $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={apiKey}";
+    //    // Step 2: Define the API key and base URL
+    //    // TODO: Replace "YOUR_API_KEY" with your actual Google Maps API key.
+    //    string apiKey = "AIzaSyDnyS5QMBa_4uwPOdbFH9T8_zNOXe3DzGw"; // Enter your Google Maps API key here.
+    //    string apiUrl = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
 
-        //using var httpClient = new HttpClient();
-        //var response = await httpClient.GetAsync(apiUrl);
+    //    // Step 3: Create an HttpClient to perform the request
+    //    using (HttpClient client = new HttpClient())
+    //    {
+    //        try
+    //        {
+    //            // Step 4: Send the HTTP request synchronously
+    //            HttpResponseMessage response = client.GetAsync(apiUrl).Result;
 
-        //if (!response.IsSuccessStatusCode)
-        //    throw new ArgumentException("Failed to fetch coordinates. Please check the address and try again.");
+    //            // Step 5: Ensure the response is successful
+    //            response.EnsureSuccessStatusCode();
 
-        //var responseContent = await response.Content.ReadAsStringAsync();
-        //var res = JsonConvert.DeserializeObject<API>(responseContent);
-        //var firstResult = res.results?.ElementAt(0);
-        //if (firstResult != null)
-        //{
-        //    var latitude = firstResult.geometry.lat;
-        //    var longitude = firstResult.geometry.lng;
-        //    return firstResult.geometry;
-        //}
-        //else
-        //{
-        return null;
-        //}
-    }
+    //            // Step 6: Read the response content synchronously
+    //            string responseBody = response.Content.ReadAsStringAsync().Result;
+    //            // Step 7: Parse the JSON response to extract latitude and longitude
+    //            return ParseCoordinatesFromGoogle(responseBody);
+    //        }
+    //        catch (HttpRequestException)
+    //        {
+    //            // Handle cases like no internet or server unreachable
+    //            throw new Exception("Unable to connect to the internet or server is unreachable.");
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            // Handle general exceptions
+    //            throw new Exception("An error occurred while fetching coordinates.", ex);
+    //        }
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Parses the JSON response from Google Maps API and extracts the latitude and longitude.
+    ///// </summary>
+    ///// <param name="responseBody">The JSON response from Google Maps API.</param>
+    ///// <returns>
+    ///// An array containing the latitude and longitude if found, null otherwise.
+    ///// </returns>
+    //private static double[]? ParseCoordinatesFromGoogle(string responseBody)
+    //{
+    //    // Parse the JSON response into a JObject
+    //    JObject json = JObject.Parse(responseBody);
+
+    //    // Check if the response contains a valid result
+    //    JToken results = json["results"];
+    //    if (results != null && results.HasValues)
+    //    {
+    //        JToken location = results[0]["geometry"]["location"];
+    //        return new double[]
+    //        {
+    //        (double)location["lat"],
+    //        (double)location["lng"]
+    //        };
+    //    }
+
+    //    // If no results were found, return null
+    //    return null;
+    //}
 }
