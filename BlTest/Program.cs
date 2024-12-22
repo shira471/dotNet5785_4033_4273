@@ -26,6 +26,7 @@ namespace VolunteerCallAssignment
                 Console.WriteLine("5. View call details");
                 Console.WriteLine("6. List all open calls by volunteer");
                 Console.WriteLine("7. List all closed calls by volunteer");
+                Console.WriteLine("8 List all volunteers");
                 Console.WriteLine("0. Exit");
                 Console.Write("Enter your choice: ");
 
@@ -55,6 +56,9 @@ namespace VolunteerCallAssignment
                             break;
                         case "7":
                             ListClosedCallsByVolunteer(bl); // List all closed calls by a specific volunteer
+                            break;
+                        case "8":
+                            ListVolunteers(bl);
                             break;
                         case "0":
                             Console.WriteLine("Exiting system. Goodbye!"); // Exit the program
@@ -188,6 +192,27 @@ namespace VolunteerCallAssignment
             foreach (var call in calls)
             {
                 Console.WriteLine(call.Id); // Print each closed call
+            }
+        }
+        static void ListVolunteers(IBl bl)
+        {
+            Console.WriteLine("\n--- List of Volunteer ---");
+            Console.Write("Volunteer Status (true=Active, false=Inactive): ");
+            var status = bool.Parse(Console.ReadLine()); // Get volunteer status (active/inactive)
+            Console.Write("Volunteer sort By(ID, name, activity status): ");
+            var temp =Console.ReadLine().ToLower(); // Get the sort by
+
+            VolunteerSortBy? sort=null;
+            if ( temp == "id" )
+                sort = VolunteerSortBy.Id;
+            if (temp == "name")
+                sort = VolunteerSortBy.Name;
+            if (temp == "activity status")
+                sort = VolunteerSortBy.ActivityStatus;
+            var volunteers = bl.Volunteer.GetVolunteersList(status, sort);
+            foreach (var vol in volunteers)
+            {
+                Console.WriteLine(vol.Id); // Print each volunteer
             }
         }
     }

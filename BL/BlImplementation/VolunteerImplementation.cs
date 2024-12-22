@@ -117,47 +117,55 @@ public class VolunteerImplementation : IVolunteer
     }
     public IEnumerable<VolunteerInList> GetVolunteersList(bool? isActive = null, VolunteerSortBy? sortBy = null)
     {
-        //try
-        //{
-        //    // משערים שיש לך דרך לשלוף את כל המתנדבים מתוך DataSource
-        //    var volunteers = _dal.volunteer.ReadAll(); // אם המתודה קיימת ב-DAL
-        //                                               // סינון לפי ערך isActive אם הוזן
-        //    if (isActive.HasValue)
-        //    {
-        //        volunteers = volunteers.Where(v => v.isActive == isActive.Value);
-        //    }
-        //    // מיון לפי ערך sortBy אם הוזן
-        //    if (sortBy.HasValue)
-        //    {
-        //        switch (sortBy.Value)
-        //        {
-        //            case VolunteerSortBy.Id:
-        //                volunteers = volunteers.OrderBy(v => v.idVol);
-        //                break;
-        //            case VolunteerSortBy.Name:
-        //                volunteers = volunteers.OrderBy(v => v.name);
-        //                break;
-        //            case VolunteerSortBy.ActivityStatus:
-        //                volunteers = volunteers.OrderBy(v => v.isActive);
-        //                break;
-        //            default:
-        //                break; // במקרה שאין sortBy, לא נבצע מיון
-        //        }
-        //    }
-        //    // המרה מ-DO.Volunteer ל-BO.VolunteerInList
-        //    return volunteers.Select(v => new VolunteerInList(
-        //        v.idVol,          // id
-        //        v.name,           // FullName
-        //        v.isActive       // IsActive
-        //    ));
-        //}
-        //catch (Exception ex)
-        //{
-        //    Console.WriteLine($"Error while getting volunteers list: {ex.Message}");
-        //    throw;
-        //}
-        throw new NotImplementedException();
+            try
+            {
+                // שליפת כל המתנדבים מתוך מקור הנתונים
+                var volunteers = _dal.volunteer.ReadAll();
 
+                // סינון לפי ערך isActive אם הוזן
+                if (isActive.HasValue)
+                {
+                    volunteers = volunteers.Where(v => v.isActive == isActive.Value);
+                }
+
+                // מיון לפי ערך sortBy אם הוזן
+                if (sortBy.HasValue)
+                {
+                    switch (sortBy.Value)
+                    {
+                        case VolunteerSortBy.Id:
+                            volunteers = volunteers.OrderBy(v => v.idVol);
+                            break;
+                        case VolunteerSortBy.Name:
+                            volunteers = volunteers.OrderBy(v => v.name);
+                            break;
+                        case VolunteerSortBy.ActivityStatus:
+                            volunteers = volunteers.OrderBy(v => v.isActive);
+                            break;
+                        default:
+                            volunteers = volunteers.OrderBy(v => v.idVol); // ברירת מחדל
+                            break;
+                    }
+                }
+                else
+                {
+                    // מיון לפי ת.ז אם sortBy == null
+                    volunteers = volunteers.OrderBy(v => v.idVol);
+                }
+
+            // המרה מ-DO.Volunteer ל-BO.VolunteerInList
+            return volunteers.Select(v => new VolunteerInList(
+                v.idVol,   // id
+                v.name,    // FullName
+                v.isActive // IsActive
+
+            ));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while getting volunteers list: {ex.Message}");
+                throw;
+            }
     }
 
 

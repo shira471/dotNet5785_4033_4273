@@ -82,20 +82,6 @@ public class CallImplementation : ICall
             volunteerId = volunteerId,
             startTime = ClockManager.Now
         };
-        //עדכון סטטוס הקריאה
-        //new CallInProgress
-        //{
-        //    Id = volunteerId,
-        //    CallId = callId,
-        //    Description = calldes,
-        //    //CallType = call.callType,
-        //    FullAddress = call.adress,
-        //    //OpenTime = call.startTime,
-        //    MaxCloseTime = call.maximumTime,
-        //    EntryTime = ClockManager.Now,
-        //    DistanceFromVolunteer = dis,
-        //    Status = Status.InProgrese
-        //};
         _dal.assignment.Create(assignment);
     }
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)

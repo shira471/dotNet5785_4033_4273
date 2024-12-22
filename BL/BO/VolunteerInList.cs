@@ -32,9 +32,9 @@ public class VolunteerInList
     public CallType CurrentCallType { get; init; }
 
     // קונסטרוקטור
-    public VolunteerInList(int id, string fullName, bool isActive, int totalCallsHandled,
-                            int totalCallsCancelled, int totalExpiredCalls, int? currentCallId,
-                            CallType currentCallType)
+    public VolunteerInList(int id, string fullName, bool isActive, int totalCallsHandled=0,
+                            int totalCallsCancelled = 0, int totalExpiredCalls = 0, int? currentCallId=null ,
+                            CallType currentCallType=0)
     {
         Id = id;
         FullName = fullName;
