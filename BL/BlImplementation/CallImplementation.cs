@@ -82,7 +82,20 @@ public class CallImplementation : ICall
             volunteerId = volunteerId,
             startTime = ClockManager.Now
         };
-
+        //עדכון סטטוס הקריאה
+        //new CallInProgress
+        //{
+        //    Id = volunteerId,
+        //    CallId = callId,
+        //    Description = calldes,
+        //    //CallType = call.callType,
+        //    FullAddress = call.adress,
+        //    //OpenTime = call.startTime,
+        //    MaxCloseTime = call.maximumTime,
+        //    EntryTime = ClockManager.Now,
+        //    DistanceFromVolunteer = dis,
+        //    Status = Status.InProgrese
+        //};
         _dal.assignment.Create(assignment);
     }
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
@@ -126,7 +139,7 @@ public class CallImplementation : ICall
             throw new UnauthorizedAccessException("Volunteer does not have permission to close this assignment.");
         }
         // בדיקת סטטוס השיוך
-        if (assign.endOfAssign != null)
+        if (assign.assignKind != null)
         {
             throw new Exception($"Assignment with ID={assignmentId} has already been closed.");
         }
@@ -159,7 +172,7 @@ public class CallImplementation : ICall
 
         // בדיקת שיוכים פעילים לקריאה
         var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
-        if (assignments.Any(a => a.endOfAssign == null))
+        if (assignments.Any(a => a.assignKind == null))
         {
             throw new Exception($"Cannot delete a call with active assignments (Call ID={callId}).");
         }
@@ -263,7 +276,7 @@ public class CallImplementation : ICall
                               openTime: call.startTime ?? DateTime.MinValue,
                               assignmentStartTime: assign.startTime ?? DateTime.MinValue,
                               actualEndTime: assign.finishTime,
-                              endType: (EndType?)(assign.endOfAssign ?? null) // המרת Enum
+                              endType: (EndType?)(assign.assignKind ?? null) // המרת Enum
                           );
 
         // סינון לפי סוג הקריאה אם צוין
@@ -291,7 +304,7 @@ public class CallImplementation : ICall
     {
         // קבלת כל השיוכים של המתנדב לקריאות שטרם נסגרו
         var assignments = _dal.assignment.ReadAll()
-            .Where(assign => assign.volunteerId == volunteerId);// && assign.finishTime == null); // קריאות פתוחות
+            .Where(assign => assign.volunteerId == volunteerId && assign.finishTime == null); // קריאות פתוחות
 
         var callIds = assignments.Select(assign => assign.callId);
         var calls = _dal.call.ReadAll(c => callIds.Contains(c.id)); // קריאות פתוחות המתאימות למתנדב

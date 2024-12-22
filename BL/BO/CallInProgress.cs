@@ -56,14 +56,6 @@ namespace BO;
         /// <summary>
         /// סטטוס הקריאה
         /// </summary>
-        public CallStatus Status { get; set; }
+        public Status Status { get; set; }
     }
 
-    /// <summary>
-    /// סטטוס הקריאה
-    /// </summary>
-    public enum CallStatus
-    {
-        InProgress,
-        InProgressAtRisk
-    }

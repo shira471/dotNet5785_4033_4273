@@ -80,4 +80,24 @@
     <startTime>2024-12-20T13:30:25.6279403+02:00</startTime>
     <maximumTime>2025-01-01T12:00:00</maximumTime>
   </Call>
+  <Call>
+    <id>7</id>
+    <detail>making dinner</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>dinner</callType>
+    <startTime>2024-12-22T09:47:21.2038399+02:00</startTime>
+    <maximumTime>2024-12-27T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>8</id>
+    <detail>fishing</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>dinner</callType>
+    <startTime>2024-12-22T09:53:31.7636403+02:00</startTime>
+    <maximumTime>2024-12-30T20:00:00</maximumTime>
+  </Call>
 </ArrayOfCall>

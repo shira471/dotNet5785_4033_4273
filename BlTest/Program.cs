@@ -172,7 +172,7 @@ namespace VolunteerCallAssignment
             var calls = bl.Call.GetOpenCallsByVolunteer(volunteerId,null,null);
             foreach (var call in calls)
             {
-                Console.WriteLine(call); // Print each open call
+                Console.WriteLine(call.Description); // Print each open call
             }
         }
 
@@ -187,7 +187,7 @@ namespace VolunteerCallAssignment
             var calls = bl.Call.GetClosedCallsByVolunteer(volunteerId, null, null);
             foreach (var call in calls)
             {
-                Console.WriteLine(call); // Print each closed call
+                Console.WriteLine(call.Id); // Print each closed call
             }
         }
     }

@@ -6,7 +6,7 @@
 		<volunteerId>501</volunteerId>
 		<startTime>2024-12-01T10:00:00</startTime>
 		<finishTime>2024-12-01T12:00:00</finishTime>
-		<endOfAssign>lunch</endOfAssign>
+		<endOfAssign>true</endOfAssign>
 	</Assignment>
 	<Assignment>
 		<id>2</id>

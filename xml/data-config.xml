@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>7</NextAssignmentId>
+  <NextAssignmentId>9</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
   <NextCallId>1</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->

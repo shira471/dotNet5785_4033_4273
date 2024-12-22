@@ -70,4 +70,46 @@
     <role xsi:nil="true" />
     <distanceType>Breakfast</distanceType>
   </Volunteer>
+  <Volunteer>
+    <idVol>54</idVol>
+    <adress>jerusalem</adress>
+    <name>mnh</name>
+    <email>kjm@gmail.com</email>
+    <phoneNumber>58652</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>60</idVol>
+    <adress>jerusalem</adress>
+    <name>shira</name>
+    <email>s60@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>50</idVol>
+    <adress>jerusalem</adress>
+    <name>yossef</name>
+    <email>y50@gmail.com</email>
+    <phoneNumber>052634981</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
 </ArrayOfVolunteer>

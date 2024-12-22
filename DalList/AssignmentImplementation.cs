@@ -31,19 +31,6 @@ internal class AssignmentImplementation : Iassignment
     {
         DataSource.assignments.RemoveAll(v => v is DO.Assignment);
     }
-
-    //public Assignment? Read(int id)
-    //{
-    //    var newId = DataSource.assignments.FirstOrDefault(a => a.id == id);
-    //    if (newId != null)
-    //    {
-    //        return newId;
-    //    }
-    //    else
-    //    {
-    //        throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
-    //    }
-    //}
     public Assignment? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find the assignment by ID.
@@ -64,10 +51,6 @@ internal class AssignmentImplementation : Iassignment
         // Use LINQ's FirstOrDefault method to find the first matching volunteer.
         return DataSource.assignments.FirstOrDefault(filter);
     }
-    //public List<Assignment> ReadAll()
-    //{
-    //    return DataSource.assignments.ToList();
-    //}
 
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {

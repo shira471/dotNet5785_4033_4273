@@ -501,12 +501,12 @@ internal class Program
             DateTime? newFinishTime = string.IsNullOrEmpty(finishTimeInput) ? assignment.finishTime : DateTime.Parse(finishTimeInput); // עדכון זמן סיום אם נדרש
 
             // עדכון ערך Hamal
-            Console.Write("Enter new end of assignment (Hamal value): ");
+            Console.Write("Enter new end of assignment (boolean value): ");
             string hamalInput = Console.ReadLine();
-            Hamal? newEndOfAssign = hamalInput == "null" ? null : (Hamal?)Enum.Parse(typeof(Hamal), hamalInput); // עדכון הערך של Hamal
+            Hamal? newassignKind = hamalInput == "null" ? null : (Hamal?)Enum.Parse(typeof(Hamal), hamalInput); // עדכון הערך של Hamal
 
             // יצירת אובייקט חדש עם הנתונים המעודכנים
-            var updatedAssignment = assignment with { startTime = newStartTime, finishTime = newFinishTime, endOfAssign = newEndOfAssign };
+            var updatedAssignment = assignment with { startTime = newStartTime, finishTime = newFinishTime, assignKind = newassignKind };
 
             // עדכון ב-DAL
             s_dal.assignment?.Update(updatedAssignment); // קריאה לעדכון ב-DAL
