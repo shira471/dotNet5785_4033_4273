@@ -10,7 +10,8 @@ namespace BlApi;
 /// <summary>
 /// ממשק עבור ניהול קריאות
 /// </summary>
-public interface ICall
+public interface ICall: IObservable //stage 5 הרחבת ממשק
+
 {
     // 1. בקשת כמויות קריאות
     // מחזירה מערך של מספר הקריאות לפי סטטוס הקריאה. 

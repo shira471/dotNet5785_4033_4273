@@ -31,6 +31,8 @@ internal class ConfigImplementation : Iconfig
         set { _riskTimeRange = value; } // מעדכן את טווח הזמן
     }
 
+    public int MaxRange { get; set; }
+
     public int getNextCallId()
     {
         return Config.nextCallId;

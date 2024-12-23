@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DalApi;
 using DO;
+using Helpers;
 
 namespace BL.Helpers;
 
 internal static class CallManager
 {
+    internal static ObserverManager Observers = new(); //stage 5 
     // גישה לשכבת ה-DAL
     private static Idal s_dal = Factory.Get; //stage 4
 
@@ -30,6 +32,7 @@ internal static class CallManager
                 // עדכון של זמן המקסימום למצב לא פעיל (לדוגמה)
                 var updatedCall = call with { maximumTime = null }; // כאן "null" מסמן מצב לא פעיל
                 s_dal.call.Update(updatedCall); // עדכון ב-DAL
+                Observers.NotifyItemUpdated(updatedCall.id); //stage 5
             }
         }
     }

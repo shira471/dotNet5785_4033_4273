@@ -6,6 +6,8 @@ namespace DalApi
         int getNextCallId(); // קבלת מזהה הקריאה הבא
         DateTime clock { set; get; } // שעון המערכת
         TimeSpan RiskTimeRange { get; set; } // טווח זמן סיכון
+        int MaxRange { get; set; }
+
         void Reset(); // איפוס הגדרות
     }
 }

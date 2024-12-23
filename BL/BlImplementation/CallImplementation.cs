@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using BL.Helpers;
 using BlApi;
 using BO;
 using BO.Enums;
@@ -44,7 +45,8 @@ public class CallImplementation : ICall
                 );
             _dal.call.Create(doCall);
             call.Status = Status.Open;
-        }
+            CallManager.Observers.NotifyListUpdated(); //stage 5
+         }
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.")));
@@ -80,9 +82,10 @@ public class CallImplementation : ICall
         {
             callId = callId,
             volunteerId = volunteerId,
-            startTime = ClockManager.Now
+            startTime = AdminManager.Now
         };
         _dal.assignment.Create(assignment);
+        CallManager.Observers.NotifyListUpdated(); //stage 5
     }
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
@@ -112,6 +115,7 @@ public class CallImplementation : ICall
 
         // עדכון בסיס הנתונים
         _dal.assignment.Delete(assignmentId);
+        CallManager.Observers.NotifyListUpdated(); //stage 5
     }
 
     public void CloseCallAssignment(int volunteerId, int assignmentId)
@@ -142,6 +146,7 @@ public class CallImplementation : ICall
 
         var updatedCall = call with { callType = null };
         _dal.call.Update(updatedCall);
+
     }
 
     public void DeleteCall(int callId)
@@ -171,6 +176,7 @@ public class CallImplementation : ICall
 
         // מחיקת הקריאה עצמה
         _dal.call.Delete(callId);
+        CallManager.Observers.NotifyListUpdated(); //stage 5
     }
     public int[] GetCallCountsByStatus()
     {
@@ -357,6 +363,8 @@ public class CallImplementation : ICall
            maximumTime: call.MaxEndTime
                );
         _dal.call.Update(doCall);
+        CallManager.Observers.NotifyItemUpdated(doCall.id); //stage 5
+        CallManager.Observers.NotifyListUpdated(); //stage 5
 
     }
 
@@ -424,5 +432,13 @@ public class CallImplementation : ICall
 
         return callAssignments;
     }
+    public void AddObserver(Action listObserver) =>
+CallManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+CallManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
 }

@@ -36,4 +36,11 @@ public interface IAdmin
     // 6. אתחול בסיס הנתונים
     // מאפסת את בסיס הנתונים ולאחר מכן מאתחלת אותו עם נתוני ברירת מחדל.
     void InitializeDatabase();
+    #region Stage 5
+    void AddConfigObserver(Action configObserver);
+    void RemoveConfigObserver(Action configObserver);
+    void AddClockObserver(Action clockObserver);
+    void RemoveClockObserver(Action clockObserver);
+    #endregion Stage 5
+
 }
