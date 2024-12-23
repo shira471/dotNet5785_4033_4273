@@ -14,7 +14,8 @@ namespace BlApi;
 /// <summary>
 /// ממשק עבור ניהול מתנדבים
 /// </summary>
-public interface IVolunteer
+public interface IVolunteer: IObservable //stage 5 הרחבת ממשק
+
 {
     /// <summary>
     /// מתודת כניסה למערכת

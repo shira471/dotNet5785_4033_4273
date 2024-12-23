@@ -10,10 +10,12 @@ using Newtonsoft.Json.Linq;
 
 
 using BL.Helpers;
+using Helpers;
 
 
 internal static class VolunteerManager
 {
+    internal static ObserverManager Observers = new(); //stage 5 
     // גישה לשכבת ה-DAL
     private static Idal s_dal = Factory.Get; //stage 4
 
@@ -34,6 +36,7 @@ internal static class VolunteerManager
                 // יצירת עותק חדש של המתנדב עם עדכון isActive
                 var updatedVolunteer = volunteer with { isActive = false };
                 s_dal.volunteer.Update(updatedVolunteer); // עדכון ב-DAL
+                Observers.NotifyItemUpdated(updatedVolunteer.idVol); //stage 5
             }
         }
     }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using BL.Helpers;
 
 //using Newtonsoft.Json.Linq;
 public class VolunteerImplementation : IVolunteer
@@ -47,6 +48,7 @@ public class VolunteerImplementation : IVolunteer
             _dal.volunteer.Create(dalVolunteer);
 
             Console.WriteLine("Volunteer added successfully");
+            VolunteerManager.Observers.NotifyListUpdated(); //stage 5
         }
         catch (Exception ex)
         {
@@ -75,6 +77,8 @@ public class VolunteerImplementation : IVolunteer
             Console.WriteLine($"Error while deleting volunteer: {ex.Message}");
             throw;
         }
+        VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+
     }
 
 
@@ -278,6 +282,9 @@ public class VolunteerImplementation : IVolunteer
             // תפיסת חריגה משכבת הנתונים והשלכת חריגה מתאימה לשכבת התצוגה
             throw new Exception("Failed to update the volunteer details.", ex);
         }
+        VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol); //stage 5
+        VolunteerManager.Observers.NotifyListUpdated(); //stage 5
+
     }
 
     // פונקציה פרטית לבדיקה האם אימייל תקין
@@ -306,4 +313,15 @@ public class VolunteerImplementation : IVolunteer
         // לוגיקת בדיקת ספרת ביקורת
         return id > 0 && id.ToString().Length == 9; // לדוגמה בלבד
     }
+
+    public void AddObserver(Action listObserver)=>
+        VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
+
+    public void AddObserver(int id, Action observer) =>
+        VolunteerManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+        VolunteerManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+        VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
+
 }

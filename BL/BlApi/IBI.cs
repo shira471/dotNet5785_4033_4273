@@ -10,11 +10,12 @@ namespace BlApi;
     /// ממשק ראשי לשכבה הלוגית
     /// </summary>
     public interface IBl
-    {
-        /// <summary>
-        /// גישה ליישות שירות לוגית מתנדבים
-        /// </summary>
-        IVolunteer Volunteer { get; }
+
+{
+    /// <summary>
+    /// גישה ליישות שירות לוגית מתנדבים
+    /// </summary>
+    IVolunteer Volunteer { get; }
 
         /// <summary>
         /// גישה ליישות שירות לוגית קריאות

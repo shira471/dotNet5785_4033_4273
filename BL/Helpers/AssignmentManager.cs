@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DalApi;
 using DO;
+using Helpers;
 
 namespace BL.Helpers;
 
 internal static class AssignmentManager
 {
+    internal static ObserverManager Observers = new(); //stage 5 
     // גישה לשכבת ה-DAL
     private static Idal s_dal = Factory.Get;
 
