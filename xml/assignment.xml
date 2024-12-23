@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignment>
-	<Assignment>
-		<id>1</id>
-		<callId>101</callId>
-		<volunteerId>501</volunteerId>
-		<startTime>2024-12-01T10:00:00</startTime>
-		<finishTime>2024-12-01T12:00:00</finishTime>
-		<endOfAssign>true</endOfAssign>
-	</Assignment>
-	<Assignment>
-		<id>2</id>
-		<callId>102</callId>
-		<volunteerId>502</volunteerId>
-		<startTime>2024-12-02T09:00:00</startTime>
-	</Assignment>
+<ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Assignment>
+    <id>1</id>
+    <callId>101</callId>
+    <volunteerId>501</volunteerId>
+    <startTime>2024-12-01T10:00:00</startTime>
+    <finishTime>2024-12-01T12:00:00</finishTime>
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>2</id>
+    <callId>102</callId>
+    <volunteerId>502</volunteerId>
+    <startTime>2024-12-02T09:00:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>0</id>
+    <callId>2</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2024-12-22T19:31:29.4807449+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind xsi:nil="true" />
+  </Assignment>
 </ArrayOfAssignment>
