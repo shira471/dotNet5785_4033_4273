@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="71*"/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Margin="10,14,0,0" Height="28">
+        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" RenderTransformOrigin="0.5,0.5" Margin="24,14,0,0" Height="28" Width="165" >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -29,7 +29,9 @@
                     <TranslateTransform/>
                 </TransformGroup>
             </Label.RenderTransform>
-            <ComboBox Width="120" Height="44"/>
         </Label>
+        <ComboBox HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Column="1"/>
+        <DataGrid Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,29,0,506"/>
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Margin="0,528,0,0"/>
     </Grid>
 </Window>
