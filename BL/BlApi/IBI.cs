@@ -12,6 +12,7 @@ namespace BlApi;
     public interface IBl
 
 {
+
     /// <summary>
     /// גישה ליישות שירות לוגית מתנדבים
     /// </summary>

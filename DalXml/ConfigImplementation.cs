@@ -10,11 +10,6 @@ internal class ConfigImplementation : Iconfig
         get { return _clock; } // מחזיר את הזמן הנוכחי של השעון
         set
         {
-            // כאן אפשר להוסיף כל בדיקה שצריך, לדוגמה: לא לאפשר להגדיר זמן עבר
-            if (value < DateTime.Now)
-            {
-                throw new ArgumentException("Clock cannot be set to a past time.");
-            }
 
             _clock = value; // מעדכן את השעון עם הזמן החדש
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Loaded="MainWindow_Loaded" Closed="MainWindow_Closed" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Grid Margin="10">
@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- אזור שעון המערכת -->
-        <Grid Grid.Row="0" Margin="0,10,0,10">
+        <Grid Grid.Row="0" Margin="0,23,0,10" RenderTransformOrigin="0.584,0.484">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -35,7 +35,7 @@
                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
 
             <!-- כפתורים לקידום שעון המערכת -->
-            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="5,5,326,5" Grid.ColumnSpan="2">
                 <Button Content="add one minute" Margin="5" Click="btnAddOneMinute_Click" />
                 <Button Content="add one hour" Margin="5" Click="btnAddOneHour_Click" />
                 <Button Content="add one day" Margin="5" Click="btnAddOneDay_Click" />
@@ -59,15 +59,15 @@
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="5">
                 <Label Content="risk time span" VerticalAlignment="Center" Margin="5" />
                 <TextBox Text= "{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" />
-                <Button Content="Update Max Range" Click="UpdateMaxRange_Click" />
+                <Button Content="Update risk time spane" Click="UpdateMaxRange_Click" Width="150" Margin="5"  />
             </StackPanel>
         </Grid>
 
         <!-- כפתורים כלליים -->
         <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-            <Button Content="תצוגת הרשימה" Width="200" Margin="5" Click="OpenListView_Click" />
-            <Button Content="אתחול בסיס נתונים" Width="200" Margin="5" Click="InitializeDB_Click" />
-            <Button Content="איפוס בסיס נתונים" Width="200" Margin="5" Click="ResetDB_Click" />
+            <Button Content="show list" Width="200" Margin="5" Click="OpenListView_Click" />
+            <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
+            <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -13,6 +13,7 @@ namespace Helpers;
 /// </summary>
 class ObserverManager //stage 5
 {
+    internal static ObserverManager Observers = new(); //stage 5 
     /// <summary>
     /// event delegate for list observers - it's called whenever there may be need to update the presentation
     /// of the list of entities

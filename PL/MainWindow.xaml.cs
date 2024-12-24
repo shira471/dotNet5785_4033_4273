@@ -10,6 +10,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BO;
 using BO.Enums;
+using BL.Helpers;
+using Helpers;
+using PL.Volunteer;
 namespace PL
 {
     /// <summary>
@@ -21,7 +24,42 @@ namespace PL
         public MainWindow()
         {
             InitializeComponent();
-            CurrentTime = DateTime.Now; // הגדרת זמן נוכחי כברירת מחדל
+            //איתחול ערכים ראשוניים
+            CurrentTime = s_bl.Admin.GetSystemClock();
+            TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
+            // רישום מתודות ההשקפה
+            s_bl.Admin.AddClockObserver(clockObserver);
+            s_bl.Admin.AddConfigObserver(configObserver);
+        }
+        /// <summary>
+        /// מתודת הטעינה של המסך הראשי
+        /// </summary>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // השמה של הערך הנוכחי של שעון המערכת
+            CurrentTime = s_bl.Admin.GetSystemClock();
+
+            // השמה של ערכי משתני התצורה
+            TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
+
+            // הוספת מתודת ההשקפה על השעון כמשקיפה
+            s_bl.Admin.AddClockObserver(clockObserver);
+
+            // הוספת מתודת ההשקפה על משתני התצורה כמשקיפה
+            s_bl.Admin.AddConfigObserver(configObserver);
+        }
+        /// <summary>
+        /// מתודת הסגירה של המסך הראשי
+        /// </summary>
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            // הסרת מתודת ההשקפה על השעון
+            s_bl.Admin.RemoveClockObserver(clockObserver);
+
+            // הסרת מתודת ההשקפה על משתני התצורה
+            s_bl.Admin.RemoveConfigObserver(configObserver);
         }
         // הגדרת תכונת תלות עבור CurrentTime
         public DateTime CurrentTime
@@ -44,6 +82,10 @@ namespace PL
         {
             s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Hour);
         }
+        private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
+        {
+            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Day);
+        }
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Month);
@@ -60,6 +102,20 @@ namespace PL
 
         public static readonly DependencyProperty MaxYearRangeProperty =
             DependencyProperty.Register("MaxYearRange", typeof(int), typeof(MainWindow));
+        // מתודת השקפה על השעון
+        private void clockObserver()
+        {
+            // עדכון השעון לפי הערך המעודכן ב-BL
+            CurrentTime = s_bl.Admin.GetSystemClock();
+        }
+
+        // מתודת השקפה על משתני התצורה
+        private void configObserver()
+        {
+            // עדכון הערך של משתני התצורה לפי הערכים המעודכנים ב-BL
+            TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
+        }
         private void UpdateMaxRange_Click(object sender, RoutedEventArgs e)
         {
             // המרת השנים ל- TimeSpan (לדוגמה, כמה ימים יש בשנתיים)
@@ -67,6 +123,81 @@ namespace PL
 
             // עדכון ערך משתנה התצורה דרך ה-BL
             s_bl.Admin.SetRiskTimeSpan(timeSpan);
+        }
+        private void OpenListView_Click(object sender, RoutedEventArgs e)
+        {
+            new VolunteerListWindow().Show();
+        }
+        /// <summary>
+        /// מתודת אירוע עבור לחיצה על כפתור "Initialize Database"
+        /// </summary>
+        /// <param name="sender">האובייקט ששלח את האירוע</param>
+        /// <param name="e">פרטי האירוע</param>
+        private void InitializeDB_Click(object sender, RoutedEventArgs e)
+        {
+            // הודעת אישור למשתמש
+            if (MessageBox.Show("Are you sure you want to initialize the database?",
+                                "Confirm Initialization",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    // שינוי האייקון של העכבר לשעון חול
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
+                    foreach (Window window in Application.Current.Windows)
+                    {
+                        if (window != this)
+                            window.Close();
+                    }
+
+                    // קריאה למתודה InitializeDB
+                    s_bl.Admin.InitializeDatabase();
+                }
+                finally
+                {
+                    // החזרת האייקון של העכבר למצב רגיל
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// מתודת אירוע עבור לחיצה על כפתור "Reset Database"
+        /// </summary>
+        /// <param name="sender">האובייקט ששלח את האירוע</param>
+        /// <param name="e">פרטי האירוע</param>
+        private void ResetDB_Click(object sender, RoutedEventArgs e)
+        {
+            // הודעת אישור למשתמש
+            if (MessageBox.Show("Are you sure you want to reset the database?",
+                                "Confirm Reset",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    // שינוי האייקון של העכבר לשעון חול
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
+                    foreach (Window window in Application.Current.Windows)
+                    {
+                        if (window != this)
+                            window.Close();
+                    }
+
+                    // קריאה למתודה ResetDB
+                    s_bl.Admin.ResetDatabase();
+                }
+                finally
+                {
+                    // החזרת האייקון של העכבר למצב רגיל
+                    Mouse.OverrideCursor = null;
+                }
+            }
         }
 
     }
