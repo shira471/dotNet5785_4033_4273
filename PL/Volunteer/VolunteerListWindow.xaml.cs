@@ -19,9 +19,23 @@ namespace PL.Volunteer
     /// </summary>
     public partial class VolunteerListWindow : Window
     {
+        // משתנה סטטי עבור BL
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
+        // בנאי החלון
         public VolunteerListWindow()
         {
             InitializeComponent();
         }
+
+        // מאפיין DependencyProperty עבור רשימת מתנדבים
+        public IEnumerable<BO.VolunteerInList> VolunteerList
+        {
+            get { return (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty); }
+            set { SetValue(VolunteerListProperty, value); }
+        }
+
+        public static readonly DependencyProperty VolunteerListProperty =
+            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
     }
 }
