@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using BL.Helpers;
 using BlApi;
 using BO;
-using BO.Enums;
 using DalApi;
 
 using Helpers;
@@ -244,7 +243,7 @@ public class CallImplementation : ICall
             Address = call.adress,
             Latitude = call.latitude,
             Longitude = call.longitude,
-            CallType = (BO.Enums.CallType)call.callType.GetValueOrDefault(),
+            CallType = (BO.CallType)call.callType.GetValueOrDefault(),
             OpenTime = call.startTime ?? throw new InvalidOperationException("Start time is null."),
             MaxEndTime = call.maximumTime
         };

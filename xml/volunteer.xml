@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Volunteer>
+    <idVol>3539668</idVol>
+    <adress>386 Highland Rd</adress>
+    <name>Shira Israelof</name>
+    <email>shira.israelof@gmail.com</email>
+    <phoneNumber>939733247</phoneNumber>
+    <password>8jkt11G</password>
+    <latitude>-13.443026342439353</latitude>
+    <longitude>-45.30995292274227</longitude>
+    <limitDestenation>38.8</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>madication</distanceType>
+  </Volunteer>
+</ArrayOfVolunteer>

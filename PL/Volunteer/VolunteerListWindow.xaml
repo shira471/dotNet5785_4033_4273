@@ -32,6 +32,8 @@
             </Label.RenderTransform>
         </Label>
         <ComboBox HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Column="1"/>
+        <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerSortByCollectionKey}}"
+           Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <DataGrid Grid.Row="1" ItemsSource="{Binding Path=VolunteerList}" Margin="5"/>
         <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Margin="0,528,0,0"/>
     </Grid>
