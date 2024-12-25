@@ -1,5 +1,5 @@
 ﻿namespace BO;
-using BO.Enums;
+
 public class CallInList
 {
     /// <summary>

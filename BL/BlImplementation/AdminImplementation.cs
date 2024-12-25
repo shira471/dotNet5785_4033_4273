@@ -2,7 +2,7 @@
 
 using System;
 using BlApi;
-using BO.Enums;
+using BO;
 using Helpers;
 
 // <summary>

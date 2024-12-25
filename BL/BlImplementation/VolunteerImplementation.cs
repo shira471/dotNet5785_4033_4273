@@ -3,7 +3,6 @@ using System.Net;
 using System.Text.Json;
 using BlApi;
 using BO;
-using BO.Enums;
 //using System;
 using System.Net.Http;
 using System.Threading.Tasks;

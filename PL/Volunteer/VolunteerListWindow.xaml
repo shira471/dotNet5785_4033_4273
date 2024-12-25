@@ -5,33 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="VolunteerListWindow" Height="640" Width="800">
+       Title="VolunteerListWindow" Height="640" Width="800"
+         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="367*"/>
+            <ColumnDefinition Width="433*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--Internal, Upper Grid-->
-        <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+        <Grid Height="auto" Grid.Row="0" Width="auto" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80*"/>
                 <ColumnDefinition Width="9*"/>
                 <ColumnDefinition Width="71*"/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" RenderTransformOrigin="0.5,0.5" Margin="24,14,0,0" Height="28" Width="165" >
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-0.347"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
-        <ComboBox HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Column="1"/>
-        <DataGrid Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,29,0,506"/>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Margin="0,528,0,0"/>
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="350,528,0,0" Grid.ColumnSpan="2"/>
+        <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerSortByCollectionKey}}" 
+          Grid.Row="1" 
+          SelectedValue="{Binding VolunteerSortBy, Mode=TwoWay}"
+          HorizontalAlignment="Left" VerticalAlignment="Center"
+          Width="757" Height="30" Margin="33,0,0,0" Grid.ColumnSpan="2" SelectionChanged="ComboBox_SelectionChanged"/>
     </Grid>
 </Window>

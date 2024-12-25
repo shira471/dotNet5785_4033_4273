@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BO;
-using BO.Enums;
 using BL.Helpers;
 using Helpers;
 using PL.Volunteer;
@@ -76,23 +75,23 @@ namespace PL
                 new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Minute);
+            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
         }
         private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Hour);
+            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
         }
         private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Day);
+            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
         }
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Month);
+            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
         }
         private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.AdvanceSystemClock(BO.Enums.TimeUnit.Year);
+            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
         }
         public int MaxYearRange
         {
