@@ -50,7 +50,26 @@ namespace PL.Volunteer
                     MessageBox.Show($"Selected Volunteer: {selectedVolunteer}");
                 }
             }
-            VolunteerList = s_bl?.Volunteer.GetVolunteersList(null,VolunteerSortBy);
+            VolunteerList = s_bl?.Volunteer.GetVolunteersList(IsActive,VolunteerSortBy);
         }
+        private void queryVolunteerList()
+        {
+            VolunteerList = (VolunteerSortBy == null)
+                ? s_bl?.Volunteer.GetVolunteersList()!
+                : s_bl?.Volunteer.GetVolunteersList(IsActive,VolunteerSortBy)!;
+        }
+        private void volunteerListObserver()
+        {
+            queryVolunteerList();
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            s_bl?.Volunteer.AddObserver(volunteerListObserver); // הרשמה כמשקיף
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            s_bl?.Volunteer.RemoveObserver(volunteerListObserver); // הסרת ההשקפה
+        }
+
     }
 }
