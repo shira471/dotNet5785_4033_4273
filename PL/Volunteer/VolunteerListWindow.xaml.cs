@@ -1,75 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Controls;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using BO;
+using System.Collections.ObjectModel;
+
 namespace PL.Volunteer
 {
-    /// <summary>
-    /// Interaction logic for VolunteerListWindow.xaml
-    /// </summary>
     public partial class VolunteerListWindow : Window
     {
         // משתנה סטטי עבור BL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public BO.VolunteerSortBy VolunteerSortBy { get; set; } 
+
+        // מאפיינים עבור הרשימה והמתנדב הנבחר
+        public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
+        public BO.Volunteer? SelectedVolunteer { get; set; }
+        public BO.VolunteerSortBy VolunteerSortBy { get; set; }
 
         // בנאי החלון
         public VolunteerListWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
-        // מאפיין DependencyProperty עבור רשימת מתנדבים
-        public IEnumerable<BO.VolunteerInList> VolunteerList
-        {
-            get { return (IEnumerable<BO.VolunteerInList>)GetValue(VolunteerListProperty); }
-            set { SetValue(VolunteerListProperty, value); }
-        }
-
-        public static readonly DependencyProperty VolunteerListProperty =
-            DependencyProperty.Register("VolunteerList", typeof(IEnumerable<BO.VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var dataGrid = sender as DataGrid;
-            if (dataGrid != null && dataGrid.SelectedItem != null)
-            {
-                var selectedVolunteer = dataGrid.SelectedItem as BO.VolunteerInList;
-                if (selectedVolunteer != null)
-                {
-                    MessageBox.Show($"Selected Volunteer: {selectedVolunteer}");
-                }
-            }
-            VolunteerList = s_bl?.Volunteer.GetVolunteersList(IsActive,VolunteerSortBy);
-        }
         private void queryVolunteerList()
         {
-            VolunteerList = (VolunteerSortBy == null)
-                ? s_bl?.Volunteer.GetVolunteersList()!
-                : s_bl?.Volunteer.GetVolunteersList(IsActive,VolunteerSortBy)!;
+            Volunteers.Clear();
+            var volunteers = s_bl?.Volunteer.GetVolunteersList(true, VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
+            foreach (var volunteer in volunteers)
+            {
+                Volunteers.Add(volunteer);
+            }
         }
+
         private void volunteerListObserver()
         {
             queryVolunteerList();
         }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            queryVolunteerList(); // טען את הרשימה
             s_bl?.Volunteer.AddObserver(volunteerListObserver); // הרשמה כמשקיף
         }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl?.Volunteer.RemoveObserver(volunteerListObserver); // הסרת ההשקפה
         }
 
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            // פותח את חלון ההוספה
+            var window = new VolunteerWindow();
+            window.ShowDialog();
+
+            // רענון הרשימה לאחר הוספה
+            queryVolunteerList();
+        }
+
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedVolunteer != null)
+            {
+                var window = new VolunteerWindow(SelectedVolunteer.Id);
+                window.ShowDialog();
+
+                // רענון הרשימה לאחר עדכון
+                queryVolunteerList();
+            }
+        }
     }
 }

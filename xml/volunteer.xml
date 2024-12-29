@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Volunteer>
+    <idVol>325004273</idVol>
+    <adress>jerusalem</adress>
+    <name>ahuvi</name>
+    <email>auviwin3@gmail.com</email>
+    <phoneNumber>0507678050</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>3250</idVol>
+    <adress>jerusalem</adress>
+    <name>ahuvi</name>
+    <email>auviw@gmail.com</email>
+    <phoneNumber>0507678050</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+</ArrayOfVolunteer>

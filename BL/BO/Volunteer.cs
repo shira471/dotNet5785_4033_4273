@@ -65,7 +65,7 @@ public class Volunteer
         Phone = phone;
         Address = addres;
         Email = email;
-        IsActive = true;
+        IsActive = active;
         DistanceType = DistanceType.AirDistance; // ברירת מחדל
     }
 }

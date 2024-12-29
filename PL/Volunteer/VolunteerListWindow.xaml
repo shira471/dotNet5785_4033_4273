@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-       Title="VolunteerListWindow" Height="640" Width="800"
-         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        Title="VolunteerListWindow" Height="640" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="367*"/>
@@ -17,19 +16,26 @@
             <RowDefinition Height="500*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--Internal, Upper Grid-->
-        <Grid Height="auto" Grid.Row="0" Width="auto" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80*"/>
-                <ColumnDefinition Width="9*"/>
-                <ColumnDefinition Width="71*"/>
-            </Grid.ColumnDefinitions>
-        </Grid>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Left" Height="50" Width="100" Margin="350,528,0,0" Grid.ColumnSpan="2"/>
-        <ComboBox ItemsSource="{Binding Source={StaticResource VolunteerSortByCollectionKey}}" 
-          Grid.Row="1" 
-          SelectedValue="{Binding VolunteerSortBy, Mode=TwoWay}"
-          HorizontalAlignment="Left" VerticalAlignment="Center"
-          Width="757" Height="30" Margin="33,0,0,0" Grid.ColumnSpan="2" SelectionChanged="ComboBox_SelectionChanged"/>
+
+        <!-- DataGrid -->
+        <DataGrid ItemsSource="{Binding Volunteers}" 
+                  SelectedItem="{Binding SelectedVolunteer, Mode=TwoWay}" 
+                  AutoGenerateColumns="False" 
+                  Grid.Row="1" 
+                  Grid.ColumnSpan="2"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100"/>
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="150"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Add" Width="150" Margin="5" Click="btnAdd_Click"/>
+            <Button Content="Update" Width="150" Margin="5" Click="btnUpdate_Click" IsEnabled="{Binding SelectedVolunteer}"/>
+        </StackPanel>
     </Grid>
 </Window>
