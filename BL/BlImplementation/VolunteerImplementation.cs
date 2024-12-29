@@ -151,16 +151,18 @@ public class VolunteerImplementation : IVolunteer
                             break;
                     }
                 }
-                else
-                {
-                    // מיון לפי ת.ז אם sortBy == null
-                    volunteers = volunteers.OrderBy(v => v.idVol);
-                }
+            else
+            {
+                // מיון לפי ת.ז אם sortBy == null
+                volunteers = volunteers.OrderBy(v => v.idVol);
+            }
 
             // המרה מ-DO.Volunteer ל-BO.VolunteerInList
             return volunteers.Select(v => new VolunteerInList(
                 v.idVol,   // id
                 v.name,    // FullName
+                v.phoneNumber,
+                v.email,
                 v.isActive // IsActive
 
             ));

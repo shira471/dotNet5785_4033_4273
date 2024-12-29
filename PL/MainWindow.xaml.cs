@@ -162,6 +162,13 @@ namespace PL
                 }
             }
         }
+        public static readonly DependencyProperty SelectedVolunteerProperty =
+    DependencyProperty.Register(
+        "SelectedVolunteer",
+        typeof(BO.Volunteer),
+        typeof(MainWindow),
+        new PropertyMetadata(null)
+    );
 
         /// <summary>
         /// מתודת אירוע עבור לחיצה על כפתור "Reset Database"
