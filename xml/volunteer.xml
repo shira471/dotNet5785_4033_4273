@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>325004273</idVol>
+    <idVol>325004275</idVol>
     <adress>jerusalem</adress>
     <name>ahuvi</name>
-    <email>auviwin3@gmail.com</email>
+    <email>au@gmail.com</email>
     <phoneNumber>0507678050</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
@@ -15,42 +15,14 @@
     <distanceType>Breakfast</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>3250</idVol>
+    <idVol>215943978</idVol>
     <adress>jerusalem</adress>
-    <name>ahuvi</name>
-    <email>auviw@gmail.com</email>
-    <phoneNumber>0507678050</phoneNumber>
+    <name>namma koufman</name>
+    <email>namma3@gmail.com</email>
+    <phoneNumber>0584654899</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role xsi:nil="true" />
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>2123140333</idVol>
-    <adress>jerusalem</adress>
-    <name>shira</name>
-    <email>syrhlpsy7@gmail.com</email>
-    <phoneNumber>0584084178</phoneNumber>
-    <password />
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role xsi:nil="true" />
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>23</idVol>
-    <adress>tel-aviv</adress>
-    <name>shira</name>
-    <email>juhy@gmail.com</email>
-    <phoneNumber>0526418923</phoneNumber>
-    <password />
-    <latitude>32.0852999</latitude>
-    <longitude>34.78176759999999</longitude>
     <limitDestenation>0</limitDestenation>
     <isActive>true</isActive>
     <role xsi:nil="true" />

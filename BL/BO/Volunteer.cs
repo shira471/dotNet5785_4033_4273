@@ -58,15 +58,15 @@ public class Volunteer
     public CallInProgress? CurrentCall { get; set; }
 
     // קונסטרוקטור
-    public Volunteer(int id, string fullName,string phone, string addres, string email,bool active)
-    {
-        Id = id;
-        FullName = fullName;
-        Phone = phone;
-        Address = addres;
-        Email = email;
-        IsActive = active;
-        DistanceType = DistanceType.AirDistance; // ברירת מחדל
-    }
+    //public Volunteer(int id, string fullName,string phone, string addres, string email,bool active)
+    //{
+    //    Id = id;
+    //    FullName = fullName;
+    //    Phone = phone;
+    //    Address = addres;
+    //    Email = email;
+    //    IsActive = active;
+    //    DistanceType = DistanceType.AirDistance; // ברירת מחדל
+    //}
 }
 

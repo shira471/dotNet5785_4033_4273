@@ -46,8 +46,12 @@ namespace BO;
     [Serializable]
     public class BlInvalidValueException : Exception
     {
-        // קונסטרוקטור שמקבל הודעת חריגה
-        public BlInvalidValueException(string? message) : base(message) { }
+    public BlInvalidValueException(string? message) : base(message)
+    {
+    }
+
+    // קונסטרוקטור שמקבל הודעת חריגה
+    public BlInvalidValueException(string? message, Exception ex) : base(message) { }
     }
 
 

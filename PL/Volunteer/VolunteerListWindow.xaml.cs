@@ -1,7 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows;
+﻿using BO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PL.Volunteer
 {
@@ -17,15 +18,20 @@ namespace PL.Volunteer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         // מאפיינים עבור הרשימה והמתנדב הנבחר
         public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
-        //public BO.Volunteer? SelectedVolunteer { get; set; }
-        private BO.Volunteer? selectedVolunteer;
-        public BO.Volunteer? SelectedVolunteer
+
+
+        private BO.VolunteerInList? selectedVolunteer;
+        public BO.VolunteerInList? SelectedVolunteer
         {
             get => selectedVolunteer;
             set
             {
-                selectedVolunteer = value;
-                OnPropertyChanged(nameof(SelectedVolunteer)); // יידע את ה-Binding שהערך השתנה
+                if (selectedVolunteer != value)
+                {
+                    selectedVolunteer = value;
+                    Console.WriteLine($"SelectedVolunteer changed: {selectedVolunteer?.FullName}"); // הוספת לוג לבדיקת שינוי
+                    OnPropertyChanged(nameof(SelectedVolunteer)); // יידע את ה-Binding שהערך השתנה
+                }
             }
         }
 
@@ -35,23 +41,32 @@ namespace PL.Volunteer
         public VolunteerListWindow()
         {
             InitializeComponent();
-            DataContext = this; 
-            var vols = s_bl.Volunteer.GetVolunteersList();
-            // מוסיף את הנתונים ל-ObservableCollection
-            foreach (var vol in vols)
+            selectedVolunteer = new VolunteerInList();
+            DataContext = this;
+            try
             {
-                Volunteers.Add(vol);
+                queryVolunteerList();
             }
-           
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void queryVolunteerList()
         {
             Volunteers.Clear();
-            var volunteers = s_bl?.Volunteer.GetVolunteersList(IsActive, VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
-            foreach (var volunteer in volunteers)
+            try
             {
-                Volunteers.Add(volunteer);
+                var volunteers = s_bl?.Volunteer.GetVolunteersList(null, VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
+                foreach (var volunteer in volunteers)
+                {
+                    Volunteers.Add(volunteer);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -62,80 +77,96 @@ namespace PL.Volunteer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            queryVolunteerList(); // טען את הרשימה
-            s_bl?.Volunteer.AddObserver(volunteerListObserver); // הרשמה כמשקיף
+            try
+            {
+                queryVolunteerList(); // טען את הרשימה
+                s_bl?.Volunteer.AddObserver(volunteerListObserver); // הרשמה כמשקיף
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בטעינת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            s_bl?.Volunteer.RemoveObserver(volunteerListObserver); // הסרת ההשקפה
+            try
+            {
+                s_bl?.Volunteer.RemoveObserver(volunteerListObserver); // הסרת ההשקפה
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בסגירת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            // פותח את חלון ההוספה
-            var window = new VolunteerWindow();
-            window.ShowDialog();
+            try
+            {
+                var window = new VolunteerWindow();
+                window.ShowDialog();
 
-            // רענון הרשימה לאחר הוספה
-            queryVolunteerList();
+                // רענון הרשימה לאחר הוספה
+                queryVolunteerList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בהוספת מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            
-            // בדיקה אם נבחר מתנדב למחיקה
-            if (SelectedVolunteer != null)
+            if (SelectedVolunteer == null)
             {
-                // הצגת הודעת אישור למחיקה
-                var result = MessageBox.Show(
-                    $"האם אתה בטוח שברצונך למחוק את המתנדב {SelectedVolunteer.FullName}?",
-                    "אישור מחיקה",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning
-                );
+                MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-                if (result == MessageBoxResult.Yes)
+            var result = MessageBox.Show(
+                $"האם אתה בטוח שברצונך למחוק את המתנדב {SelectedVolunteer.FullName}?",
+                "אישור מחיקה",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
                 {
-                    try
-                    {
-                        // קריאה לשכבת BL למחיקה
-                        s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id);
-
-                        // הסרת המתנדב מהרשימה
-                        Volunteers.Remove(Volunteers.First(v => v.Id == SelectedVolunteer.Id));
-                    }
-                    catch (Exception ex)
-                    {
-                        // טיפול בחריגה והצגת הודעה
-                        MessageBox.Show(
-                            $"לא ניתן למחוק את המתנדב: {ex.Message}",
-                            "שגיאה במחיקה",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
-                    }
+                    s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id);
+                    Volunteers.Remove(Volunteers.First(v => v.Id == SelectedVolunteer.Id));
+                    MessageBox.Show("המתנדב נמחק בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"לא ניתן למחוק את המתנדב: {ex.Message}", "שגיאה במחיקה", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else
-            {
-                // הצגת הודעה במקרה שלא נבחר מתנדב
-                MessageBox.Show(
-                    "לא נבחר מתנדב למחיקה.",
-                    "שגיאה",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
-                );
-            }
         }
+
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedVolunteer != null)
+            //if (sender is DataGrid dg && dg.SelectedItem is BO.Volunteer s)
+            //    SelectedVolunteer = s;
+            if (SelectedVolunteer == null)
+            {
+                MessageBox.Show("לא נבחר מתנדב לעדכון.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
             {
                 var window = new VolunteerWindow(SelectedVolunteer.Id);
                 window.ShowDialog();
 
                 // רענון הרשימה לאחר עדכון
                 queryVolunteerList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בעדכון מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

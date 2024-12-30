@@ -17,18 +17,20 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+
         <!-- DataGrid -->
         <DataGrid ItemsSource="{Binding Volunteers}" 
-                  SelectedItem="{Binding SelectedVolunteer, Mode=TwoWay}" 
+                   SelectedValue="{Binding SelectedVolunteer, Mode=TwoWay}"
                   AutoGenerateColumns="False" 
                   Grid.Row="1" 
                   Grid.ColumnSpan="2"
                   Margin="10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100"/>
-                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="150"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding mail}" Width="200"/>
+            <DataGrid.Columns >
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding mail}" Width="200" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="100" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
 
