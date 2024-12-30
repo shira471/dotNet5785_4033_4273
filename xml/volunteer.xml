@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>325004275</idVol>
+    <idVol>212314033</idVol>
     <adress>jerusalem</adress>
-    <name>ahuvi</name>
-    <email>au@gmail.com</email>
-    <phoneNumber>0507678050</phoneNumber>
-    <password />
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role xsi:nil="true" />
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>215943978</idVol>
-    <adress>jerusalem</adress>
-    <name>namma koufman</name>
-    <email>namma3@gmail.com</email>
-    <phoneNumber>0584654899</phoneNumber>
+    <name>shira</name>
+    <email>syrhlpsy7@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
