@@ -12,6 +12,7 @@ using BO;
 using BL.Helpers;
 using Helpers;
 using PL.Volunteer;
+using DalApi;
 namespace PL
 {
     /// <summary>
@@ -169,6 +170,44 @@ namespace PL
         typeof(MainWindow),
         new PropertyMetadata(null)
     );
+       
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            string userId = txtId.Text.Trim().ToLower();
+            string password = txtPassword.Password.ToString().ToLower();
+
+
+            // בדיקת תקינות בסיסית
+            if (string.IsNullOrEmpty(userId))
+            {
+                lblError.Text = "Please enter your ID.";
+                lblError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // זיהוי סוג המשתמש
+            var userType = s_bl.Volunteer.Login(userId, password);
+
+            if (userType == "manager")
+            {
+                // מעבר למסך בחירת מנהל
+              //  new AdminWindow().Show();
+                this.Hide();
+            }
+            else if (userType == "volunteer")
+            {
+                // מעבר למסך מתנדב
+                new VolunteerListWindow().Show();
+                this.Hide();
+            }
+            else
+            {
+                lblError.Text = "Invalid credentials. Please try again.";
+                lblError.Visibility = Visibility.Visible;
+            }
+        }
+
 
         /// <summary>
         /// מתודת אירוע עבור לחיצה על כפתור "Reset Database"

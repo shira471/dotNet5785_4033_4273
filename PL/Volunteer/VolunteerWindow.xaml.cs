@@ -76,40 +76,7 @@ namespace PL.Volunteer
         {
             try
             {
-                // ולידציה על ID
-                //if (CurrentVolunteer.Id <= 0)
-                //{
-                //    MessageBox.Show("ID must be a positive number.");
-                //    return;
-                //}
 
-                //// ולידציה על Full Name
-                //if (string.IsNullOrWhiteSpace(CurrentVolunteer.FullName))
-                //{
-                //    MessageBox.Show("Full Name cannot be empty.");
-                //    return;
-                //}
-
-                //// ולידציה על Phone
-                //if (string.IsNullOrWhiteSpace(CurrentVolunteer.Phone) || !CurrentVolunteer.Phone.All(char.IsDigit))
-                //{
-                //    MessageBox.Show("Phone must contain only digits and cannot be empty.");
-                //    return;
-                //}
-
-                //// ולידציה על Address
-                //if (string.IsNullOrWhiteSpace(CurrentVolunteer.Address))
-                //{
-                //    MessageBox.Show("Address cannot be empty.");
-                //    return;
-                //}
-
-                //// ולידציה על Email
-                //if (string.IsNullOrWhiteSpace(CurrentVolunteer.Email) || !CurrentVolunteer.Email.Contains("@"))
-                //{
-                //    MessageBox.Show("Email must be a valid email address.");
-                //    return;
-                //}
 
                 // אם עברנו את כל הבדיקות
                 if (ButtonText == "Add")

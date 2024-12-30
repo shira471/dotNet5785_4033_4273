@@ -35,23 +35,5 @@ public class VolunteerInList
     // סוג הקריאה שבטיפולו (אם לא קיימת קריאה בטיפולו, יהיה ערך None)
     public CallType CurrentCallType { get; set; }
 
-    //// קונסטרוקטור
-    //public VolunteerInList(int id, string fullName,string phone,string email, bool isActive, int totalCallsHandled=0,
-    //                        int totalCallsCancelled = 0, int totalExpiredCalls = 0, int? currentCallId=null ,
-    //                        CallType currentCallType=0)
-    //{
-    //    Id = id;
-    //    FullName = fullName;
-    //    Phone=phone;
-    //    mail = email;
-    //    IsActive = isActive;
-    //    TotalCallsHandled = totalCallsHandled;
-    //    TotalCallsCancelled = totalCallsCancelled;
-    //    TotalExpiredCalls = totalExpiredCalls;
-    //    CurrentCallId = currentCallId;
-    //    if (currentCallType == null)// ברירת מחדל אם אין קריאה בטיפולו
-    //        CurrentCallType = CallType.None;
-    //    else CurrentCallType = currentCallType;
-    //}
 }
 
