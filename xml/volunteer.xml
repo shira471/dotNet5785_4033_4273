@@ -4,14 +4,42 @@
     <idVol>212314033</idVol>
     <adress>jerusalem</adress>
     <name>shira</name>
-    <email>syrhlpsy7@gmail.com</email>
+    <email>g@gmail.com</email>
     <phoneNumber>0584084178</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
     <limitDestenation>0</limitDestenation>
     <isActive>true</isActive>
-    <role xsi:nil="true" />
+    <role>Volunteer</role>
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>254825394</idVol>
+    <adress>tel aviv</adress>
+    <name>lea</name>
+    <email>juh@gmail.com</email>
+    <phoneNumber>053248691</phoneNumber>
+    <password />
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>325004273</idVol>
+    <adress>herzliya</adress>
+    <name>ahuvi</name>
+    <email>ahuvi@gmail.com</email>
+    <phoneNumber>0289642178</phoneNumber>
+    <password />
+    <latitude>32.162413</latitude>
+    <longitude>34.844675</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
     <distanceType>Breakfast</distanceType>
   </Volunteer>
 </ArrayOfVolunteer>

@@ -189,13 +189,13 @@ namespace PL
             // זיהוי סוג המשתמש
             var userType = s_bl.Volunteer.Login(userId, password);
 
-            if (userType == "manager")
+            if (userType == "Manager")
             {
                 // מעבר למסך בחירת מנהל
-              //  new AdminWindow().Show();
+                 new AdminWindow().Show();
                 this.Hide();
             }
-            else if (userType == "volunteer")
+            else if (userType == "Volunteer")
             {
                 // מעבר למסך מתנדב
                 new VolunteerListWindow().Show();
