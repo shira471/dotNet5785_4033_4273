@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="VolunteerListWindow" Height="640" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        Title="VolunteerListWindow" Height="640" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="367*"/>

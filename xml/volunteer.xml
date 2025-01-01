@@ -15,11 +15,39 @@
     <distanceType>Breakfast</distanceType>
   </Volunteer>
   <Volunteer>
+    <idVol>328603196</idVol>
+    <adress>hanashi hashishi 18 jerusalem</adress>
+    <name>shlomo attal</name>
+    <email>shlomowattal@gmail.com</email>
+    <phoneNumber>0587851589</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
     <idVol>215943978</idVol>
-    <adress>jerusalem</adress>
-    <name>namma koufman</name>
-    <email>namma3@gmail.com</email>
+    <adress>Har Nof Hai Taib 52</adress>
+    <name>naama miryam kaufman</name>
+    <email>naamakaufman32@gmail.com</email>
     <phoneNumber>0584654899</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>326549441</idVol>
+    <adress>jerusalem</adress>
+    <name>hodaya carcom</name>
+    <email>hodayacarcom@gmail.com</email>
+    <phoneNumber>0509304196</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
