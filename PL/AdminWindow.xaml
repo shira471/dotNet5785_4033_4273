@@ -6,7 +6,37 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
-    <Grid>
-        
+
+    <Grid Margin="10">
+        <!-- אזור שעון המערכת -->
+        <Grid Grid.Row="0" Margin="0,23,0,10" RenderTransformOrigin="0.584,0.484">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- תצוגת שעון המערכת -->
+            <Label Grid.Row="0" Grid.Column="0" Content="{Binding CurrentTime}" 
+                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
+
+            <!-- כפתורים לקידום שעון המערכת -->
+            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="5,5,326,5" Grid.ColumnSpan="2">
+                <Button Content="add one minute" Margin="5" Click="btnAddOneMinute_Click" />
+                <Button Content="add one hour" Margin="5" Click="btnAddOneHour_Click" />
+                <Button Content="add one day" Margin="5" Click="btnAddOneDay_Click" />
+                <Button Content="add one month" Margin="5" Click="btnAddOneMonth_Click" />
+                <Button Content="add one year" Margin="5" Click="btnAddOneYear_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- כפתורים כלליים -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,103,0,-83">
+            <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
+            <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
+        </StackPanel>
     </Grid>
 </Window>
