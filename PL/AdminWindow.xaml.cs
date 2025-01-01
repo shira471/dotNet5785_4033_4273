@@ -117,10 +117,12 @@ namespace PL.Volunteer
             Volunteers.Clear(); // ניקוי הרשימה
             try
             {
-                var volunteers = s_bl?.Volunteer.GetVolunteersList(null, VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
-                foreach (var volunteer in volunteers)
+                //TODO
+                // var volunteers = s_bl?.Volunteer.GetVolunteersList(null, null) ?? Enumerable.Empty<BO.VolunteerInList>();
+                //foreach (var volunteer in volunteers)
                 {
-                    Volunteers.Add(volunteer); // הוספת כל מתנדב לרשימה
+                    //TODO
+                    //Volunteers.Add(volunteer); // הוספת כל מתנדב לרשימה
                 }
             }
             catch (Exception ex)

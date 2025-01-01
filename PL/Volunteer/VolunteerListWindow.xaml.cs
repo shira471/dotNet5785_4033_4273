@@ -12,17 +12,17 @@ namespace PL.Volunteer
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-      
+
         // משתנה סטטי עבור BL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         // מאפיינים עבור הרשימה והמתנדב הנבחר
 
-        public VolunteerListVM vm {  get; set; }
+        public VolunteerListVM vm { get; set; }
 
         // בנאי החלון
         public VolunteerListWindow()
         {
-             vm = new ();
+            vm = new();
             DataContext = vm;
             InitializeComponent();
             try
@@ -38,7 +38,7 @@ namespace PL.Volunteer
         // פונקציה לטעינת רשימת המתנדבים
         private void queryVolunteerList()
         {
-            Volunteers.Clear(); // ניקוי הרשימה
+            vm.Volunteers.Clear(); // ניקוי הרשימה
             try
             {
                 var volunteers = s_bl?.Volunteer.GetVolunteersList(null, vm.VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
@@ -139,11 +139,11 @@ namespace PL.Volunteer
                 MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-                try
-                {
-                    var volunteerDetails=s_bl.Volunteer.GetVolunteerDetails(SelectedVolunteer.Id); // מחיקת המתנדב בלוגיקה העסקית
-                                                                                                   // הצגת התוצאה
-                                                                                                   // בניית מחרוזת להצגה
+            try
+            {
+                var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // מחיקת המתנדב בלוגיקה העסקית
+                                                                                                    // הצגת התוצאה
+                                                                                                    // בניית מחרוזת להצגה
                 string details = $"name: {volunteerDetails.FullName}\n" +
                                  $"phone number: {volunteerDetails.Phone}\n" +
                                  $"role: {volunteerDetails.Role}";
@@ -152,10 +152,10 @@ namespace PL.Volunteer
                 MessageBox.Show(details, "details", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
-                {
-                    MessageBox.Show($"לא ניתן לצפות בפרטי המתנדב: {ex.Message}", "שגיאה בצפייה", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            {
+                MessageBox.Show($"לא ניתן לצפות בפרטי המתנדב: {ex.Message}", "שגיאה בצפייה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
         // פעולה לעדכון מתנדב
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
