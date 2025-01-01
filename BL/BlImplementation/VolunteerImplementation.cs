@@ -11,13 +11,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using BL.Helpers;
 using System.Data.Common;
+using DO;
+using DalApi;
+using System.Data;
 
 //using Newtonsoft.Json.Linq;
 public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-    public void AddVolunteer(Volunteer volunteer)
+    public void AddVolunteer(BO.Volunteer volunteer)
     {
         if (volunteer == null)
         {
@@ -45,7 +48,7 @@ public class VolunteerImplementation : IVolunteer
             IsValidEmail(volunteer.Email);
             IsValidPhoneNumber(volunteer.Phone);
             IsValidId(volunteer.Id);
-
+            
            var dalVolunteer = new DO.Volunteer
             {
                 idVol = volunteer.Id,
@@ -60,7 +63,6 @@ public class VolunteerImplementation : IVolunteer
                 isActive = volunteer.IsActive,
                 distanceType = (DO.Hamal)volunteer.DistanceType
             };
-
             _dal.volunteer.Create(dalVolunteer);
             VolunteerManager.Observers.NotifyListUpdated();
         }
@@ -83,7 +85,7 @@ public class VolunteerImplementation : IVolunteer
         }
     }
 
-    public Volunteer GetVolunteerDetails(int volunteerId)
+    public BO.Volunteer GetVolunteerDetails(int volunteerId)
     {
         try
         {
@@ -94,7 +96,7 @@ public class VolunteerImplementation : IVolunteer
                 throw new BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
             }
 
-            return new Volunteer
+            return new BO.Volunteer
             {
                 Id = volunteerId,
                 FullName = volunteerDO.name,
@@ -105,7 +107,9 @@ public class VolunteerImplementation : IVolunteer
                 Password = volunteerDO.password,
                 Latitude = volunteerDO.latitude,
                 Longitude = volunteerDO.longitude,
-                MaxDistance = volunteerDO.limitDestenation
+                MaxDistance = volunteerDO.limitDestenation,
+                Role = (BO.Role?)volunteerDO.role
+               
             };
         }
         catch (Exception ex)
@@ -148,6 +152,7 @@ public class VolunteerImplementation : IVolunteer
                 mail = v.email,
                 IsActive = v.isActive
             });
+            
         }
         catch (Exception ex)
         {
@@ -159,16 +164,17 @@ public class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var volunteers = _dal.volunteer.ReadAll();
+            int userId=int.Parse(username);
+            //var volunteers = _dal.volunteer.ReadAll();
+            var vol = _dal.volunteer.Read(userId);
+            //var volunteer = volunteers.FirstOrDefault(v => v.email == username && v.password == password);
 
-            var volunteer = volunteers.FirstOrDefault(v => v.email == username && v.password == password);
-
-            if (volunteer == null)
+            if (vol == null)
             {
                 throw new UnauthorizedAccessException("Invalid username or password.");
             }
-
-            return volunteer.role switch
+   
+            return vol.role switch
             {
                 DO.Role.Manager => "Manager",
                 DO.Role.Volunteer => "Volunteer",

@@ -19,32 +19,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- אזור שעון המערכת -->
-        <Grid Grid.Row="0" Margin="0,23,0,10" RenderTransformOrigin="0.584,0.484">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <!-- תצוגת שעון המערכת -->
-            <Label Grid.Row="0" Grid.Column="0" Content="{Binding CurrentTime}" 
-                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
-
-            <!-- כפתורים לקידום שעון המערכת -->
-            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="5,5,326,5" Grid.ColumnSpan="2">
-                <Button Content="add one minute" Margin="5" Click="btnAddOneMinute_Click" />
-                <Button Content="add one hour" Margin="5" Click="btnAddOneHour_Click" />
-                <Button Content="add one day" Margin="5" Click="btnAddOneDay_Click" />
-                <Button Content="add one month" Margin="5" Click="btnAddOneMonth_Click" />
-                <Button Content="add one year" Margin="5" Click="btnAddOneYear_Click" />
-            </StackPanel>
-        </Grid>
-
-        <!-- אזור משתני תצורה -->
+        
+        
+         <!--אזור משתני תצורה--><!-- 
+        
         <Grid Grid.Row="1" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -55,7 +33,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- משתנה תצורה לעריכה -->
+            
+         --><!--משתנה תצורה לעריכה--><!-- 
+        
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="5">
                 <Label Content="risk time span" VerticalAlignment="Center" Margin="5" />
                 <TextBox Text= "{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" />
@@ -63,11 +43,26 @@
             </StackPanel>
         </Grid>
 
-        <!-- כפתורים כלליים -->
+         --><!--כפתורים כלליים--><!-- 
+        
         <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
             <Button Content="show list" Width="200" Margin="5" Click="OpenListView_Click" />
             <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
             <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
-        </StackPanel>
+        </StackPanel>-->
+
+        <TextBox x:Name="txtId"  HorizontalAlignment="Center" Margin="0,64,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your ID:" VerticalAlignment="Top" Width="120"/>
+
+        <!-- טקסט ברירת מחדל -->
+        <TextBlock x:Name="txtPasswordPlaceholder" Text="enter your password:" 
+             VerticalAlignment="Top" HorizontalAlignment="Left" 
+             Margin="331,87,0,0" Foreground="Gray" Visibility="Visible" Grid.Row="2" />
+        <!-- שדה סיסמה -->
+        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="328,104,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" IsEnabled="False"  AutomationProperties.AutomationId="" AutomationProperties.AccessKey="e"/>
+        <!-- כפתור התחברות -->
+        <Button Content="Login" Click="Login_Click" Margin="0,179,0,3" Grid.Row="2" />
+
+        <!-- תצוגת שגיאה -->
+        <TextBlock x:Name="lblError" Foreground="Red" Visibility="Collapsed" />
     </Grid>
 </Window>

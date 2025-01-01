@@ -16,5 +16,10 @@ public record Volunteer(
 )
 {
     // בנאי ברירת מחדל
-    public Volunteer() : this(0, "", "", "", "", "", 0, 0, 0) { }
+    public Volunteer() : this(0, "", "", "", "", "", 0, 0, 0) {
+        if (idVol == 212314033 || idVol == 325004273)
+            role = Role.Manager;
+        else
+            role = Role.Volunteer;
+    }
 }

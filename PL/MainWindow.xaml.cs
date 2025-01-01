@@ -11,8 +11,9 @@ using System.Windows.Shapes;
 using BO;
 using BL.Helpers;
 using Helpers;
-using PL.Volunteer;
-namespace PL
+
+using DalApi;
+namespace PL.Volunteer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -73,26 +74,26 @@ namespace PL
                 typeof(DateTime),
                 typeof(MainWindow),
                 new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
-        private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
-        {
-            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
-        }
-        private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
-        {
-            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
-        }
-        private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
-        {
-            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
-        }
-        private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
-        {
-            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
-        }
-        private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
-        {
-            s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
-        }
+        //private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
+        //{
+        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
+        //}
+        //private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
+        //{
+        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
+        //}
+        //private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
+        //{
+        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
+        //}
+        //private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
+        //{
+        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
+        //}
+        //private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
+        //{
+        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
+        //}
         public int MaxYearRange
         {
             get { return (int)GetValue(MaxYearRangeProperty); }
@@ -127,41 +128,8 @@ namespace PL
         {
             new VolunteerListWindow().Show();
         }
-        /// <summary>
-        /// מתודת אירוע עבור לחיצה על כפתור "Initialize Database"
-        /// </summary>
-        /// <param name="sender">האובייקט ששלח את האירוע</param>
-        /// <param name="e">פרטי האירוע</param>
-        private void InitializeDB_Click(object sender, RoutedEventArgs e)
-        {
-            // הודעת אישור למשתמש
-            if (MessageBox.Show("Are you sure you want to initialize the database?",
-                                "Confirm Initialization",
-                                MessageBoxButton.YesNo,
-                                MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    // שינוי האייקון של העכבר לשעון חול
-                    Mouse.OverrideCursor = Cursors.Wait;
-
-                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
-                    foreach (Window window in Application.Current.Windows)
-                    {
-                        if (window != this)
-                            window.Close();
-                    }
-
-                    // קריאה למתודה InitializeDB
-                    s_bl.Admin.InitializeDatabase();
-                }
-                finally
-                {
-                    // החזרת האייקון של העכבר למצב רגיל
-                    Mouse.OverrideCursor = null;
-                }
-            }
-        }
+       
+        
         public static readonly DependencyProperty SelectedVolunteerProperty =
     DependencyProperty.Register(
         "SelectedVolunteer",
@@ -169,42 +137,46 @@ namespace PL
         typeof(MainWindow),
         new PropertyMetadata(null)
     );
+       
 
-        /// <summary>
-        /// מתודת אירוע עבור לחיצה על כפתור "Reset Database"
-        /// </summary>
-        /// <param name="sender">האובייקט ששלח את האירוע</param>
-        /// <param name="e">פרטי האירוע</param>
-        private void ResetDB_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
-            // הודעת אישור למשתמש
-            if (MessageBox.Show("Are you sure you want to reset the database?",
-                                "Confirm Reset",
-                                MessageBoxButton.YesNo,
-                                MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            string userId = txtId.Text.Trim().ToLower();
+            string password = txtPassword.Password.ToString().ToLower();
+
+
+            // בדיקת תקינות בסיסית
+            if (string.IsNullOrEmpty(userId))
             {
-                try
-                {
-                    // שינוי האייקון של העכבר לשעון חול
-                    Mouse.OverrideCursor = Cursors.Wait;
+                lblError.Text = "Please enter your ID.";
+                lblError.Visibility = Visibility.Visible;
+                return;
+            }
 
-                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
-                    foreach (Window window in Application.Current.Windows)
-                    {
-                        if (window != this)
-                            window.Close();
-                    }
+            // זיהוי סוג המשתמש
+            var userType = s_bl.Volunteer.Login(userId, password);
 
-                    // קריאה למתודה ResetDB
-                    s_bl.Admin.ResetDatabase();
-                }
-                finally
-                {
-                    // החזרת האייקון של העכבר למצב רגיל
-                    Mouse.OverrideCursor = null;
-                }
+            if (userType == "Manager")
+            {
+                // מעבר למסך בחירת מנהל
+                 new AdminWindow().Show();
+                this.Hide();
+            }
+            else if (userType == "Volunteer")
+            {
+                // מעבר למסך מתנדב
+                new VolunteerListWindow().Show();
+                this.Hide();
+            }
+            else
+            {
+                lblError.Text = "Invalid credentials. Please try again.";
+                lblError.Visibility = Visibility.Visible;
             }
         }
+
+
+        
 
     }
 }
