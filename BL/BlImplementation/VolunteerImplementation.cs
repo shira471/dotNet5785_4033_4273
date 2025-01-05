@@ -173,13 +173,14 @@ public class VolunteerImplementation : IVolunteer
             {
                 throw new UnauthorizedAccessException("Invalid username or password.");
             }
-   
-            return vol.role switch
-            {
-                DO.Role.Manager => "Manager",
-                DO.Role.Volunteer => "Volunteer",
-                _ => throw new BlInvalidValueException("Invalid role.")
-            };
+
+            //return vol.role switch
+            //{
+            //    DO.Role.Manager => "Manager",
+            //    DO.Role.Volunteer => "Volunteer",
+            //    _ => throw new BlInvalidValueException("Invalid role.")
+            //};
+            return "Volunteer";
         }
         catch (Exception ex)
         {

@@ -291,7 +291,7 @@ public class CallImplementation : ICall
         return closedCalls;
     }
 
-    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType, Enum? sortField)
+    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType=null, Enum? sortField = null)
     {
         // קבלת כל השיוכים של המתנדב לקריאות שטרם נסגרו
         var assignments = _dal.assignment.ReadAll()
@@ -367,7 +367,11 @@ public class CallImplementation : ICall
 
     }
 
-
+    public void UpdateCallStatus(Call call,bool isFinish)
+    {
+        if (isFinish) 
+            call.Status = Status.Closed;
+    }
     public IEnumerable<CallInList> GetCallsList(Enum? filterField, object? filterValue, Enum? sortField)
     {
         // קבלת כל הקריאות

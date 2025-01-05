@@ -169,9 +169,9 @@ namespace PL.Volunteer
 
             try
             {
-                var window = new VolunteerWindow(vm.SelectedVolunteer.Id);
-                window.ShowDialog();
-                queryVolunteerList(); // רענון הרשימה
+                //var window = new VolunteerWindow(vm.SelectedVolunteer.Id);
+                //window.ShowDialog();
+                //queryVolunteerList(); // רענון הרשימה
             }
             catch (Exception ex)
             {

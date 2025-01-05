@@ -102,7 +102,7 @@ namespace PL.Volunteer
         {
             try
             {
-                var window = new VolunteerWindow(); // פתיחת חלון הוספה
+                var window = new VolunteerListWindow(); // פתיחת חלון הוספה
                 window.ShowDialog();
                 queryVolunteerList(); // רענון הרשימה
             }

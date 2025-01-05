@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>212314033</idVol>
-    <adress>jerusalem</adress>
-    <name>shira</name>
-    <email>g@gmail.com</email>
-    <phoneNumber>0584084178</phoneNumber>
-    <password />
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>254825394</idVol>
     <adress>tel aviv</adress>
     <name>lea</name>
@@ -68,6 +54,20 @@
     <limitDestenation>0</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
+    <distanceType>Breakfast</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>212314033</idVol>
+    <adress>jerusalem</adress>
+    <name>shira</name>
+    <email>g@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
+    <password />
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>0</limitDestenation>
+    <isActive>true</isActive>
+    <role xsi:nil="true" />
     <distanceType>Breakfast</distanceType>
   </Volunteer>
 </ArrayOfVolunteer>

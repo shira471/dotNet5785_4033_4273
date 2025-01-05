@@ -13,13 +13,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BO;
-
+using BL.Helpers;
+using Helpers;
+using DalApi;
+using System.Xml.Linq;
+using PL.viewModel;
 
 
 namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window
     {
+       
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -29,80 +34,119 @@ namespace PL.Volunteer
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
-        public string ButtonText
-        {
-            get { return (string)GetValue(ButtonTextProperty); }
-            set { SetValue(ButtonTextProperty, value); }
-        }
 
-        public static readonly DependencyProperty ButtonTextProperty =
-            DependencyProperty.Register("ButtonText", typeof(string), typeof(VolunteerWindow), new PropertyMetadata("Add"));
+
 
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
         private readonly BlApi.IBl s_bl;
 
-        public VolunteerWindow(int id = 0)
+        public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
 
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
-
-            if (id == 0)
-            {
-                // Add mode: Initialize with default values
-                CurrentVolunteer = new BO.Volunteer();
-                ButtonText = "Add";
-            }
-            else
-            {
-                // Update mode: Load data from BL
-                try
-                {
-                    CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
-                    ButtonText = "Update";
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error loading volunteer: {ex.Message}");
-                    Close();
-                }
-            }
-
-            DataContext = this;
+            LoadVolunteer(id);
+            LoadCallDetails();
         }
 
-        private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
+        private void LoadVolunteer(string volunteerId)
         {
             try
             {
+                CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(int.Parse(volunteerId));
 
-
-                // אם עברנו את כל הבדיקות
-                if (ButtonText == "Add")
-                {
-                    s_bl.Volunteer.AddVolunteer(CurrentVolunteer!);
-                    MessageBox.Show("Volunteer added successfully.");
-                }
-                else
-                {
-                    s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer!);
-                    MessageBox.Show("Volunteer updated successfully.");
-                }
-
-                // סגור את החלון לאחר הצלחה
-                Close();
+                txtId.Text = volunteerId;
+                txtFullName.Text = CurrentVolunteer.FullName;
+                txtPhone.Text = CurrentVolunteer.Phone;
+                txtEmail.Text = CurrentVolunteer.Email;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                MessageBox.Show($"שגיאה בטעינת פרטי המתנדב: {ex.Message}");
+                Close();
             }
-
         }
-
-        private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        private void EnableEditing_Click(object sender, RoutedEventArgs e)
         {
-            e.Handled = !int.TryParse(e.Text, out _);
+            // הפיכת השדות לעריכים
+            txtFullName.IsEnabled = true;
+            txtPhone.IsEnabled = true;
+            txtEmail.IsEnabled = true;
+
+            // הפעלת כפתור השמירה
+            btnSave.IsEnabled = true;
+
+            // כיבוי כפתור "עדכון פרטים" בזמן עריכה
+            (sender as Button).IsEnabled = false;
         }
+
+        private void SaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // עדכון פרטי המתנדב
+                CurrentVolunteer.FullName = txtFullName.Text;
+                CurrentVolunteer.Phone = txtPhone.Text;
+                CurrentVolunteer.Email = txtEmail.Text;
+
+                // שמירה באמצעות BL
+                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id,CurrentVolunteer);
+
+                MessageBox.Show("פרטי המתנדב נשמרו בהצלחה.", "עדכון", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // הפיכת השדות ל-ReadOnly מחדש
+                txtFullName.IsEnabled = false;
+                txtPhone.IsEnabled = false;
+                txtEmail.IsEnabled = false;
+
+                // הפעלת כפתור "עדכון פרטים" מחדש
+                btnSave.IsEnabled = false;
+                EnableEditing_Click(sender: null, e: null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"שגיאה בעדכון פרטי המתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void FinishCall_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentVolunteer.Id != null)
+            {
+               //s_bl.Call.GetOpenCallsByVolunteer();
+                MessageBox.Show("הקריאה סומנה כסגורה.");
+                LoadCallDetails();
+            }
+            else
+            {
+                MessageBox.Show("אין קריאה בטיפול לסיים.");
+            }
+        }
+        private void SelectCall_Click(object sender, RoutedEventArgs e)
+        {
+            //var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+            //selectCallWindow.ShowDialog();
+            //LoadCallDetails();
+        }
+        private void ShowAllCallsHistory_Click(object sender, RoutedEventArgs e)
+        {
+            //var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
+            //myHistoryWindow.Show();
+        }
+
+        private void LoadCallDetails()
+        {
+            //var currentCall = s_bl.Call.GetCurrentCallForVolunteer(CurrentVolunteer?.Id ?? 0);
+            //if (currentCall != null)
+            //{
+            //    txtCallDetails.Text = $"קריאה: {currentCall.Description}";
+            //}
+            //else
+            //{
+            //    txtCallDetails.Text = "אין קריאה בטיפול";
+            //}
+        }
+
     }
 }
