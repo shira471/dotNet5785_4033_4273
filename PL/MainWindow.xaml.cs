@@ -74,26 +74,7 @@ namespace PL.Volunteer
                 typeof(DateTime),
                 typeof(MainWindow),
                 new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
-        //private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
-        //{
-        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
-        //}
-        //private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
-        //{
-        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
-        //}
-        //private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
-        //{
-        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
-        //}
-        //private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
-        //{
-        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
-        //}
-        //private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
-        //{
-        //    s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
-        //}
+        
         public int MaxYearRange
         {
             get { return (int)GetValue(MaxYearRangeProperty); }
@@ -165,7 +146,8 @@ namespace PL.Volunteer
             else if (userType == "Volunteer")
             {
                 // מעבר למסך מתנדב
-                new VolunteerListWindow().Show();
+                new AdminWindow().Show();
+                // new VolunteerListWindow().Show();
                 this.Hide();
             }
             else

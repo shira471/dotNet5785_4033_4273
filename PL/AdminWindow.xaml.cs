@@ -22,13 +22,13 @@ namespace PL.Volunteer
     public partial class AdminWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        public AdminWindow()
-        {
-            // השמה של הערך הנוכחי של שעון המערכת
-            CurrentTime = s_bl.Admin.GetSystemClock();
+        //public AdminWindow()
+        //{
+        //    // השמה של הערך הנוכחי של שעון המערכת
+        //    CurrentTime = s_bl.Admin.GetSystemClock();
 
-            InitializeComponent();
-        }
+        //    InitializeComponent();
+        //}
         public ObservableCollection<BO.Volunteer> Volunteers { get; set; }
 
         public BO.Volunteer SelectedVolunteer { get; set; }
