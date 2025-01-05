@@ -123,7 +123,7 @@ namespace PL.Volunteer
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             string userId = txtId.Text.Trim().ToLower();
-            string password = txtPassword.Password.ToString().ToLower();
+            string password = txtPassword.Text.ToString().ToLower();
 
 
             // בדיקת תקינות בסיסית

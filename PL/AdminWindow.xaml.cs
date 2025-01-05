@@ -22,30 +22,30 @@ namespace PL.Volunteer
     public partial class AdminWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        //public AdminWindow()
-        //{
+        public AdminWindow()
+        {
         //    // השמה של הערך הנוכחי של שעון המערכת
         //    CurrentTime = s_bl.Admin.GetSystemClock();
 
-        //    InitializeComponent();
-        //}
+           InitializeComponent();
+        }
         public ObservableCollection<BO.Volunteer> Volunteers { get; set; }
 
         public BO.Volunteer SelectedVolunteer { get; set; }
 
         // הגדרת תכונת תלות עבור CurrentTime
-        public DateTime CurrentTime
-        {
-            get { return (DateTime)GetValue(CurrentTimeProperty); }
-            set { SetValue(CurrentTimeProperty, value); }
-        }
+        //public DateTime CurrentTime
+        //{
+        //    get { return (DateTime)GetValue(CurrentTimeProperty); }
+        //    set { SetValue(CurrentTimeProperty, value); }
+        //}
 
-        public static readonly DependencyProperty CurrentTimeProperty =
-            DependencyProperty.Register(
-                "CurrentTime",
-                typeof(DateTime),
-                typeof(MainWindow),
-                new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
+        //public static readonly DependencyProperty CurrentTimeProperty =
+        //    DependencyProperty.Register(
+        //        "CurrentTime",
+        //        typeof(DateTime),
+        //        typeof(MainWindow),
+        //        new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);

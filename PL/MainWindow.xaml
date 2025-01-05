@@ -53,12 +53,10 @@
 
         <TextBox x:Name="txtId"  HorizontalAlignment="Center" Margin="0,64,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your ID:" VerticalAlignment="Top" Width="120"/>
 
-        <!-- טקסט ברירת מחדל -->
-        <TextBlock x:Name="txtPasswordPlaceholder" Text="enter your password:" 
-             VerticalAlignment="Top" HorizontalAlignment="Left" 
-             Margin="331,87,0,0" Foreground="Gray" Visibility="Visible" Grid.Row="2" />
         <!-- שדה סיסמה -->
-        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="328,104,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" IsEnabled="False"  AutomationProperties.AutomationId="" AutomationProperties.AccessKey="e"/>
+        <TextBox x:Name="txtPassword"  HorizontalAlignment="Center" Margin="0,87,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your password:" VerticalAlignment="Top" Width="120"/>
+
+        <!--<PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="328,104,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" IsEnabled="False"  AutomationProperties.AutomationId="" AutomationProperties.AccessKey="e"/>-->
         <!-- כפתור התחברות -->
         <Button Content="Login" Click="Login_Click" Margin="0,179,0,3" Grid.Row="2" />
 
