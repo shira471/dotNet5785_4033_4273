@@ -18,6 +18,7 @@ using Helpers;
 using DalApi;
 using System.Xml.Linq;
 using PL.viewModel;
+using PL.Calls;
 
 
 namespace PL.Volunteer
@@ -33,9 +34,6 @@ namespace PL.Volunteer
 
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
-
-
-
 
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
@@ -114,9 +112,16 @@ namespace PL.Volunteer
         {
             if (CurrentVolunteer.Id != null)
             {
-               //s_bl.Call.GetOpenCallsByVolunteer();
-                MessageBox.Show("הקריאה סומנה כסגורה.");
-                LoadCallDetails();
+                try
+                {
+                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, 1);//לשנות למספר רץ של assigment להבין איך לעשות את זה
+                    MessageBox.Show("הקריאה סומנה כסגורה.");
+                    LoadCallDetails();
+                }
+                catch
+                {
+                    MessageBox.Show("שגיאה בסיום הקריאה. אנא נסה שוב.");
+                }
             }
             else
             {
@@ -125,19 +130,19 @@ namespace PL.Volunteer
         }
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
-            //var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            //selectCallWindow.ShowDialog();
-            //LoadCallDetails();
+            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+            selectCallWindow.ShowDialog();
+            LoadCallDetails();
         }
-        private void ShowAllCallsHistory_Click(object sender, RoutedEventArgs e)
+        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
-            //var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            //myHistoryWindow.Show();
+            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
+            myHistoryWindow.Show();
         }
 
         private void LoadCallDetails()
         {
-            //var currentCall = s_bl.Call.GetCurrentCallForVolunteer(CurrentVolunteer?.Id ?? 0);
+            //var currentCall = s_bl.Call.GetCurrentCallForVolunteer(CurrentVolunteer?.Id,1,null);//לבדוק מה זה השלישי ולשנות אותו בהתאם לצורך
             //if (currentCall != null)
             //{
             //    txtCallDetails.Text = $"קריאה: {currentCall.Description}";

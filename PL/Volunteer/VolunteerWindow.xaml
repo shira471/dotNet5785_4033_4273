@@ -44,15 +44,9 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-
-        
-       
-
-        
-
         <!-- כפתורים לגישה למסכים נוספים -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="היסטוריית קריאות" Width="150" Margin="5" Click="ShowAllCallsHistory_Click" />
+            <Button Content="בחירת קריאה לטיפול" Width="150" Margin="5" Click="SelectCall_Click" />
             <Button Content="היסטוריית קריאות שלי" Width="150" Margin="5" Click="ShowMyCallsHistory_Click" />
         </StackPanel>
     </Grid>

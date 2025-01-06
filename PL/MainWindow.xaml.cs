@@ -146,9 +146,7 @@ namespace PL.Volunteer
             else if (userType == "Volunteer")
             {
                 // מעבר למסך מתנדב
-                //new AdminWindow().Show();
                 new VolunteerWindow(userId).Show();
-                //new VolunteerListWindow().Show();
                 this.Hide();
             }
             else
