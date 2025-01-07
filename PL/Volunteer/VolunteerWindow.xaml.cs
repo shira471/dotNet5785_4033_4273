@@ -130,8 +130,8 @@ namespace PL.Volunteer
         }
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
-            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
+          //  var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+           // selectCallWindow.ShowDialog();
             LoadCallDetails();
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)

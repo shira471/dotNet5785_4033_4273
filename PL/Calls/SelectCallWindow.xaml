@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Calls"
         mc:Ignorable="d"
         Title="SelectCallWindow" Height="640" Width="800">
     <Grid Margin="10">
@@ -17,20 +16,33 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Filter Section -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
+            <ComboBox Width="200" Margin="5" 
+                      ItemsSource="{Binding FilterOptions}"
+                      SelectedItem="{Binding SelectedFilterOption}" SelectionChanged="ComboBox_SelectionChanged"/>
+        </StackPanel>
 
         <!-- DataGrid -->
-        <DataGrid ItemsSource="{Binding Calls}" 
-            SelectedValue="{Binding SelectedCall, Mode=TwoWay}"
-           AutoGenerateColumns="False" 
-           Grid.Row="1" 
-           Grid.ColumnSpan="2"
-           Margin="10">
-            <DataGrid.Columns >
+        <DataGrid ItemsSource="{Binding FilteredCalls}"
+                  SelectedValue="{Binding SelectedCall, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  CanUserSortColumns="True"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  Margin="10" SelectionChanged="DataGrid_SelectionChanged">
+            <DataGrid.Columns>
                 <DataGridTextColumn Header="Call ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Brief Description" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="End Date" Binding="{Binding Phone}" Width="150" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding mail}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Call Description" Binding="{Binding Description}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="150" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Selected" Width="150" Margin="5" Click="btnSelected_Click" IsEnabled="{Binding SelectedCall}"/>
+        </StackPanel>
     </Grid>
 </Window>
