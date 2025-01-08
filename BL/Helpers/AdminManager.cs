@@ -44,7 +44,7 @@ internal static class AdminManager //stage 4
     {
         // new Thread(() => { // stage 7 - not sure - still under investigation - see stage 7 instructions after it will be released        
         updateClock(newClock);//stage 4-6
-        // }).Start(); // stage 7 as above
+        //}).Start(); // stage 7 as above
     }
 
     private static void updateClock(DateTime newClock) // prepared for stage 7 as DRY to eliminate needless repetition
@@ -66,6 +66,7 @@ internal static class AdminManager //stage 4
         ClockUpdatedObservers?.Invoke(); //prepared for stage 5
     }
     #endregion Stage 4
+
 
     #region Stage 7 base
     internal static readonly object blMutex = new();

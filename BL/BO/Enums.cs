@@ -62,9 +62,9 @@ public enum CallField
 /// </summary>
 public enum Status
 {
-    Open = 1,
-    Closed = 2,
-    InProgrese
+    Open = 0,
+    Closed = 1,
+    InProgrese=2
 }
 
 /// <summary>

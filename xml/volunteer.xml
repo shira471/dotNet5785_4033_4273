@@ -1,73 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>254825394</idVol>
-    <adress>tel aviv</adress>
-    <name>lea</name>
-    <email>juh@gmail.com</email>
-    <phoneNumber>053248691</phoneNumber>
-    <password />
-    <latitude>32.0852999</latitude>
-    <longitude>34.78176759999999</longitude>
-    <limitDestenation>0</limitDestenation>
+    <idVol>2841670</idVol>
+    <adress>982 Second Ave</adress>
+    <name>Dani Levy</name>
+    <email>dani.levy@gmail.com</email>
+    <phoneNumber>234654381</phoneNumber>
+    <password>22WArfHBK</password>
+    <latitude>-11.383887827172757</latitude>
+    <longitude>-40.42258013871725</longitude>
+    <limitDestenation>35.38</limitDestenation>
     <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>328603196</idVol>
-    <adress>hanashi hashishi 18 jerusalem</adress>
-    <name>shlomo attal</name>
-    <email>shlomowattal@gmail.com</email>
-    <phoneNumber>0587851589</phoneNumber>
-    <password />
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role xsi:nil="true" />
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>215943978</idVol>
-    <adress>Har Nof Hai Taib 52</adress>
-    <name>naama miryam kaufman</name>
-    <email>naamakaufman32@gmail.com</email>
-    <phoneNumber>0584654899</phoneNumber>
-    <password />
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role xsi:nil="true" />
-    <distanceType>Breakfast</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>326549441</idVol>
-    <adress>jerusalem</adress>
-    <name>hodaya carcom</name>
-    <email>hodayacarcom@gmail.com</email>
-    <phoneNumber>0509304196</phoneNumber>
-    <password />
-    <latitude>32.162413</latitude>
-    <longitude>34.844675</longitude>
-    <limitDestenation>0</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>Breakfast</distanceType>
+    <role>Manager</role>
+    <distanceType xsi:nil="true" />
   </Volunteer>
   <Volunteer>
     <idVol>212314033</idVol>
     <adress>jerusalem</adress>
     <name>shira</name>
-    <email>g@gmail.com</email>
+    <email>s@gmail.com</email>
     <phoneNumber>0584084178</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
     <limitDestenation>0</limitDestenation>
     <isActive>true</isActive>
-    <role xsi:nil="true" />
+    <role>Volunteer</role>
     <distanceType>Breakfast</distanceType>
   </Volunteer>
 </ArrayOfVolunteer>

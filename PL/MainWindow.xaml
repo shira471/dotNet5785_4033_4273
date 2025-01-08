@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Loaded="MainWindow_Loaded" Closed="MainWindow_Closed" Height="450" Width="800"
+        Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Grid Margin="10">
@@ -56,7 +56,6 @@
         <!-- שדה סיסמה -->
         <TextBox x:Name="txtPassword"  HorizontalAlignment="Center" Margin="0,87,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your password:" VerticalAlignment="Top" Width="120"/>
 
-        <!--<PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="328,104,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" IsEnabled="False"  AutomationProperties.AutomationId="" AutomationProperties.AccessKey="e"/>-->
         <!-- כפתור התחברות -->
         <Button Content="Login" Click="Login_Click" Margin="0,179,0,3" Grid.Row="2" />
 

@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <id>8764</id>
+    <detail>Service request</detail>
+    <adress>123 Main St</adress>
+    <latitude>87.08871151323257</latitude>
+    <longitude>-88.70701595416475</longitude>
+    <callType xsi:nil="true" />
+    <startTime>2024-01-07T00:00:00</startTime>
+    <maximumTime>2024-01-07T00:06:00</maximumTime>
+  </Call>
+</ArrayOfCall>
