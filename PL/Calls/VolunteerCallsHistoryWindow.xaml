@@ -3,10 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Calls"
         mc:Ignorable="d"
-        Title="VolunteerCallsHistoryWindow" Height="400" Width="800">
-    <Grid>
-        
+        Title="Volunteer Calls History" Height="640" Width="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Filter Section -->
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Filter:" VerticalAlignment="Center" />
+            <ComboBox Width="200" Margin="5" ItemsSource="{Binding FilterOptions}" SelectedItem="{Binding SelectedFilterOption}" />
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding ClosedCalls}" AutoGenerateColumns="False" CanUserSortColumns="True" Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="2*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="3*" />
+                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime}" Width="2*" />
+                <DataGridTextColumn Header="Assignment Start" Binding="{Binding AssignmentStartTime}" Width="2*" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding ActualEndTime}" Width="2*" />
+                <DataGridTextColumn Header="End Type" Binding="{Binding EndType}" Width="2*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

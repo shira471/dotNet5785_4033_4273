@@ -6,43 +6,32 @@
         mc:Ignorable="d"
         Title="SelectCallWindow" Height="640" Width="800">
     <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="367*"/>
-            <ColumnDefinition Width="433*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="500*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Filter Section -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
-            <ComboBox Width="200" Margin="5" 
-                      ItemsSource="{Binding FilterOptions}"
-                      SelectedItem="{Binding SelectedFilterOption}" SelectionChanged="ComboBox_SelectionChanged"/>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Filter:" VerticalAlignment="Center" />
+            <ComboBox Width="200" Margin="5" ItemsSource="{Binding FilterOptions}" SelectedItem="{Binding SelectedFilterOption}" />
         </StackPanel>
 
         <!-- DataGrid -->
-        <DataGrid ItemsSource="{Binding FilteredCalls}"
-                  SelectedValue="{Binding SelectedCall, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
-                  CanUserSortColumns="True"
-                  Grid.Row="1"
-                  Grid.ColumnSpan="2"
-                  Margin="10" SelectionChanged="DataGrid_SelectionChanged">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Calls}" AutoGenerateColumns="False" CanUserSortColumns="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Call ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Call Description" Binding="{Binding Description}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="150" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Buttons -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Selected" Width="150" Margin="5" Click="btnSelected_Click" IsEnabled="{Binding SelectedCall}"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Select" Width="100" Click="btnSelected_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -39,7 +39,7 @@
                     <TextBlock Name="txtCallDetails" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" />
                     <Button Content="סיים טיפול בקריאה" Width="200" HorizontalAlignment="Center" Margin="5"
                 Click="FinishCall_Click" />
-                    <Button Content="בחר קריאה לטיפול" Width="200" HorizontalAlignment="Center" Margin="5"
+                    <Button Content="ביטול טיפול" Width="200" HorizontalAlignment="Center" Margin="5"
                 Click="SelectCall_Click" />
                 </StackPanel>
             </GroupBox>

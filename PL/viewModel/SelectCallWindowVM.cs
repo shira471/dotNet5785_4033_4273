@@ -10,11 +10,10 @@ namespace PL.viewModel;
 
 public class SelectCallWindowVM : ViewModelBase
 {
-    public ObservableCollection<BO.OpenCallInList> Calls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
+    public ObservableCollection<OpenCallInList> Calls { get; set; } = new ObservableCollection<OpenCallInList>();
 
-
-    private BO.OpenCallInList? selectedCall;
-    public BO.OpenCallInList? SelectedCall
+    private OpenCallInList? selectedCall;
+    public OpenCallInList? SelectedCall
     {
         get => selectedCall;
         set
@@ -22,19 +21,47 @@ public class SelectCallWindowVM : ViewModelBase
             if (selectedCall != value)
             {
                 selectedCall = value;
-                Console.WriteLine($"SelectedCall changed: {selectedCall?.Id}"); // הוספת לוג לבדיקת שינוי
-                OnPropertyChanged(nameof(SelectedCall)); // יידע את ה-Binding שהערך השתנה
+                OnPropertyChanged(nameof(SelectedCall));
             }
         }
     }
 
-  //  public BO.CallsSortBy CallsSortBy { get; set; }
-
-    public SelectCallWindowVM()
+    private string? selectedFilterOption;
+    public string? SelectedFilterOption
     {
-        selectedCall = new OpenCallInList();
+        get => selectedFilterOption;
+        set
+        {
+            if (selectedFilterOption != value)
+            {
+                selectedFilterOption = value;
+                ApplyFilter();
+                OnPropertyChanged(nameof(SelectedFilterOption));
+            }
+        }
     }
 
+    //public void LoadCalls(int volunteerId)
+    //{
+    //    Calls.Clear();
+    //    var filteredCalls = new Call().GetOpenCallsByVolunteer(VolunteerId, null,null);
+    //    foreach (var call in filteredCalls)
+    //    {
+    //        Calls.Add(call);
+    //    }
+    //}
+
+    public void ApplyFilter()
+    {
+        if (string.IsNullOrWhiteSpace(SelectedFilterOption)) return;
+
+        var filteredCalls = Calls.Where(c => c.Description.Contains(SelectedFilterOption, StringComparison.OrdinalIgnoreCase)).ToList();
+        Calls.Clear();
+        foreach (var call in filteredCalls)
+        {
+            Calls.Add(call);
+        }
+    }
 }
 
 

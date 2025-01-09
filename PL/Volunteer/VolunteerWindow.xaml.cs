@@ -130,19 +130,20 @@ namespace PL.Volunteer
         }
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
-          //  var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-           // selectCallWindow.ShowDialog();
+            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+            selectCallWindow.ShowDialog();
             LoadCallDetails();
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
             var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.Show();
+            myHistoryWindow.ShowDialog();
+            LoadCallDetails();
         }
 
         private void LoadCallDetails()
         {
-            //var currentCall = s_bl.Call.GetCurrentCallForVolunteer(CurrentVolunteer?.Id,1,null);//לבדוק מה זה השלישי ולשנות אותו בהתאם לצורך
+            //var currentCall = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer?.Id, 1, null);//לבדוק מה זה השלישי ולשנות אותו בהתאם לצורך
             //if (currentCall != null)
             //{
             //    txtCallDetails.Text = $"קריאה: {currentCall.Description}";

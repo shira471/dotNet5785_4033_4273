@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>2841670</idVol>
-    <adress>982 Second Ave</adress>
-    <name>Dani Levy</name>
-    <email>dani.levy@gmail.com</email>
-    <phoneNumber>234654381</phoneNumber>
-    <password>22WArfHBK</password>
-    <latitude>-11.383887827172757</latitude>
-    <longitude>-40.42258013871725</longitude>
-    <limitDestenation>35.38</limitDestenation>
+    <idVol>9276352</idVol>
+    <adress>396 Oak St</adress>
+    <name>Yair Cohen</name>
+    <email>yair.cohen@gmail.com</email>
+    <phoneNumber>402282614</phoneNumber>
+    <password>liCkB7HK</password>
+    <latitude>64.48000277005477</latitude>
+    <longitude>163.16257047776577</longitude>
+    <limitDestenation>16.26</limitDestenation>
     <isActive>false</isActive>
-    <role>Manager</role>
+    <role xsi:nil="true" />
     <distanceType xsi:nil="true" />
   </Volunteer>
   <Volunteer>
-    <idVol>212314033</idVol>
+    <idVol>325004273</idVol>
     <adress>jerusalem</adress>
-    <name>shira</name>
-    <email>s@gmail.com</email>
-    <phoneNumber>0584084178</phoneNumber>
+    <name>ahuvi wunkler</name>
+    <email>auviwin3@gmail.com</email>
+    <phoneNumber>0507678050</phoneNumber>
     <password />
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>

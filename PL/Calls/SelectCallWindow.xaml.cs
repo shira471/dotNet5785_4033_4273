@@ -14,23 +14,23 @@ namespace PL.Calls
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-
-        // משתנה סטטי עבור BL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        // מאפיינים עבור הרשימה והמתנדב הנבחר
 
         public SelectCallWindowVM Vm { get; set; }
 
+        private int VolunteerId;
+ 
 
-        // בנאי החלון
-        public SelectCallWindow()
+        public SelectCallWindow(int volunteerId)
         {
-            Vm = new();
+            VolunteerId = volunteerId;
+
+            Vm = new SelectCallWindowVM();
             DataContext = Vm;
             InitializeComponent();
             try
             {
-                queryCallList(); // טעינת רשימת קריאות ראשונית
+                queryCallList();
             }
             catch (Exception ex)
             {
@@ -38,17 +38,16 @@ namespace PL.Calls
             }
         }
 
-       //פונקציה לטעינת רשימת קריאות
         private void queryCallList()
         {
-            Vm.Calls.Clear(); // ניקוי הרשימה
+            Vm.Calls.Clear();
             try
             {
-                //var calls = s_bl?.Call.GetCallsList(null, Vm.CallsSortBy) ?? Enumerable.Empty<BO.OpenCallInList>();
-                //foreach (var call in calls)
-                //{
-                //    Vm.Calls.Add(call);
-                //}
+                var calls = s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null,null);
+                foreach (var call in calls)
+                {
+                    Vm.Calls.Add(call);
+                }
             }
             catch (Exception ex)
             {
@@ -56,19 +55,17 @@ namespace PL.Calls
             }
         }
 
-        // פונקציה לרענון הרשימה כאשר קריאות מתעדכנות
         private void CallListObserver()
         {
             queryCallList();
         }
 
-        // פעולה שמופעלת כשחלון נטען
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                queryCallList(); // טוען את הרשימה
-                s_bl?.Call.AddObserver(CallListObserver); //הוספת תצפית על רשימת הקריאות
+                queryCallList();
+                s_bl.Call.AddObserver(CallListObserver);
             }
             catch (Exception ex)
             {
@@ -76,44 +73,42 @@ namespace PL.Calls
             }
         }
 
-        // פעולה שמופעלת כשחלון נסגר
         private void Window_Closed(object sender, EventArgs e)
         {
             try
             {
-                s_bl?.Volunteer.RemoveObserver(CallListObserver); // מסיר את התצפית על הרשימה
+                s_bl.Call.RemoveObserver(CallListObserver);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"שגיאה בסגירת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-        }
-
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
+            Vm.ApplyFilter();
         }
 
         private void btnSelected_Click(object sender, RoutedEventArgs e)
         {
             if (Vm.SelectedCall == null)
             {
-                MessageBox.Show("לא נבחר קריאה ", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("לא נבחר קריאה", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             try
             {
-                //לבדוק מה ואיך לעשות
-                queryCallList(); // רענון הרשימה
+                // Adding the selected call to the volunteer's list
+                s_bl.Call.AssignCallToVolunteer(VolunteerId, Vm.SelectedCall.Description);
+
+                MessageBox.Show($"קריאה {Vm.SelectedCall.Id} נוספה למתנדב {VolunteerId}", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                queryCallList(); // Refresh the list after assignment
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בבחירת קריאה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"שגיאה בהוספת קריאה למתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
