@@ -372,6 +372,7 @@ public class CallImplementation : ICall
         if (isFinish) 
             call.Status = Status.Closed;
     }
+  
     public IEnumerable<CallInList> GetCallsList(Enum? filterField, object? filterValue, Enum? sortField)
     {
         // קבלת כל הקריאות
@@ -380,18 +381,20 @@ public class CallImplementation : ICall
 
         // מיזוג הקריאות וההקצאות על פי ה-callId
         var callAssignments = from call in calls
-                              join assign in assigns on call.id equals assign.callId
+                              join assign in assigns on call.id equals assign.callId into callGroup
+                              from assign in callGroup.DefaultIfEmpty()
                               select new CallInList
                               {
                                   CallId = call.id,
                                   CallType = (CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
                                   TimeRemaining = call.maximumTime.HasValue ? call.maximumTime.Value - DateTime.Now : (TimeSpan?)null,
-                                  LastVolunteerName = _dal.volunteer.Read(assign.volunteerId)?.name,
-                                  CompletionTime = (call.maximumTime.HasValue && assign.finishTime.HasValue) ? (assign.finishTime.Value - call.startTime.Value) : null,
-                                  Status = Status.Open, // סטטוס כרגע הוא פתוח, תוכל לעדכן בהתאם למצב הסופי
+                                  LastVolunteerName = assign == null ? null : _dal.volunteer.Read(assign.volunteerId)?.name,
+                                  CompletionTime = (call.maximumTime.HasValue && assign?.finishTime.HasValue == true) ? (assign.finishTime.Value - call.startTime.Value) : null,
+                                  Status =Status.Open, // עדכון סטטוס לפי קריטריונים
                                   TotalAssignments = assigns.Count(a => a.callId == call.id) // סך ההקצאות לכל קריאה
                               };
+
 
         // סינון לפי השדה הנבחר אם יש
         if (filterField != null && filterValue != null)
