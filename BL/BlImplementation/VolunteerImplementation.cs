@@ -195,10 +195,10 @@ public class VolunteerImplementation : IVolunteer
             throw new BlNullPropertyException("Volunteer object cannot be null.");
         }
 
-        if (requesterId != volunteer.Id && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
-        {
-            throw new UnauthorizedAccessException("Only managers or the volunteer themselves can update details.");
-        }
+        //if (requesterId != volunteer.Id && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
+        //{
+        //    throw new UnauthorizedAccessException("Only managers or the volunteer themselves can update details.");
+        //}
 
         if (!IsValidEmail(volunteer.Email))
         {
@@ -218,11 +218,11 @@ public class VolunteerImplementation : IVolunteer
         var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
             ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
 
-        if (!object.Equals(existingVolunteer.role, volunteer.Role) &&
-            !object.Equals(_dal.volunteer.Read(requesterId).role, DO.Role.Manager))
-        {
-            throw new UnauthorizedAccessException("Only a manager can update the volunteer's role.");
-        }
+        //if (!object.Equals(existingVolunteer.role, volunteer.Role) &&
+        //    !object.Equals(_dal.volunteer.Read(requesterId).role, DO.Role.Manager))
+        //{
+        //    throw new UnauthorizedAccessException("Only a manager can update the volunteer's role.");
+        //}
 
         if (existingVolunteer.adress != volunteer.Address)
         {

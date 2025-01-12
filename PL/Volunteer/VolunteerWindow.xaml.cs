@@ -75,10 +75,11 @@ namespace PL.Volunteer
             // הפעלת כפתור השמירה
             btnSave.IsEnabled = true;
 
+            
             // כיבוי כפתור "עדכון פרטים" בזמן עריכה
             (sender as Button).IsEnabled = false;
         }
-
+        
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -100,7 +101,8 @@ namespace PL.Volunteer
 
                 // הפעלת כפתור "עדכון פרטים" מחדש
                 btnSave.IsEnabled = false;
-                EnableEditing_Click(sender: null, e: null);
+                btnEnableEditing.IsEnabled = true;
+               
             }
             catch (Exception ex)
             {

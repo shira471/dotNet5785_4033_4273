@@ -31,7 +31,7 @@
                 <TextBox Name="txtEmail" Width="200" IsEnabled="False" />
                 <!-- כפתורים -->
             </StackPanel>
-            <Button Content="עדכון פרטים"  Width="150" Click="EnableEditing_Click"/>
+            <Button Content="עדכון פרטים"  Width="150" Click="EnableEditing_Click"  Name="btnEnableEditing"/>
             <Button Content="שמור" Width="150" Click="SaveChanges_Click" IsEnabled="False" Name="btnSave" />
             <!-- פרטי קריאה בטיפול -->
             <GroupBox Header="קריאה בטיפול" Grid.Row="2" Margin="10">
