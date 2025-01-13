@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL"
+        xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:MainWindowVM />
+    </Window.DataContext>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -14,19 +16,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="txtId"  HorizontalAlignment="Center" Margin="0,64,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your ID:" VerticalAlignment="Top" Width="120"/>
+        <!-- TextBox for UserId -->
+        <TextBox HorizontalAlignment="Center" Margin="0,64,0,0" Grid.Row="0" 
+                 Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" 
+                 VerticalAlignment="Top" Width="120" />
 
-        <!-- שדה סיסמה -->
-        <TextBox x:Name="txtPassword"  HorizontalAlignment="Center" Margin="0,87,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your password:" VerticalAlignment="Top" Width="120"/>
+        <!-- PasswordBox for Password -->
+        <PasswordBox HorizontalAlignment="Center" Margin="0,87,0,0" Grid.Row="1" Width="120"
+                     PasswordChanged="PasswordBox_PasswordChanged" />
 
-        <!-- כפתור התחברות -->
+        <!-- Login Button -->
         <Button Content="Login" Click="Login_Click" Margin="0,179,0,3" Grid.Row="2" />
 
-        <!-- תצוגת שגיאה -->
-        <TextBlock x:Name="lblError" Foreground="Red" Visibility="Collapsed" />
+        <!-- Error Message -->
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
+                   Visibility="{Binding ErrorVisibility}" />
     </Grid>
 </Window>

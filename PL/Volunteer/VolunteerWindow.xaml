@@ -16,42 +16,42 @@
         <StackPanel Grid.Row="1" Margin="0,20,20,0">
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="ID:" Width="150" />
-                <TextBox Name="txtId" Width="200" IsEnabled="False" />
+                <TextBox Width="200" IsEnabled="False" Text="{Binding CurrentVolunteer.Id}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Full Name:" Width="150" />
-                <TextBox Name="txtFullName" Width="200" IsEnabled="False" />
+                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.FullName}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <Label Content="טלפון:" Width="150" />
-                <TextBox Name="txtPhone" Width="200" IsEnabled="False" />
+                <Label Content="Phone:" Width="150" />
+                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.Phone}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <Label Content="אימייל:" Width="150" />
-                <TextBox Name="txtEmail" Width="200" IsEnabled="False" />
+                <Label Content="Email:" Width="150" />
+                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.Email}"/>
                 <!-- כפתורים -->
             </StackPanel>
-            <Button Content="עדכון פרטים"  Width="150" Click="EnableEditing_Click"  Name="btnEnableEditing"/>
-            <Button Content="שמור" Width="150" Click="SaveChanges_Click" IsEnabled="False" Name="btnSave" />
-            
-            
+            <Button Content="Update details"  Width="150" Click="EnableEditing_Click"  />
+            <Button Content="Save" Width="150" Click="SaveChanges_Click" IsEnabled="{Binding IsEditing}"  />
+
+
             <!-- פרטי קריאה בטיפול -->
-            <GroupBox Header="קריאה בטיפול" Grid.Row="2" Margin="10">
+            <GroupBox Header="call in progress" Grid.Row="2" Margin="10">
                 <StackPanel Margin="5">
-                    <TextBlock Name="txtCallDetails" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" />
-                    <Button Content="סיים טיפול בקריאה" Width="200" HorizontalAlignment="Center" Margin="5"
+                    <TextBlock FontSize="14" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding CallDetails}"/>
+                    <Button Content="End call" Width="200" HorizontalAlignment="Center" Margin="5"
                 Click="FinishCall_Click" />
-                    <Button Content="ביטול טיפול" Width="200" HorizontalAlignment="Center" Margin="5"
+                    <Button Content="Cancel call" Width="200" HorizontalAlignment="Center" Margin="5"
                 Click="SelectCall_Click" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        
-        
+
+
         <!-- כפתורים לגישה למסכים נוספים -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="בחירת קריאה לטיפול" Width="150" Margin="5" Click="SelectCall_Click" />
-            <Button Content="היסטוריית קריאות שלי" Width="150" Margin="5" Click="ShowMyCallsHistory_Click" />
+            <Button Content="Select call to handle" Width="150" Margin="5" Click="SelectCall_Click" />
+            <Button Content="My calls history" Width="150" Margin="5" Click="ShowMyCallsHistory_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -1,9 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace PL.Volunteer
 {
-    public class MainWindowVM : ViewModelBase
+    public class MainWindowVM : INotifyPropertyChanged
     {
         private readonly BlApi.IBl _bl = BlApi.Factory.Get();
 
@@ -14,7 +16,7 @@ namespace PL.Volunteer
             set
             {
                 _userId = value;
-                OnPropertyChanged(nameof(UserId));
+                OnPropertyChanged();
             }
         }
 
@@ -25,7 +27,7 @@ namespace PL.Volunteer
             set
             {
                 _password = value;
-                OnPropertyChanged(nameof(Password));
+                OnPropertyChanged();
             }
         }
 
@@ -36,18 +38,18 @@ namespace PL.Volunteer
             set
             {
                 _errorMessage = value;
-                OnPropertyChanged(nameof(ErrorMessage));
+                OnPropertyChanged();
             }
         }
 
-        private bool _isErrorVisible;
-        public bool IsErrorVisible
+        private string _errorVisibility = "Collapsed";
+        public string ErrorVisibility
         {
-            get => _isErrorVisible;
+            get => _errorVisibility;
             set
             {
-                _isErrorVisible = value;
-                OnPropertyChanged(nameof(IsErrorVisible));
+                _errorVisibility = value;
+                OnPropertyChanged();
             }
         }
 
@@ -55,7 +57,7 @@ namespace PL.Volunteer
         {
             try
             {
-                IsErrorVisible = false;
+                ErrorVisibility = "Collapsed";
 
                 var userType = _bl.Volunteer.Login(UserId, Password);
 
@@ -73,8 +75,14 @@ namespace PL.Volunteer
             catch
             {
                 ErrorMessage = "Login failed. Please check your credentials.";
-                IsErrorVisible = true;
+                ErrorVisibility = "Visible";
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

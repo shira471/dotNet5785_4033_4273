@@ -372,7 +372,8 @@ public class CallImplementation : ICall
         if (isFinish) 
             call.Status = Status.Closed;
     }
-  
+
+
     public IEnumerable<CallInList> GetCallsList(Enum? filterField, object? filterValue, Enum? sortField)
     {
         // קבלת כל הקריאות
@@ -391,7 +392,7 @@ public class CallImplementation : ICall
                                   TimeRemaining = call.maximumTime.HasValue ? call.maximumTime.Value - DateTime.Now : (TimeSpan?)null,
                                   LastVolunteerName = assign == null ? null : _dal.volunteer.Read(assign.volunteerId)?.name,
                                   CompletionTime = (call.maximumTime.HasValue && assign?.finishTime.HasValue == true) ? (assign.finishTime.Value - call.startTime.Value) : null,
-                                  Status =Status.Open, // עדכון סטטוס לפי קריטריונים
+                                  Status = Status.Open, // עדכון סטטוס לפי קריטריונים
                                   TotalAssignments = assigns.Count(a => a.callId == call.id) // סך ההקצאות לכל קריאה
                               };
 

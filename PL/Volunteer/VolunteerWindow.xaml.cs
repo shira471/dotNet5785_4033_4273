@@ -1,36 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using BO;
-using BL.Helpers;
-using Helpers;
-using DalApi;
-using System.Xml.Linq;
-using PL.viewModel;
+using BlApi;
 using PL.Calls;
-
 
 namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window
     {
-       
+        public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
+
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
             set { SetValue(CurrentVolunteerProperty, value); }
         }
+        public string? CallDetails { get; set; }
 
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
@@ -38,12 +24,21 @@ namespace PL.Volunteer
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
         private readonly BlApi.IBl s_bl;
+        public bool IsEditing
+        {
+            get { return (bool)GetValue(IsEditingProperty); }
+            set { SetValue(IsEditingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsEditingProperty =
+            DependencyProperty.Register("IsEditing", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(false));
 
         public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
 
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
+            DataContext = this;
             LoadVolunteer(id);
             LoadCallDetails();
         }
@@ -53,81 +48,54 @@ namespace PL.Volunteer
             try
             {
                 CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(int.Parse(volunteerId));
-
-                txtId.Text = volunteerId;
-                txtFullName.Text = CurrentVolunteer.FullName;
-                txtPhone.Text = CurrentVolunteer.Phone;
-                txtEmail.Text = CurrentVolunteer.Email;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת פרטי המתנדב: {ex.Message}");
+                MessageBox.Show($"Error loading volunteer details: {ex.Message}");
                 Close();
             }
         }
         private void EnableEditing_Click(object sender, RoutedEventArgs e)
         {
-            // הפיכת השדות לעריכים
-            txtFullName.IsEnabled = true;
-            txtPhone.IsEnabled = true;
-            txtEmail.IsEnabled = true;
-
-            // הפעלת כפתור השמירה
-            btnSave.IsEnabled = true;
-
-            
-            // כיבוי כפתור "עדכון פרטים" בזמן עריכה
-            (sender as Button).IsEnabled = false;
+            IsEditing = true;
         }
-        
+
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // עדכון פרטי המתנדב
-                CurrentVolunteer.FullName = txtFullName.Text;
-                CurrentVolunteer.Phone = txtPhone.Text;
-                CurrentVolunteer.Email = txtEmail.Text;
+                // Save changes in BL
+                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
 
-                // שמירה באמצעות BL
-                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id,CurrentVolunteer);
+                MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                MessageBox.Show("פרטי המתנדב נשמרו בהצלחה.", "עדכון", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // הפיכת השדות ל-ReadOnly מחדש
-                txtFullName.IsEnabled = false;
-                txtPhone.IsEnabled = false;
-                txtEmail.IsEnabled = false;
-
-                // הפעלת כפתור "עדכון פרטים" מחדש
-                btnSave.IsEnabled = false;
-                btnEnableEditing.IsEnabled = true;
-               
+                // Disable editing after saving
+                IsEditing = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בעדכון פרטי המתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error updating volunteer details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void FinishCall_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentVolunteer.Id != null)
+            if (CurrentVolunteer?.Id != null)
             {
                 try
                 {
-                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, 1);//לשנות למספר רץ של assigment להבין איך לעשות את זה
-                    MessageBox.Show("הקריאה סומנה כסגורה.");
+                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
+                    MessageBox.Show("The call was marked as closed.");
                     LoadCallDetails();
                 }
                 catch
                 {
-                    MessageBox.Show("שגיאה בסיום הקריאה. אנא נסה שוב.");
+                    MessageBox.Show("Error closing the call. Please try again.");
                 }
             }
             else
             {
-                MessageBox.Show("אין קריאה בטיפול לסיים.");
+                MessageBox.Show("No ongoing call to finish.");
             }
         }
         private void SelectCall_Click(object sender, RoutedEventArgs e)
@@ -145,16 +113,7 @@ namespace PL.Volunteer
 
         private void LoadCallDetails()
         {
-            //var currentCall = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer?.Id, 1, null);//לבדוק מה זה השלישי ולשנות אותו בהתאם לצורך
-            //if (currentCall != null)
-            //{
-            //    txtCallDetails.Text = $"קריאה: {currentCall.Description}";
-            //}
-            //else
-            //{
-            //    txtCallDetails.Text = "אין קריאה בטיפול";
-            //}
+            // VolunteerCalls = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer.Id, null, null);
         }
-
     }
 }
