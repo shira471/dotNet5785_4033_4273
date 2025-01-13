@@ -53,10 +53,9 @@ public static class Initialization
 
         // Random role and distance type (if the Hamal enum is defined)
         Role? role = GetRandomRoleValue();
-        Hamal? distanceType = GetRandomHamalValue();
 
         // Create the volunteer with random values and save it in the database
-        s_dal!.volunteer.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, distanceType));//stage 2
+        s_dal!.volunteer.Create(new Volunteer(id, address, name, email, phoneNumber, password, latitude, longitude, limitDestination, isActive, role, TypeDistance.air));//stage 2
     }
 
 

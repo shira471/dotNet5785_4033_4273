@@ -9,7 +9,6 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Grid Margin="10">
-        <!-- הגדרת שורות ועמודות ב-Grid הראשי -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -18,38 +17,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        
-        
-         <!--אזור משתני תצורה--><!-- 
-        
-        <Grid Grid.Row="1" Margin="0,10,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            
-         --><!--משתנה תצורה לעריכה--><!-- 
-        
-            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="5">
-                <Label Content="risk time span" VerticalAlignment="Center" Margin="5" />
-                <TextBox Text= "{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" />
-                <Button Content="Update risk time spane" Click="UpdateMaxRange_Click" Width="150" Margin="5"  />
-            </StackPanel>
-        </Grid>
-
-         --><!--כפתורים כלליים--><!-- 
-        
-        <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-            <Button Content="show list" Width="200" Margin="5" Click="OpenListView_Click" />
-            <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
-            <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
-        </StackPanel>-->
 
         <TextBox x:Name="txtId"  HorizontalAlignment="Center" Margin="0,64,0,0" Grid.Row="2" TextWrapping="Wrap" Text="enter your ID:" VerticalAlignment="Top" Width="120"/>
 

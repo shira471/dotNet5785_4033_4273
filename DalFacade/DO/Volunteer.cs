@@ -10,16 +10,12 @@ public record Volunteer(
     double latitude,               // קו רוחב
     double longitude,              // קו אורך
     double limitDestenation,       // מגבלת המרחק
-    bool isActive = false,         // האם פעיל  
-    Role? role = null, // תפקיד
-    Hamal? distanceType = null     // סוג המרחק
+    bool isActive =false,         // האם פעיל  
+    Role? role =Role.Volunteer, // תפקיד
+    TypeDistance? distanceType = TypeDistance.air   // סוג המרחק
 )
 {
     // בנאי ברירת מחדל
-    public Volunteer() : this(0, "", "", "", "", "", 0, 0, 0) {
-        if (idVol == 212314033 || idVol == 325004273)
-            role = Role.Manager;
-        else
-            role = Role.Volunteer;
+    public Volunteer() : this(0, "", "", "", "", "", 0, 0, 0,false, Role.Volunteer, TypeDistance.air) {
     }
 }

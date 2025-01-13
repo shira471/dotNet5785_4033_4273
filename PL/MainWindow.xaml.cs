@@ -11,13 +11,10 @@ using System.Windows.Shapes;
 using BO;
 using BL.Helpers;
 using Helpers;
-
 using DalApi;
+
 namespace PL.Volunteer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -32,14 +29,14 @@ namespace PL.Volunteer
             //s_bl.Admin.AddClockObserver(clockObserver);
             //s_bl.Admin.AddConfigObserver(configObserver);
         }
-       
-       
+
+
         private void OpenListView_Click(object sender, RoutedEventArgs e)
         {
             new VolunteerListWindow().Show();
         }
-       
-        
+
+
         public static readonly DependencyProperty SelectedVolunteerProperty =
     DependencyProperty.Register(
         "SelectedVolunteer",
@@ -47,7 +44,7 @@ namespace PL.Volunteer
         typeof(MainWindow),
         new PropertyMetadata(null)
     );
-       
+
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
@@ -62,31 +59,31 @@ namespace PL.Volunteer
                 lblError.Visibility = Visibility.Visible;
                 return;
             }
+            try
+            {
+                // זיהוי סוג המשתמש
+                var userType = s_bl.Volunteer.Login(userId, password);
 
-            // זיהוי סוג המשתמש
-            var userType = s_bl.Volunteer.Login(userId, password);
-
-            if (userType == "Manager")
-            {
-                // מעבר למסך בחירת מנהל
-                 new AdminWindow().Show();
-                this.Hide();
+                if (userType == "Manager")
+                {
+                    // מעבר למסך בחירת מנהל
+                    new AdminWindow().Show();
+                    this.Hide();
+                }
+                else if (userType == "Volunteer")
+                {
+                    // מעבר למסך מתנדב
+                    new VolunteerWindow(userId).Show();
+                    this.Hide();
+                }
             }
-            else if (userType == "Volunteer")
+            catch (Exception ex)
             {
-                // מעבר למסך מתנדב
-                new VolunteerWindow(userId).Show();
-                this.Hide();
-            }
-            else
-            {
-                lblError.Text = "Invalid credentials. Please try again.";
+                MessageBox.Show($"{ex.Message} Please try again", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 lblError.Visibility = Visibility.Visible;
             }
         }
 
-
-        
-
     }
+
 }

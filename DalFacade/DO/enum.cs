@@ -23,4 +23,14 @@
         Manager,    // תפקיד של מנהל
         Volunteer   // תפקיד של מתנדב
     }
+
+    /// <summary>
+    /// Defines the type of distance calculation methods available.
+    /// </summary>
+    public enum TypeDistance
+    {
+        air,
+        walking,
+        driving
+    }
 }

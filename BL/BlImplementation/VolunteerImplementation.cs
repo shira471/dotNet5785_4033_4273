@@ -42,26 +42,30 @@ public class VolunteerImplementation : IVolunteer
             throw new BlInvalidValueException("Invalid ID number.");
         }
 
+        if (volunteer.MaxDistance < 0)
+            throw new ArgumentException("MaxDistance must be non-negative.");
+
         try
         {
             var temp = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
             IsValidEmail(volunteer.Email);
             IsValidPhoneNumber(volunteer.Phone);
             IsValidId(volunteer.Id);
-            
-           var dalVolunteer = new DO.Volunteer
+
+            var dalVolunteer = new DO.Volunteer
             {
                 idVol = volunteer.Id,
                 adress = volunteer.Address,
                 name = volunteer.FullName,
                 email = volunteer.Email,
                 phoneNumber = volunteer.Phone,
-                password = volunteer.Password ?? "",
+                password = volunteer.Password,
                 latitude = temp[0],
                 longitude = temp[1],
                 limitDestenation = volunteer.MaxDistance ?? 0,
                 isActive = volunteer.IsActive,
-                distanceType = (DO.Hamal)volunteer.DistanceType
+                role = (DO.Role)volunteer.Role,
+                distanceType = (DO.TypeDistance)volunteer.DistanceType
             };
             _dal.volunteer.Create(dalVolunteer);
             VolunteerManager.Observers.NotifyListUpdated();
@@ -162,30 +166,23 @@ public class VolunteerImplementation : IVolunteer
 
     public string Login(string username, string password)
     {
-        try
-        {
             int userId=int.Parse(username);
-            //var volunteers = _dal.volunteer.ReadAll();
             var vol = _dal.volunteer.Read(userId);
-            //var volunteer = volunteers.FirstOrDefault(v => v.email == username && v.password == password);
-
+          
             if (vol == null)
             {
                 throw new UnauthorizedAccessException("Invalid username or password.");
             }
-
-            //return vol.role switch
-            //{
-            //    DO.Role.Manager => "Manager",
-            //    DO.Role.Volunteer => "Volunteer",
-            //    _ => throw new BlInvalidValueException("Invalid role.")
-            //};
-            return "Volunteer";
-        }
-        catch (Exception ex)
-        {
-            throw new BlInvalidValueException("Error during login.", ex);
-        }
+            if (vol.password != password)
+            {
+                throw new UnauthorizedAccessException("Invalid username or password.");
+            }
+            return vol.role switch
+            {
+                DO.Role.Manager => "Manager",
+                DO.Role.Volunteer => "Volunteer",
+                _ => throw new BlInvalidValueException("Invalid role.")
+            };
     }
 
     public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
@@ -245,7 +242,7 @@ public class VolunteerImplementation : IVolunteer
             limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
             isActive: volunteer.IsActive,
             role: (DO.Role?)volunteer.Role,
-            distanceType: (DO.Hamal?)volunteer.DistanceType
+            distanceType: (DO.TypeDistance?)volunteer.DistanceType
         );
 
         try

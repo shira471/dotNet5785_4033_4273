@@ -11,21 +11,35 @@
     <longitude>163.16257047776577</longitude>
     <limitDestenation>16.26</limitDestenation>
     <isActive>false</isActive>
-    <role xsi:nil="true" />
-    <distanceType xsi:nil="true" />
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>326549441</idVol>
+    <adress>jerusalem</adress>
+    <name>Hodaya Carcom</name>
+    <email>hodaya@gmail.com</email>
+    <phoneNumber>0509304196</phoneNumber>
+    <password>122345</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>1233</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
     <idVol>325004273</idVol>
     <adress>jerusalem</adress>
-    <name>ahuvi</name>
+    <name>ahuvi cohen</name>
     <email>auviwin3@gmail.com</email>
     <phoneNumber>0507678050</phoneNumber>
-    <password />
+    <password>1234567</password>
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
-    <limitDestenation>0</limitDestenation>
+    <limitDestenation>122</limitDestenation>
     <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>Breakfast</distanceType>
+    <role>Manager</role>
+    <distanceType>air</distanceType>
   </Volunteer>
 </ArrayOfVolunteer>

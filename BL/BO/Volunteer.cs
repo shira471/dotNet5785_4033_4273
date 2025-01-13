@@ -22,7 +22,7 @@ public class Volunteer
     public string Email { get; set; }
 
     // סיסמה (עם הצפנה ותקינות)
-    public string? Password { get; set; }
+    public string Password { get; set; }
 
     // כתובת מלאה נוכחית
     public string? Address { get; set; }

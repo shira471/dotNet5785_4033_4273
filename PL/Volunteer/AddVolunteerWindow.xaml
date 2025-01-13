@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="AddVolunteerWindow" Height="450" Width="800">
+        Title="Add Volunteer" Height="500" Width="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,6 +20,12 @@
             <!-- Email -->
             <RowDefinition Height="Auto"/>
             <!-- Is Active -->
+            <RowDefinition Height="Auto"/>
+            <!-- Role -->
+            <RowDefinition Height="Auto"/>
+            <!-- Password -->
+            <RowDefinition Height="Auto"/>
+            <!-- Max Distance -->
             <RowDefinition Height="*"/>
             <!-- Button -->
         </Grid.RowDefinitions>
@@ -52,8 +58,24 @@
         <Label Content="Is Active:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
         <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"/>
 
+        <!-- Role -->
+        <Label Content="Role:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="300">
+            <ComboBoxItem Content="Manager" />
+            <ComboBoxItem Content="Volunteer" />
+        </ComboBox>
+
+        <!-- Password -->
+        <Label Content="Password:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
+                 Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Width="300" />
+        
+        <!-- Max Distance -->
+        <Label Content="Max Distance:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+
         <!-- Add/Update Button -->
-        <Button Content="{Binding ButtonText}" Grid.Row="6" Grid.ColumnSpan="2" Height="40" Width="120" 
+        <Button Content="{Binding ButtonText}" Grid.Row="9" Grid.ColumnSpan="2" Height="40" Width="120" 
                 HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="btnAddUpdate_Click"/>
     </Grid>
 </Window>
