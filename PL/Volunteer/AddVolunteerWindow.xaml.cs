@@ -21,6 +21,8 @@ namespace PL.Volunteer
 {
     public partial class AddVolunteerWindow : Window
     {
+        public ObservableCollection<Role> Roles { get; set; }
+
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -47,12 +49,15 @@ namespace PL.Volunteer
         {
             InitializeComponent();
 
+            // טען את ערכי ה-Enum
+            Roles = new ObservableCollection<Role>(Enum.GetValues(typeof(Role)).Cast<Role>());
+
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
 
             if (id == 0)
             {
                 // Add mode: Initialize with default values
-                CurrentVolunteer = new BO.Volunteer();
+                CurrentVolunteer = new BO.Volunteer { Role = Role.Volunteer }; // ברירת מחדל
                 ButtonText = "Add";
             }
             else
@@ -72,6 +77,36 @@ namespace PL.Volunteer
 
             DataContext = this;
         }
+
+        //public AddVolunteerWindow(int id = 0)
+        //{
+        //    InitializeComponent();
+
+        //    s_bl = BlApi.Factory.Get(); // Factory pattern for BL
+
+        //    if (id == 0)
+        //    {
+        //        // Add mode: Initialize with default values
+        //        CurrentVolunteer = new BO.Volunteer();
+        //        ButtonText = "Add";
+        //    }
+        //    else
+        //    {
+        //        // Update mode: Load data from BL
+        //        try
+        //        {
+        //            CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
+        //            ButtonText = "Update";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show($"Error loading volunteer: {ex.Message}");
+        //            Close();
+        //        }
+        //    }
+
+        //    DataContext = this;
+        //}
 
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {

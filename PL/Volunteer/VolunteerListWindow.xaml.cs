@@ -139,6 +139,10 @@ namespace PL.Volunteer
                 }
             }
         }
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
         // פעולה לצפייה בפרטי מתנדב
         private void btnView_Click(object sender, RoutedEventArgs e)
         {

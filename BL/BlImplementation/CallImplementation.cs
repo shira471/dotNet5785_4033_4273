@@ -418,24 +418,24 @@ public class CallImplementation : ICall
             }
         }
 
-        // מיון לפי השדה שנבחר אם יש
-        if (sortField != null)
-        {
-            switch (sortField)
-            {
-                case CallField.Status:
-                    callAssignments = callAssignments.OrderBy(c => c.OpenTime);
-                    break;
-                case CallField.AssignedTo:
-                    callAssignments = callAssignments.OrderBy(c => c.LastVolunteerName);
-                    break;
-                case CallField.Priority:
-                    // מיון לפי עדיפות אם יש
-                    break;
-                default:
-                    break;
-            }
-        }
+        //// מיון לפי השדה שנבחר אם יש
+        //if (sortField != null)
+        //{
+        //    switch (sortField)
+        //    {
+        //        case CallType.:
+        //            callAssignments = callAssignments.OrderBy(c => c.OpenTime);
+        //            break;
+        //        case CallField.AssignedTo:
+        //            callAssignments = callAssignments.OrderBy(c => c.LastVolunteerName);
+        //            break;
+        //        case CallField.Priority:
+        //            // מיון לפי עדיפות אם יש
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         return callAssignments;
     }

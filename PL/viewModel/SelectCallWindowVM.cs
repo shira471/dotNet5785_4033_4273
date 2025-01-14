@@ -11,6 +11,7 @@ namespace PL.viewModel;
 public class SelectCallWindowVM : ViewModelBase
 {
     public ObservableCollection<OpenCallInList> Calls { get; set; } = new ObservableCollection<OpenCallInList>();
+    public ObservableCollection<CallInList> CallList { get; set; } = new ObservableCollection<CallInList>();
 
     private OpenCallInList? selectedCall;
     public OpenCallInList? SelectedCall

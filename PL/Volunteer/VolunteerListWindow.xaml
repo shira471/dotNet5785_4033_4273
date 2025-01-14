@@ -41,6 +41,7 @@
             <Button Content="Delete" Width="150"  Margin="5"  Click="btnDelete_Click" IsEnabled="{Binding SelectedVolunteer}"/>
             <Button Content="Update" Width="150" Margin="5" Click="btnUpdate_Click" IsEnabled="{Binding SelectedVolunteer}"/>
             <Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedVolunteer}"/>
+            <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" />
 
         </StackPanel>
     </Grid>

@@ -58,12 +58,18 @@
         <Label Content="Is Active:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
         <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left"/>
 
-        <!-- Role -->
+        <!-- Role --><!--
         <Label Content="Role:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
         <ComboBox SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="300">
             <ComboBoxItem Content="Manager" />
             <ComboBoxItem Content="Volunteer" />
-        </ComboBox>
+        </ComboBox>-->
+        <!-- Role -->
+        <Label Content="Role:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox ItemsSource="{Binding Roles}" 
+          SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}" 
+          Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="300" />
+
 
         <!-- Password -->
         <Label Content="Password:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>

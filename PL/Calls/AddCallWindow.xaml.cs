@@ -79,12 +79,12 @@ namespace PL.Call
                 if (ButtonText == "Add")
                 {
                     s_bl.Call.AddCall(CurrentCall!);
-                    MessageBox.Show("Volunteer added successfully.");
+                    MessageBox.Show("Call added successfully.");
                 }
                 else
                 {
                     s_bl.Call.UpdateCallDetails(CurrentCall);
-                    MessageBox.Show("Volunteer updated successfully.");
+                    MessageBox.Show("Call updated successfully.");
                 }
 
                 // סגור את החלון לאחר הצלחה
