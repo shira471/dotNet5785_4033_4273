@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="CallsViewWindow" Height="450" Width="800">
+        Title="Calls Management" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
@@ -13,28 +13,26 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="CallDataGrid" AutoGenerateColumns="True" CanUserSortColumns="True" IsReadOnly="True">
+        <DataGrid x:Name="CallDataGrid" AutoGenerateColumns="False" CanUserSortColumns="True" IsReadOnly="True" ItemsSource="{Binding Calls}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Call Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Call ID" Binding="{Binding CallId}" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-                <DataGridTextColumn Header="Volunteer Name" Binding="{Binding VolunteerName}" />
-                <DataGridTextColumn Header="Total allocations" Binding="{Binding AssignmentCount}" />
-                <DataGridTextColumn Header="Creation Date" Binding="{Binding CreationDate}" />
-                <DataGridTemplateColumn Header="actions">
+                <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName}" />
+                <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments}" />
+                <DataGridTemplateColumn Header="Actions">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <!--<Button Content="Delete" Click="DeleteCall_Click" Visibility="{Binding CanDelete, Converter={StaticResource BoolToVisibilityConverter}}" />-->
+                            <Button Content="Delete" Click="DeleteCall_Click" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <!-- Buttons -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Add" Width="150" Margin="5" Click="btnAdd_Click"/>
-            <Button Content="Update" Width="150" Margin="5" Click="btnUpdate_Click" IsEnabled="{Binding selectedCall}"/>
-            <Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding selectedCall}"/>
 
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Add Call" Width="150" Margin="5" Click="btnAdd_Click"/>
+            <Button Content="Update Call" Width="150" Margin="5" Click="btnUpdate_Click" IsEnabled="{Binding SelectedCall}"/>
+            <Button Content="View Call" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedCall}"/>
         </StackPanel>
 
     </Grid>

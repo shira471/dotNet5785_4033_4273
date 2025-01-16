@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using PL.Volunteer;
+using BO;
+
 
 namespace PL.Call
 {
@@ -20,13 +23,13 @@ namespace PL.Call
     /// </summary>
     public partial class AddCallWindow : Window
     {
-        
-      
-            public BO.Call? CurrentCall
-        {
+
+        public ObservableCollection<CallType> CallTypes { get; set; }
+        public BO.Call? CurrentCall
+            {
             get { return (BO.Call?)GetValue(CurrentCallProperty); }
             set { SetValue(CurrentCallProperty, value); }
-        }
+            }
 
         public static readonly DependencyProperty CurrentCallProperty =
             DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallsViewWindow), new PropertyMetadata(null));
@@ -38,18 +41,22 @@ namespace PL.Call
 
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(CallsViewWindow), new PropertyMetadata("Add"));
+
         private readonly BlApi.IBl s_bl;
 
         public AddCallWindow(int id = 0)
         {
             InitializeComponent();
+            CallTypes = new ObservableCollection<CallType>(Enum.GetValues(typeof(CallType)).Cast<CallType>());
 
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
 
             if (id == 0)
             {
                 // Add mode: Initialize with default values
-                CurrentCall = new BO.Call();
+                CurrentCall = new BO.Call { CallType = CallType.Emergency,
+                OpenTime = DateTime.Now
+                }; // ברירת מחדל
                 ButtonText = "Add";
             }
             else

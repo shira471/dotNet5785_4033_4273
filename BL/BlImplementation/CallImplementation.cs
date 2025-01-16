@@ -167,14 +167,20 @@ public class CallImplementation : ICall
             throw new Exception($"Cannot delete a call with active assignments (Call ID={callId}).");
         }
 
-        // מחיקת כל השיוכים הקשורים לקריאה
-        foreach (var assignment in assignments)
+        try
         {
-            _dal.assignment.Delete(assignment.id);
-        }
+            // מחיקת כל השיוכים הקשורים לקריאה
+            foreach (var assignment in assignments)
+            {
+                _dal.assignment.Delete(assignment.id);
+            }
 
-        // מחיקת הקריאה עצמה
-        _dal.call.Delete(callId);
+            _dal.call.Delete(callId);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to delete call.", ex);
+        }
         CallManager.Observers.NotifyListUpdated(); //stage 5
     }
     public int[] GetCallCountsByStatus()
@@ -349,19 +355,41 @@ public class CallImplementation : ICall
             throw new ArgumentNullException(nameof(call), "Call cannot be null.");
         }
 
-        // עדכון פרטי הקריאה במסד הנתונים
-        // נניח שיש לך פונקציה ב-DAL שתעדכן את הקריאה
-        var doCall = new DO.Call(//הפיכה מאובייקט מסוג BO לDO
-               id: 0, // ייווצר מזהה חדש ב-DAL
-           detail: call.Description,
-           adress: call.Address,
-           latitude: call.Latitude,
-           longitude: call.Longitude,
-           callType: (DO.Hamal?)call.CallType,
-           startTime: call.OpenTime,
-           maximumTime: call.MaxEndTime
-               );
-        _dal.call.Update(doCall);
+        // בדיקת תקינות לוגית
+        if (call.MaxEndTime <= call.OpenTime)
+        {
+            throw new ArgumentException("MaxEndTime must be greater than OpenTime.");
+        }
+
+        // עדכון קווי אורך ורוחב לפי הכתובת
+        var coordinates = VolunteerManager.GetCoordinatesFromGoogle(call.Address);
+        if (coordinates == null || coordinates.Length < 2)
+        {
+            throw new InvalidOperationException("Invalid address: could not retrieve coordinates.");
+        }
+
+        // יצירת אובייקט DO.Call
+        var doCall = new DO.Call
+        {
+            id = call.Id,
+            detail = call.Description,
+            adress = call.Address,
+            latitude = coordinates[0],
+            longitude = coordinates[1],
+            callType = (DO.Hamal?)call.CallType,
+            startTime = call.OpenTime,
+            maximumTime = call.MaxEndTime
+        };
+
+        // עדכון הקריאה בשכבת ה-DAL
+        try
+        {
+            _dal.call.Update(doCall);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to update call.", ex);
+        }
         CallManager.Observers.NotifyItemUpdated(doCall.id); //stage 5
         CallManager.Observers.NotifyListUpdated(); //stage 5
 
@@ -374,71 +402,71 @@ public class CallImplementation : ICall
     }
 
 
-    public IEnumerable<CallInList> GetCallsList(Enum? filterField, object? filterValue, Enum? sortField)
+    public IEnumerable<CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField)
     {
-        // קבלת כל הקריאות
-        var calls = _dal.call.ReadAll(); // או כל קריאה ל- DAL כדי להביא את כל הקריאות
-        var assigns = _dal.assignment.ReadAll(); // כל ההקצאות
+        // טוען את כל הקריאות וההקצאות משכבת ה-DAL
+        var calls = _dal.call.ReadAll();
+        var assignments = _dal.assignment.ReadAll();
 
-        // מיזוג הקריאות וההקצאות על פי ה-callId
+        // מציאת ההקצאה האחרונה לכל קריאה
+        var latestAssignments = assignments
+            .GroupBy(a => a.callId)
+            .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
+
+        // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
-                              join assign in assigns on call.id equals assign.callId into callGroup
+                              join assign in latestAssignments on call.id equals assign?.callId into callGroup
                               from assign in callGroup.DefaultIfEmpty()
                               select new CallInList
                               {
                                   CallId = call.id,
                                   CallType = (CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
-                                  TimeRemaining = call.maximumTime.HasValue ? call.maximumTime.Value - DateTime.Now : (TimeSpan?)null,
-                                  LastVolunteerName = assign == null ? null : _dal.volunteer.Read(assign.volunteerId)?.name,
-                                  CompletionTime = (call.maximumTime.HasValue && assign?.finishTime.HasValue == true) ? (assign.finishTime.Value - call.startTime.Value) : null,
-                                  Status = Status.Open, // עדכון סטטוס לפי קריטריונים
-                                  TotalAssignments = assigns.Count(a => a.callId == call.id) // סך ההקצאות לכל קריאה
+                                  TimeRemaining = call.maximumTime.HasValue
+                                      ? call.maximumTime.Value - DateTime.Now
+                                      : (TimeSpan?)null,
+                                  LastVolunteerName = assign?.volunteerId != null
+                                      ? _dal.volunteer.Read(assign.volunteerId)?.name
+                                      : null,
+                                  CompletionTime = assign?.finishTime != null
+                                      ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
+                                      : null,
+                                  Status = assign != null && assign.finishTime.HasValue
+                                      ? Status.Closed
+                                      : Status.Open,
+                                  TotalAssignments = assignments.Count(a => a.callId == call.id)
                               };
 
-
-        // סינון לפי השדה הנבחר אם יש
+        // סינון הקריאות לפי שדה וערך (אם נבחרו)
         if (filterField != null && filterValue != null)
         {
-            switch (filterField)
+            callAssignments = filterField switch
             {
-                case CallField.Status:
-                    var statusFilter = (Status)filterValue;
-                    callAssignments = callAssignments.Where(c => c.Status == statusFilter);
-                    break;
-                case CallField.AssignedTo:
-                    var volunteerName = (string)filterValue;
-                    callAssignments = callAssignments.Where(c => c.LastVolunteerName == volunteerName);
-                    break;
-                case CallField.Priority:
-                    // סינון לפי עדיפות - להוסיף אם יש לך מנגנון לזה
-                    break;
-                default:
-                    break;
-            }
+                CallField.Status => callAssignments.Where(c => c.Status == (Status)filterValue),
+                CallField.AssignedTo => callAssignments.Where(c => c.LastVolunteerName == (string)filterValue),
+                _ => callAssignments
+            };
         }
 
-        //// מיון לפי השדה שנבחר אם יש
-        //if (sortField != null)
-        //{
-        //    switch (sortField)
-        //    {
-        //        case CallType.:
-        //            callAssignments = callAssignments.OrderBy(c => c.OpenTime);
-        //            break;
-        //        case CallField.AssignedTo:
-        //            callAssignments = callAssignments.OrderBy(c => c.LastVolunteerName);
-        //            break;
-        //        case CallField.Priority:
-        //            // מיון לפי עדיפות אם יש
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
+        // מיון הקריאות לפי שדה שנבחר
+        if (sortField != null)
+        {
+            callAssignments = sortField switch
+            {
+                CallField.Status => callAssignments.OrderBy(c => c.Status),
+                CallField.AssignedTo => callAssignments.OrderBy(c => c.LastVolunteerName),
+                _ => callAssignments.OrderBy(c => c.CallId)
+            };
+        }
+        else
+        {
+            callAssignments = callAssignments.OrderBy(c => c.CallId);
+        }
 
         return callAssignments;
     }
+   
+
     public void AddObserver(Action listObserver) =>
 CallManager.Observers.AddListObserver(listObserver); //stage 5
     public void AddObserver(int id, Action observer) =>

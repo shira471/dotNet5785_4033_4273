@@ -15,9 +15,23 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
+    <idVol>236154955</idVol>
+    <adress>jerusalem</adress>
+    <name>ayala alfasy</name>
+    <email>ayala.hey@gmail.com</email>
+    <phoneNumber>0523671899</phoneNumber>
+    <password>2361549</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>4</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
     <idVol>325004273</idVol>
     <adress>jerusalem</adress>
-    <name>ahuvi winkler</name>
+    <name>Ahuvi Winkler</name>
     <email>a@gmail.com</email>
     <phoneNumber>0507678050</phoneNumber>
     <password>1234567</password>
@@ -29,15 +43,15 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>236154955</idVol>
-    <adress>jerusalem</adress>
-    <name>ayala alfasy</name>
-    <email>ayala.hey@gmail.com</email>
-    <phoneNumber>0523671899</phoneNumber>
-    <password>2361549</password>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>4</limitDestenation>
+    <idVol>215943978</idVol>
+    <adress>hai taib 52</adress>
+    <name>Naama Kaufman</name>
+    <email>naamakaufman32@gmail.com</email>
+    <phoneNumber>0584654899</phoneNumber>
+    <password>0584654899</password>
+    <latitude>31.420771</latitude>
+    <longitude>34.588366</longitude>
+    <limitDestenation>12</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>

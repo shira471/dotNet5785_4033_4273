@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BO;
 using PL.Call;
 using PL.Calls;
 using PL.viewModel;
@@ -34,16 +35,16 @@ namespace PL
 
         public CallsViewWindow()
         {
-            vm = new();
+            vm = new CallViewVM();
             DataContext = vm;
             InitializeComponent();
             try
             {
-                queryCallList(); // טעינת רשימת קריאות ראשונית
+                queryCallList();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת הקריאות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         // פונקציה לטעינת רשימת המתנדבים
@@ -52,7 +53,12 @@ namespace PL
             vm.Calls.Clear(); // ניקוי הרשימה
             try
             {
-                var calls = s_bl?.Call.GetCallsList(null,vm.Calls,null) ?? Enumerable.Empty<BO.CallInList>();
+                CallField? filterField = CallField.Status;       // שדה לסינון
+                object? filterValue = Status.Open;              // ערך לסינון (קריאות פתוחות)
+                CallField? sortField = CallField.AssignedTo;    // שדה למיון
+
+                // קריאה ל-GetCallsList
+                var calls = s_bl?.Call.GetCallsList(filterField, filterValue, sortField) ?? Enumerable.Empty<BO.CallInList>();
                 foreach (var call in calls)
                 {
                     vm.Calls.Add(call);
@@ -60,7 +66,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         // פונקציה לרענון הרשימה כאשר מתנדבים מתעדכנים
@@ -77,7 +83,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -103,7 +109,7 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בהוספת מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error adding call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void btnUpdate_Click(object sender, RoutedEventArgs e) {
@@ -111,7 +117,7 @@ namespace PL
             //    SelectedVolunteer = s;
             if (vm.SelectedCall == null)
             {
-                MessageBox.Show("לא נבחר מתנדב לעדכון.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+               MessageBox.Show("Please select a call to update.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -124,14 +130,14 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בעדכון מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error updating call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     
         private void btnView_Click(object sender, RoutedEventArgs e) {
             if (vm.SelectedCall == null)
             {
-                MessageBox.Show("לא נבחר מתנדב לצפייה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please select a call to view.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             try
@@ -148,37 +154,35 @@ namespace PL
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"לא ניתן לצפות בפרטי המתנדב: {ex.Message}", "שגיאה בצפייה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error viewing call details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void DeleteCall_Click(object sender, RoutedEventArgs e)
         {
-            var SelectedCall = vm.SelectedCall;
-            if (SelectedCall == null) // בדיקה אם נבחר מתנדב
+ 
+            if (vm.SelectedCall == null)
             {
-                MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please select a call to delete.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var result = MessageBox.Show(
-                $"האם אתה בטוח שברצונך למחוק את המתנדב {SelectedCall.CallId}?",
-                "אישור מחיקה",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning
-            );
+            var result = MessageBox.Show($"Are you sure you want to delete the call {vm.SelectedCall.CallId}?",
+                                          "Delete Confirmation",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Warning);
 
-            if (result == MessageBoxResult.Yes) // ביצוע מחיקה אם המשתמש מאשר
+            if (result == MessageBoxResult.Yes)
             {
                 try
                 {
-                    s_bl.Volunteer.DeleteVolunteer(SelectedCall.CallId); // מחיקת המתנדב בלוגיקה העסקית
-                    vm.Calls.Remove(vm.Calls.First(v => v.Id == SelectedCall.CallId)); // הסרה מהרשימה המקומית
-                    MessageBox.Show("המתנדב נמחק בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                    s_bl.Call.DeleteCall(vm.SelectedCall.CallId);
+                    vm.Calls.Remove(vm.SelectedCall);
+                    MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"לא ניתן למחוק את המתנדב: {ex.Message}", "שגיאה במחיקה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error deleting call: {ex.Message}", "Error deleting", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

@@ -28,9 +28,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ID -->
-        <Label Content="ID:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.CallId, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
 
         <!-- Description -->
         <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
@@ -40,14 +37,20 @@
         <Label Content="open time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox Text="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
 
+        <!-- Max Time -->
+        <Label Content="maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+
         <!-- Address -->
-        <Label Content="Address:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
 
         <!-- Call Type -->
-        <Label Content="Call Type:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.CallType, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <Label Content="Call Type:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox ItemsSource="{Binding CallTypes}"
+          SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
 
+  
 
         <!-- Add/Update Button -->
         <Button Content="{Binding ButtonText}" Grid.Row="6" Grid.ColumnSpan="2" Height="40" Width="120" 

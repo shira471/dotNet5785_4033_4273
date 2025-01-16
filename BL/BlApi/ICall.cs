@@ -21,7 +21,7 @@ public interface ICall: IObservable //stage 5 הרחבת ממשק
     // 2. בקשת רשימת קריאות
     // מקבלת פרמטרים לסינון ומיון, מחזירה רשימת קריאות מסוננת וממוינת.
     // אם ערך סינון או מיון הוא null, ברירת המחדל היא ללא סינון/מיון לפי מספר קריאה.
-    IEnumerable<BO.CallInList> GetCallsList(Enum? filterField, object? filterValue, Enum? sortField);
+    IEnumerable<BO.CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField);
 
     // 3. בקשת פרטי קריאה
     // מקבלת מזהה קריאה, מחזירה את פרטי הקריאה כולל רשימת ההקצאות.

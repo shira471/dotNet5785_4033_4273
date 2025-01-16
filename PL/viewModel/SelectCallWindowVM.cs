@@ -45,7 +45,7 @@ public class SelectCallWindowVM : ViewModelBase
     //public void LoadCalls(int volunteerId)
     //{
     //    Calls.Clear();
-    //    var filteredCalls = new Call().GetOpenCallsByVolunteer(VolunteerId, null,null);
+    //    var filteredCalls = new Call().GetOpenCallsByVolunteer(VolunteerId, null, null);
     //    foreach (var call in filteredCalls)
     //    {
     //        Calls.Add(call);
