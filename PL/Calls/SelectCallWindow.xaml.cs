@@ -1,5 +1,4 @@
-﻿
-using BO;
+﻿using BO;
 using PL.viewModel;
 using System;
 using System.Collections.ObjectModel;
@@ -56,21 +55,9 @@ public partial class SelectCallWindow : Window
         }
         catch (Exception ex)
         {
-<<<<<<< HEAD
-            MessageBox.Show($"Error loading call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-=======
-            if(Vm.Calls!=null)
-                Vm.Calls.Clear();
-            try
-            {
-                Vm.Calls = new (s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null, null));
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading the list of calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
->>>>>>> da4dbf356ad3a9b3ae7b5d4ec4b45c08b56ec174
+            MessageBox.Show($"Error loading call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
         }
     }
 
@@ -124,4 +111,3 @@ public partial class SelectCallWindow : Window
         }
     }
 }
-
