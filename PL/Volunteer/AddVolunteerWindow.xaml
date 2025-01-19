@@ -69,7 +69,7 @@
                  Grid.Row="9" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
 
         <!-- Add/Update Button -->
-        <Button Content="Add" Grid.Row="10" Grid.ColumnSpan="2" Height="40" Width="150" 
+        <Button Content="Add" Click="btnAddUpdate_Click" Grid.Row="10" Grid.ColumnSpan="2" Height="40" Width="150" 
                 HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                 Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
     </Grid>

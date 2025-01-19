@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>212314033</idVol>
-    <adress>jerusalem</adress>
-    <name>Shira alfasi</name>
-    <email>syrhlpsy7@gmail.com</email>
-    <phoneNumber>0584084178</phoneNumber>
-    <password>58850090</password>
-    <latitude>34.5922650713197</latitude>
-    <longitude>-32.24445263209182</longitude>
-    <limitDestenation>6.36</limitDestenation>
-    <isActive>true</isActive>
-    <role>Manager</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>325004273</idVol>
     <adress>jerusalem</adress>
     <name>Ahuvi Winkler</name>
@@ -54,6 +40,20 @@
     <limitDestenation>4</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>212314033</idVol>
+    <adress>jerusalem</adress>
+    <name>Shira alfas</name>
+    <email>syrhlpsy7@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
+    <password>58850090</password>
+    <latitude>34.5922650713197</latitude>
+    <longitude>-32.24445263209182</longitude>
+    <limitDestenation>6.36</limitDestenation>
+    <isActive>true</isActive>
+    <role>Manager</role>
     <distanceType>air</distanceType>
   </Volunteer>
 </ArrayOfVolunteer>
