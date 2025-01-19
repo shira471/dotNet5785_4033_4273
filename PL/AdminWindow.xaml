@@ -5,89 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="AdminWindow" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed"  Height="450" Width="800">
-    <!--אזור משתני תצורה-->
+        Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" Height="450" Width="800"
+        Background="AliceBlue" FontFamily="Segoe UI">
 
-
-    <Grid Grid.Row="1" Margin="0,10,0,10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- כותרת חלון -->
+        <TextBlock Text="Welcome!" FontSize="24" FontWeight="Bold" Foreground="Green" HorizontalAlignment="Center" Margin="0,10,0,20" />
 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-        <!--משתנה תצורה לעריכה-->
-
-
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="5">
-            <Label Content="risk time span" VerticalAlignment="Center" Margin="5" />
-            <TextBox Text= "{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Content="Update risk time spane" Click="UpdateMaxRange_Click" Width="150" Margin="5"  />
-        </StackPanel>
-
-
-
-        <!--כפתורים כלליים-->
-
-
-        <!--<StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-            --><!--<Button Content="show list" Width="200" Margin="5" Click="OpenListView_Click" />--><!--
-            <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
-            <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
-        </StackPanel>-->
-
-
-        <!--<Grid Margin="10">-->
-        <!-- אזור שעון המערכת -->
-        <!--<Grid Grid.Row="0" Margin="0,23,0,10" RenderTransformOrigin="0.584,0.484">-->
-        <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>-->
-
-        <!--תצוגת שעון המערכת-->
-        <Label Grid.Column="1" Content="{Binding CurrentTime}"
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,0,0,0" Height="Auto"  Width="Auto" Grid.RowSpan="3"  FlowDirection="LeftToRight" >
-            
-        </Label>
-
-        <!--כפתורים לקידום שעון המערכת-->
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="5,5,326,5" Grid.ColumnSpan="2">
-            <Button Content="add one minute" Margin="5" Click="btnAddOneMinute_Click" />
-            <Button Content="add one hour" Margin="5" Click="btnAddOneHour_Click" />
-            <Button Content="add one day" Margin="5" Click="btnAddOneDay_Click" />
-            <Button Content="add one month" Margin="5" Click="btnAddOneMonth_Click" />
-            <Button Content="add one year" Margin="5" Click="btnAddOneYear_Click" />
-        </StackPanel>
-        <!--</Grid>-->
-
-        <!-- כפתורים כלליים -->
-        
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,103,0,-83">
-                <Button Content="initialize data base" Width="200" Margin="5" Click="InitializeDB_Click" />
-                <Button Content="reset data base" Width="200" Margin="5" Click="ResetDB_Click" />
+            <!-- אזור משתני תצורה -->
+            <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,100,10,10">
+                <Label Content="Risk time span" VerticalAlignment="Center" Margin="5" />
+                <TextBox Text="{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                <Button Content="Update risk time span" Click="UpdateMaxRange_Click" Width="200" Margin="5" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
             </StackPanel>
-        <Button Content="start simulator" HorizontalAlignment="Left" Margin="34,117,0,0" Grid.Row="1" VerticalAlignment="Top" Click="btnStrSimulat_Click"/>
-        <Button Content="stop simulator" HorizontalAlignment="Left" Margin="34,156,0,0" Grid.Row="1" VerticalAlignment="Top" Click="btnStpSimulat_Click"/>
-        <Button Content="Show call by status" HorizontalAlignment="Left" Margin="220,137,0,0" Grid.Row="1" VerticalAlignment="Top" Click="btnCallStatus_Click"/>
-        <Button Content="Volunteer management" HorizontalAlignment="Left" Margin="74,289,0,0" Grid.Row="1" Click="btnVolManage_Click"/>
-        <Button Content="Calls management" HorizontalAlignment="Left" Margin="257,289,0,0" Grid.Row="1" VerticalAlignment="Top" Click="btnCallManage_Click"/>
 
-        <!-- כפתורי הוספה ומחיקה -->
-        <!--
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10,103,0,-83">
-                <Button Content="Add" Width="200" Margin="5" Click="btnAdd_Click" />
-                <Button Content="Delete" Width="200" Margin="5" Click="btnDelete_Click" />
-            </StackPanel>-->
+            <!-- כפתורים לקידום שעון המערכת -->
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10,10,10,281">
+                <Button Content="Add one minute" Margin="5" Click="btnAddOneMinute_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Add one hour" Margin="5" Click="btnAddOneHour_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Add one day" Margin="5" Click="btnAddOneDay_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Add one month" Margin="5" Click="btnAddOneMonth_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Add one year" Margin="5" Click="btnAddOneYear_Click" Background="LightBlue" Foreground="DarkBlue" />
+            </StackPanel>
+
+            <!-- אזור כפתורים כלליים -->
+            <StackPanel Grid.Column="0" Margin="10,100,0,0">
+                <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+                <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+                <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Stop Simulator" Width="200" Margin="5" Click="btnStpSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Show Call by Status" Width="200" Margin="5" Click="btnCallStatus_Click" Background="LightBlue" Foreground="DarkBlue" />
+            </StackPanel>
+
+            <!-- אזור ניהול -->
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10,250,0,0">
+                <Button Content="Volunteer Management" Width="200" Margin="5" Click="btnVolManage_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <Button Content="Calls Management" Width="200" Margin="5" Click="btnCallManage_Click" Background="LightBlue" Foreground="DarkBlue" />
+            </StackPanel>
+
+            <!-- תצוגת שעון המערכת -->
+            <Label Grid.Column="1" Content="{Binding CurrentTime}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="16" FontWeight="Bold" Foreground="DarkBlue" />
+        </Grid>
     </Grid>
-    <!--</Grid>-->
 </Window>

@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="SelectCallWindow" Height="640" Width="800">
+        Title="Select Call Window" Height="640" Width="800" Background="Lavender" FontFamily="Segoe UI">
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -12,26 +13,56 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- כותרת -->
+        <TextBlock Text="Select a Call" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Foreground="DarkSlateBlue" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,10" />
+
         <!-- Filter Section -->
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <TextBlock Text="Filter:" VerticalAlignment="Center" />
-            <ComboBox Width="200" Margin="5" ItemsSource="{Binding FilterOptions}" SelectedItem="{Binding SelectedFilterOption}" />
+        <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
+            <TextBlock Text="Filter:" 
+                       FontWeight="Bold" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,10,0" />
+            <ComboBox Width="200" 
+                      Margin="0,0,10,0" 
+                      ItemsSource="{Binding FilterOptions}" 
+                      SelectedItem="{Binding SelectedFilterOption}" />
         </StackPanel>
 
         <!-- DataGrid -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Calls}" AutoGenerateColumns="False" CanUserSortColumns="True">
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding Calls}" 
+                  AutoGenerateColumns="False" 
+                  CanUserSortColumns="True" 
+                  Margin="5" 
+                  BorderBrush="Gray" 
+                  BorderThickness="1" 
+                  Background="White" 
+                  AlternatingRowBackground="LightGray" 
+                  RowHeaderWidth="0">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" />
-                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Select" Width="100" Click="btnSelected_Click" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Select" 
+                    Width="100" 
+                    Height="30" 
+                    Background="LightSkyBlue" 
+                    Foreground="DarkBlue" 
+                    FontWeight="Bold" 
+                    Margin="5" 
+                    Click="btnSelected_Click" />
         </StackPanel>
     </Grid>
 </Window>

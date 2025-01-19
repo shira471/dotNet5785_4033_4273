@@ -5,55 +5,61 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="AddCallWindow" Height="450" Width="800">
+        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI">
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- ID -->
-            <RowDefinition Height="Auto"/>
-            <!-- Description -->
-            <RowDefinition Height="Auto"/>
-            <!-- open time -->
-            <RowDefinition Height="Auto"/>
-            <!-- Address -->
-            <RowDefinition Height="Auto"/>
-            <!-- call type -->
-            <RowDefinition Height="Auto"/>
-            <!-- maximum end time -->
-            <RowDefinition Height="*"/>
-            <!-- Button -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!-- כותרת -->
+        <TextBlock Text="Add Call"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Foreground="DarkSlateBlue"
+                   HorizontalAlignment="Center"
+                   Grid.ColumnSpan="2"
+                   Margin="0,0,0,20" />
 
         <!-- Description -->
-        <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
+        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
-        <!-- open time -->
-        <Label Content="open time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <!-- Open Time -->
+        <Label Content="Open Time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
+        <TextBox Text="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
-        <!-- Max Time -->
-        <Label Content="maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <!-- Max End Time -->
+        <Label Content="Maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
+        <TextBox Text="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
         <!-- Address -->
-        <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
+        <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
+        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
         <!-- Call Type -->
-        <Label Content="Call Type:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="Call Type:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <ComboBox ItemsSource="{Binding CallTypes}"
-          SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300"/>
-
-  
+                  SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" 
+                  Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
         <!-- Add/Update Button -->
-        <Button Content="{Binding ButtonText}" Grid.Row="6" Grid.ColumnSpan="2" Height="40" Width="120" 
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="btnAddUpdate_Click"/>
+        <Button Content="{Binding ButtonText}" 
+                Grid.Row="6" Grid.ColumnSpan="2" 
+                Height="40" Width="150"
+                Background="DodgerBlue" Foreground="White"
+                FontWeight="Bold"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                Click="btnAddUpdate_Click" />
     </Grid>
 </Window>
