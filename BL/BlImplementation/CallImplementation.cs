@@ -45,7 +45,7 @@ public class CallImplementation : ICall
             _dal.call.Create(doCall);
             call.Status = Status.Open;
             CallManager.Observers.NotifyListUpdated(); //stage 5
-         }
+        }
         catch (DO.DalAlreadyExistsException ex)
         {
             throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.")));
@@ -53,30 +53,24 @@ public class CallImplementation : ICall
     }
 
 
-    public void AssignCallToVolunteer(int volunteerId, string calldes)
+    public void AssignCallToVolunteer(int volunteerId, int callId)
     {
-        //שליפת הקריאה ממאגר הנתונים
-        var calls = _dal.call.ReadAll();
-        int callId=0;
-        foreach (var call2 in calls)
-        {
-            if (call2.detail == calldes)
-            {
-                callId = call2.id;
-            }
-        }
+        // שליפת הקריאה ממאגר הנתונים
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
-        //שליפת המתנדב ממאגר הנתונים
+
+        // שליפת המתנדב ממאגר הנתונים
         var volunteer = _dal.volunteer.Read(volunteerId) ??
-           throw new Exception($"Volunterr with ID={volunteerId} does not exist.");
-        var dis = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
-        if (dis > volunteer.limitDestenation)
+            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+        // חישוב המרחק ובדיקת טווח
+        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
+        if (distance > volunteer.limitDestenation)
         {
-            throw new Exception($"Call is out of volunteer's range (Distance: {dis} > Limit: {volunteer.limitDestenation}).");
+            throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
         }
 
-        // צור שיוך חדש
+        // יצירת שיוך חדש
         var assignment = new DO.Assignment
         {
             callId = callId,
@@ -84,7 +78,9 @@ public class CallImplementation : ICall
             startTime = AdminManager.Now
         };
         _dal.assignment.Create(assignment);
-        CallManager.Observers.NotifyListUpdated(); //stage 5
+
+        // עדכון התצפיתנים
+        CallManager.Observers.NotifyListUpdated();
     }
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
@@ -297,7 +293,7 @@ public class CallImplementation : ICall
         return closedCalls;
     }
 
-    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType=null, Enum? sortField = null)
+    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType = null, Enum? sortField = null)
     {
         // קבלת כל השיוכים של המתנדב לקריאות שטרם נסגרו
         var assignments = _dal.assignment.ReadAll()
@@ -395,9 +391,9 @@ public class CallImplementation : ICall
 
     }
 
-    public void UpdateCallStatus(Call call,bool isFinish)
+    public void UpdateCallStatus(Call call, bool isFinish)
     {
-        if (isFinish) 
+        if (isFinish)
             call.Status = Status.Closed;
     }
 
@@ -465,7 +461,7 @@ public class CallImplementation : ICall
 
         return callAssignments;
     }
-   
+
 
     public void AddObserver(Action listObserver) =>
 CallManager.Observers.AddListObserver(listObserver); //stage 5

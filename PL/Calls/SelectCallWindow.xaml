@@ -46,7 +46,8 @@
                   AlternatingRowBackground="LightGray" 
                   RowHeaderWidth="0">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding CallId}" Width="*" />
+                <DataGridTextColumn Header="call Type" Binding="{Binding CallType}" Width="*" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
                 <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
                 <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
