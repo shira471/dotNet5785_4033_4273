@@ -21,21 +21,20 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Full Name:" Width="150" />
-                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.FullName}"/>
+                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.FullName}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Phone:" Width="150" />
-                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.Phone}"/>
+                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.Phone}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Email:" Width="150" />
-                <TextBox Width="200" IsEnabled="{Binding IsEditing}" Text="{Binding CurrentVolunteer.Email}"/>
+                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.Email}"/>
             </StackPanel>
 
             <!-- כפתורים לעדכון ושמירה -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
-                <Button Content="Update details" Width="150" Margin="5" Click="EnableEditing_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-                <Button Content="Save" Width="150" Margin="5" Click="SaveChanges_Click" IsEnabled="{Binding IsEditing}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+                <Button Content="Save" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
             </StackPanel>
 
             <!-- פרטי קריאה בטיפול -->
