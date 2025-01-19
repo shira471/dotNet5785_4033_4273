@@ -35,7 +35,6 @@
             <!-- כפתורים לעדכון ושמירה -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
                 <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-
             </StackPanel>
 
             <!-- פרטי קריאה בטיפול -->
