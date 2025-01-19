@@ -1,4 +1,6 @@
-﻿using BO;
+﻿using BlApi;
+using BO;
+using DO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +12,11 @@ namespace PL.viewModel;
 
 public class SelectCallWindowVM : ViewModelBase
 {
-    public ObservableCollection<OpenCallInList> Calls { get; set; } = new ObservableCollection<OpenCallInList>();
-    public ObservableCollection<CallInList> CallList { get; set; } = new ObservableCollection<CallInList>();
+    public ObservableCollection<BO.OpenCallInList> Calls { get; set; }
+    private readonly IBl s_bl = Factory.Get(); 
 
-    private OpenCallInList? selectedCall;
+    private BO.OpenCallInList? selectedCall;
+ 
     public OpenCallInList? SelectedCall
     {
         get => selectedCall;
@@ -25,6 +28,11 @@ public class SelectCallWindowVM : ViewModelBase
                 OnPropertyChanged(nameof(SelectedCall));
             }
         }
+    }
+    public SelectCallWindowVM()
+    {
+        selectedCall=new OpenCallInList();
+
     }
 
     private string? selectedFilterOption;

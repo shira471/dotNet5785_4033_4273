@@ -19,7 +19,17 @@ namespace PL.Calls
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
         // ViewModel instance for data binding
-        public SelectCallWindowVM Vm { get; set; }
+
+
+        public SelectCallWindowVM Vm
+        {
+            get { return (SelectCallWindowVM)GetValue(vMProperty); }
+            set { SetValue(vMProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Vm.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty vMProperty =
+            DependencyProperty.Register("Vm", typeof(SelectCallWindowVM), typeof(SelectCallWindow));
 
         // ID of the volunteer interacting with the window
         private int VolunteerId;
@@ -31,7 +41,6 @@ namespace PL.Calls
 
             // Initialize the ViewModel and set the DataContext for data binding
             Vm = new SelectCallWindowVM();
-            DataContext = Vm;
             InitializeComponent();
 
             try
@@ -51,11 +60,8 @@ namespace PL.Calls
             Vm.Calls.Clear();
             try
             {
-                var calls = s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null, null);
-                foreach (var call in calls)
-                {
-                    Vm.Calls.Add(call);
-                }
+                Vm.Calls = new (s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null, null));
+
             }
             catch (Exception ex)
             {
