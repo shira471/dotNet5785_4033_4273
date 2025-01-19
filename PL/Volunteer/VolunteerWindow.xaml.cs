@@ -64,13 +64,18 @@ namespace PL.Volunteer
         {
             try
             {
-                // Save changes in BL
+                // שמירה במערכת ה-BL
                 s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
 
                 MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
 
+<<<<<<< HEAD
                 //// Disable editing after saving
                 //IsEditing = true;
+=======
+                // ביטול עריכה לאחר שמירה
+                IsEditing = false;
+>>>>>>> e58dde8a30eca8c7fdf3ad8ba5ffe9180a63f720
             }
             catch (Exception ex)
             {
