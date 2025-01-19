@@ -124,9 +124,9 @@ namespace PL
             }
         }
         private void btnUpdate_Click(object sender, RoutedEventArgs e) {
-            //if (sender is DataGrid dg && dg.SelectedItem is BO.Volunteer s)
-            //    SelectedVolunteer = s;
-            if (vm.SelectedCall == null)
+
+            var selectedCall = vm.SelectedCall;
+            if (selectedCall == null)
             {
                MessageBox.Show("Please select a call to update.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -146,14 +146,15 @@ namespace PL
         }
     
         private void btnView_Click(object sender, RoutedEventArgs e) {
-            if (vm.SelectedCall == null)
+            var selectedCall = vm.SelectedCall;
+            if (selectedCall == null)
             {
                 MessageBox.Show("Please select a call to view.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             try
             {
-                var CallDetails = s_bl.Call.GetCallDetails(vm.SelectedCall.Id.ToString()); // מחיקת המתנדב בלוגיקה העסקית
+                var CallDetails = s_bl.Call.GetCallDetails(selectedCall.CallId.ToString()); // מחיקת המתנדב בלוגיקה העסקית
                                                                                 // הצגת התוצאה
                                                                                 // בניית מחרוזת להצגה
                 string details = $"ID: {CallDetails.Id}\n" +
