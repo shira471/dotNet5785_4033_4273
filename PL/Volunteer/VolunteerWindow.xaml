@@ -34,13 +34,12 @@
 
             <!-- כפתורים לעדכון ושמירה -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
-<<<<<<< HEAD
+
                 <!--<Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />-->
                 <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" IsEnabled="{Binding IsEditing}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-               
-=======
+
                 <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
->>>>>>> db562526c832f3e0b95e790ea0199748e6b5f55c
+
             </StackPanel>
 
             <!-- פרטי קריאה בטיפול -->

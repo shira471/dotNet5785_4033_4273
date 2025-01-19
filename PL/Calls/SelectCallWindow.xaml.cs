@@ -57,7 +57,8 @@ namespace PL.Calls
         // Load the list of open calls and populate the ViewModel's Calls collection
         private void queryCallList()
         {
-            Vm.Calls.Clear();
+            if(Vm.Calls!=null)
+                Vm.Calls.Clear();
             try
             {
                 Vm.Calls = new (s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null, null));

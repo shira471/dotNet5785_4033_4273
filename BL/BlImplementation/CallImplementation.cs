@@ -233,7 +233,7 @@ public class CallImplementation : ICall
             }
         }
         // קריאת הקריאה הספציפית משכבת ה-DAL לפי המזהה
-        var call = _dal.call.Read(callId);
+        var call = _dal.call.Read(int.Parse(calld));
 
         // בדיקת קיום הקריאה
         if (call == null)

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-=======
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
     <id>9704</id>
@@ -14,36 +11,6 @@
     <maximumTime>2025-03-27T00:10:00</maximumTime>
   </Call>
   <Call>
-    <id>1</id>
-    <detail>food</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-12-02T00:00:00</startTime>
-    <maximumTime>2025-03-27T00:10:00</maximumTime>
-  </Call>
-  <Call>
-    <id>7</id>
-    <detail>take pepolr</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-16T16:07:36.6685022+02:00</startTime>
-    <maximumTime>2025-07-16T16:07:36</maximumTime>
-  </Call>
-  <Call>
-    <id>8</id>
-    <detail>cloths</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-19T14:10:10.75586+02:00</startTime>
-    <maximumTime>2025-01-25T15:14:10</maximumTime>
-  </Call>
-  <Call>
     <id>9</id>
     <detail>take care</detail>
     <adress>jerusalem</adress>
@@ -53,5 +20,14 @@
     <startTime>2025-01-19T16:42:22.3819738+02:00</startTime>
     <maximumTime>2025-01-19T18:42:22</maximumTime>
   </Call>
+  <Call>
+    <id>7</id>
+    <detail>take pepolr</detail>
+    <adress>tel aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-16T16:07:36.6685022+02:00</startTime>
+    <maximumTime>2025-07-18T16:07:36</maximumTime>
+  </Call>
 </ArrayOfCall>
->>>>>>> db562526c832f3e0b95e790ea0199748e6b5f55c

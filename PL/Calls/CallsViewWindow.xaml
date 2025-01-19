@@ -22,6 +22,7 @@
                   CanUserSortColumns="True" 
                   IsReadOnly="True" 
                   ItemsSource="{Binding Calls}" 
+                  SelectedItem="{Binding SelectedCall, Mode=TwoWay}" 
                   Grid.Row="1" 
                   Margin="0,10"
                   Background="WhiteSmoke" 
