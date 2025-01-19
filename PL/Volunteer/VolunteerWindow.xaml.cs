@@ -69,13 +69,13 @@ namespace PL.Volunteer
 
                 MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
 
-<<<<<<< HEAD
+
                 //// Disable editing after saving
                 //IsEditing = true;
-=======
+
                 // ביטול עריכה לאחר שמירה
-                IsEditing = false;
->>>>>>> e58dde8a30eca8c7fdf3ad8ba5ffe9180a63f720
+                //IsEditing = false;
+
             }
             catch (Exception ex)
             {
