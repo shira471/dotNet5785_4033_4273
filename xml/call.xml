@@ -30,4 +30,14 @@
     <startTime>2025-01-16T16:07:36.6685022+02:00</startTime>
     <maximumTime>2025-07-18T16:07:36</maximumTime>
   </Call>
+  <Call>
+    <id>10</id>
+    <detail>food</detail>
+    <adress>tel aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+    <callType>dinner</callType>
+    <startTime>2025-01-19T20:08:35</startTime>
+    <maximumTime>2025-01-19T21:08:35</maximumTime>
+  </Call>
 </ArrayOfCall>

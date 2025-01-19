@@ -32,7 +32,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Call ID" Binding="{Binding CallId}" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-                <DataGridTextColumn Header="Details" Binding="{Binding}" />
+                <!--<DataGridTextColumn Header="Details" Binding="{Binding }" />-->
                 <DataGridTextColumn Header="call Type" Binding="{Binding CallType}" />
                 <!--<DataGridTextColumn Header="Adress" Binding="{Binding }" />-->
                 <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName}" />

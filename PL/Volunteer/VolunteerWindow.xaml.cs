@@ -84,26 +84,26 @@ namespace PL.Volunteer
             }
         }
 
-        private void FinishCall_Click(object sender, RoutedEventArgs e)
-        {
-            if (CurrentVolunteer?.Id != null)
-            {
-                try
-                {
-                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
-                    MessageBox.Show("The call was marked as closed.");
-                    LoadCallDetails();
-                }
-                catch
-                {
-                    MessageBox.Show("Error closing the call. Please try again.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("No ongoing call to finish.");
-            }
-        }
+        //private void FinishCall_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (CurrentVolunteer?.Id != null)
+        //    {
+        //        try
+        //        {
+        //            s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
+        //            MessageBox.Show("The call was marked as closed.");
+        //            LoadCallDetails();
+        //        }
+        //        catch
+        //        {
+        //            MessageBox.Show("Error closing the call. Please try again.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("No ongoing call to finish.");
+        //    }
+        //}
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);

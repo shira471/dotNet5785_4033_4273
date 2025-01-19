@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-<<<<<<< HEAD
-  <NextAssignmentId>1</NextAssignmentId>
-=======
-  <NextAssignmentId>10</NextAssignmentId>
->>>>>>> db562526c832f3e0b95e790ea0199748e6b5f55c
+  <NextAssignmentId>11</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
   <NextCallId>1</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->

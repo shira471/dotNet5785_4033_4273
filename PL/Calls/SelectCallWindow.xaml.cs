@@ -93,7 +93,8 @@ public partial class SelectCallWindow : Window
 
     private void btnSelected_Click(object sender, RoutedEventArgs e)
     {
-        if (Vm.SelectedCall == null)
+        var selected = Vm.SelectedCall;
+        if (selected == null)
         {
             MessageBox.Show("No call selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
@@ -110,4 +111,47 @@ public partial class SelectCallWindow : Window
             MessageBox.Show($"Error assigning call to volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+    private void FinishCall_Click(object sender, RoutedEventArgs e)
+    {
+        var call = Vm.SelectedCall;
+        if (call?.Id == null)
+        {
+            try
+            {
+                s_bl.Call.CloseCallAssignment(Vm.VolunteerId, call.CallId);
+                MessageBox.Show("The call was marked as closed.");
+                //LoadCallDetails();
+            }
+            catch
+            {
+                MessageBox.Show("Error closing the call. Please try again.");
+            }
+        }
+        else
+        {
+            MessageBox.Show("No ongoing call to finish.");
+        }
+    }
+    private void btnCanceled_Click(object sender, RoutedEventArgs e)
+    {
+        var call = Vm.SelectedCall;
+        if (call?.Id != null)
+        {
+            try
+            {
+                s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.CallId);
+                MessageBox.Show("The call was marked as closed.");
+                //LoadCallDetails();
+            }
+            catch
+            {
+                MessageBox.Show("Error closing the call. Please try again.");
+            }
+        }
+        else
+        {
+            MessageBox.Show("No ongoing call to finish.");
+        }
+    }
+
 }

@@ -30,13 +30,14 @@
                        Margin="0,0,10,0" />
             <ComboBox Width="200" 
                       Margin="0,0,10,0" 
-                      ItemsSource="{Binding Calls}" 
-                      SelectedItem="{Binding SelectedFilterOption}" />
+                      ItemsSource="{Binding FilterOptions}" 
+                      />
         </StackPanel>
 
         <!-- DataGrid -->
         <DataGrid Grid.Row="1" 
                   ItemsSource="{Binding Calls}" 
+                  SelectedItem="{Binding SelectedCall}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
@@ -48,10 +49,10 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding CallId}" Width="*" />
                 <DataGridTextColumn Header="call Type" Binding="{Binding CallType}" Width="*" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="3*" />
+                <!--<DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
                 <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />-->
             </DataGrid.Columns>
         </DataGrid>
 
@@ -65,6 +66,22 @@
                     FontWeight="Bold" 
                     Margin="5" 
                     Click="btnSelected_Click" />
+            <Button Content="End call" 
+                    Width="100" 
+                    Height="30" 
+                    Background="LightSkyBlue" 
+                    Foreground="DarkBlue" 
+                    FontWeight="Bold" 
+                    Margin="5" 
+                    Click="FinishCall_Click" />
+            <Button Content="Cancel call" 
+                    Width="100" 
+                    Height="30" 
+                    Background="LightSkyBlue" 
+                    Foreground="DarkBlue" 
+                    FontWeight="Bold" 
+                    Margin="5" 
+                    Click="btnCanceled_Click" />    
         </StackPanel>
     </Grid>
 </Window>
