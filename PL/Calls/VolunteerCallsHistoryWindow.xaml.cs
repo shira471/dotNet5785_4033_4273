@@ -21,51 +21,67 @@ namespace PL.Calls
     /// </summary>
     public partial class VolunteerCallsHistoryWindow : Window, INotifyPropertyChanged
     {
+        // Event used for property change notifications
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        // Reference to the business logic layer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
+        // ViewModel for binding data to the UI
         public VolunteerCallsHistoryVM Vm { get; set; }
 
+        // ID of the volunteer whose call history is displayed
         private int VolunteerId;
 
+        /// <summary>
+        /// Constructor for the VolunteerCallsHistoryWindow.
+        /// Initializes the ViewModel and loads the closed calls.
+        /// </summary>
+        /// <param name="volunteerId">ID of the volunteer</param>
         public VolunteerCallsHistoryWindow(int volunteerId)
         {
             VolunteerId = volunteerId;
 
-            Vm = new VolunteerCallsHistoryVM();
-            DataContext = Vm;
+            Vm = new VolunteerCallsHistoryVM(); // Initialize the ViewModel
+            DataContext = Vm; // Set the data context for data binding
             InitializeComponent();
             try
             {
-                queryClosedCallList();
+                queryClosedCallList(); // Load the list of closed calls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת קריאות סגורות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        /// <summary>
+        /// Fetches the list of closed calls for the volunteer and updates the ViewModel.
+        /// </summary>
         private void queryClosedCallList()
         {
-            Vm.ClosedCalls.Clear();
+            Vm.ClosedCalls.Clear(); // Clear existing call data in the ViewModel
             try
             {
-                var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null);
+                var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null); // Get closed calls from the BL
                 foreach (var call in calls)
                 {
-                    Vm.ClosedCalls.Add(call);
+                    Vm.ClosedCalls.Add(call); // Add each call to the ViewModel's collection
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת הקריאות הסגורות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading the list of closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        /// <summary>
+        /// Event handler for when the ComboBox selection changes.
+        /// Applies filtering logic to the displayed call list.
+        /// </summary>
         private void ComboBox_SelectionChanged(object sender, EventArgs e)
         {
-            Vm.ApplyFilter();
+            Vm.ApplyFilter(); // Apply filters defined in the ViewModel
         }
     }
 }

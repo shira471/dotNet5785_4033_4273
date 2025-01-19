@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using BO;
-//using VolunteerWindow.PL;
+
 namespace PL.Volunteer
 {
     /// <summary>
@@ -23,60 +23,49 @@ namespace PL.Volunteer
     public partial class AdminWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
         public AdminWindow()
         {
-        //    // השמה של הערך הנוכחי של שעון המערכת
-        //    CurrentTime = s_bl.Admin.GetSystemClock();
-
-           InitializeComponent();
+            InitializeComponent();
             this.DataContext = this;
+
+            // Initialize the current system clock value
             CurrentTime = s_bl.Admin.GetSystemClock();
+
+            // Calculate the maximum year range based on the risk time span
             TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
-            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
-            // רישום מתודות ההשקפה
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // Convert days to years
+
+            // Register clock and configuration observers
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
         }
+
         public ObservableCollection<BO.Volunteer> Volunteers { get; set; }
-      
 
         /// <summary>
-        /// מתודת הטעינה של המסך הראשי
+        /// Method triggered when the main screen is loaded
         /// </summary>
         private void AdminWindow_Loaded(object sender, RoutedEventArgs e)
         {
-
-            //// השמה של הערך הנוכחי של שעון המערכת
             CurrentTime = s_bl.Admin.GetSystemClock();
 
-            // השמה של ערכי משתני התצורה
             TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
-            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // Convert days to years
 
-            // הוספת מתודת ההשקפה על השעון כמשקיפה
             s_bl.Admin.AddClockObserver(clockObserver);
-
-            // הוספת מתודת ההשקפה על משתני התצורה כמשקיפה
             s_bl.Admin.AddConfigObserver(configObserver);
-
         }
+
         /// <summary>
-        /// מתודת הסגירה של המסך הראשי
+        /// Method triggered when the main screen is closed
         /// </summary>
         private void AdminWindow_Closed(object sender, EventArgs e)
         {
-            // הסרת מתודת ההשקפה על השעון
             s_bl.Admin.RemoveClockObserver(clockObserver);
-
-            // הסרת מתודת ההשקפה על משתני התצורה
             s_bl.Admin.RemoveConfigObserver(configObserver);
         }
-        // הגדרת תכונת תלות עבור CurrentTime
-        //public DateTime CurrentTime
-        //{
-        //    get { return (DateTime)GetValue(CurrentTimeProperty); }
-        //    set { SetValue(CurrentTimeProperty, value); }
-        //}
+
         public DateTime CurrentTime
         {
             get { return (DateTime)GetValue(CurrentTimeProperty); }
@@ -84,22 +73,21 @@ namespace PL.Volunteer
             {
                 if (Dispatcher.CheckAccess())
                 {
-                    SetValue(CurrentTimeProperty, value); // אם הקריאה נעשית מתוך שרשור ה-UI
+                    SetValue(CurrentTimeProperty, value); // Update from the UI thread
                 }
                 else
                 {
-                    Dispatcher.Invoke(() => SetValue(CurrentTimeProperty, value)); // אם הקריאה נעשית מתוך שרשור אחר
+                    Dispatcher.Invoke(() => SetValue(CurrentTimeProperty, value)); // Update from a different thread
                 }
             }
         }
-
 
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register(
                 "CurrentTime",
                 typeof(DateTime),
                 typeof(AdminWindow),
-                new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
+                new PropertyMetadata(DateTime.Now)); // Default value
 
         public int MaxYearRange
         {
@@ -109,131 +97,124 @@ namespace PL.Volunteer
 
         public static readonly DependencyProperty MaxYearRangeProperty =
             DependencyProperty.Register("MaxYearRange", typeof(int), typeof(MainWindow));
-        // מתודת השקפה על השעון
+
+        /// <summary>
+        /// Observer method to update the clock
+        /// </summary>
         private void clockObserver()
         {
-            // עדכון השעון לפי הערך המעודכן ב-BL
             CurrentTime = s_bl.Admin.GetSystemClock();
-           // MessageBox.Show($"CurrentTime updated to: {CurrentTime}");
         }
 
-        // מתודת השקפה על משתני התצורה
+        /// <summary>
+        /// Observer method to update configuration variables
+        /// </summary>
         private void configObserver()
         {
-            // עדכון הערך של משתני התצורה לפי הערכים המעודכנים ב-BL
             TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
-            MaxYearRange = (int)(timeSpan.TotalDays / 365); // המרה לשנים
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // Convert days to years
         }
+
         private void UpdateMaxRange_Click(object sender, RoutedEventArgs e)
         {
-            // המרת השנים ל- TimeSpan (לדוגמה, כמה ימים יש בשנתיים)
-            TimeSpan timeSpan = TimeSpan.FromDays(MaxYearRange * 365);
-
-            // עדכון ערך משתנה התצורה דרך ה-BL
-            s_bl.Admin.SetRiskTimeSpan(timeSpan);
+            TimeSpan timeSpan = TimeSpan.FromDays(MaxYearRange * 365); // Convert years to TimeSpan
+            s_bl.Admin.SetRiskTimeSpan(timeSpan); // Update configuration via BL
         }
-        
 
         public BO.Volunteer SelectedVolunteer { get; set; }
 
-        // הגדרת תכונת תלות עבור CurrentTime
-        //public DateTime CurrentTime
-        //{
-        //    get { return (DateTime)GetValue(CurrentTimeProperty); }
-        //    set { SetValue(CurrentTimeProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty CurrentTimeProperty =
-        //    DependencyProperty.Register(
-        //        "CurrentTime",
-        //        typeof(DateTime),
-        //        typeof(MainWindow),
-        //        new PropertyMetadata(DateTime.Now)); // ערך ברירת מחדל
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
         }
+
         private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
         }
+
         private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
         }
+
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
         }
+
         private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
         }
 
-        // פעולה למחיקת מתנדב
+        /// <summary>
+        /// Deletes a volunteer
+        /// </summary>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedVolunteer == null) // בדיקה אם נבחר מתנדב
+            if (SelectedVolunteer == null) // Check if a volunteer is selected
             {
-                MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No volunteer selected for deletion.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             var result = MessageBox.Show(
-                $"האם אתה בטוח שברצונך למחוק את המתנדב {SelectedVolunteer.FullName}?",
-                "אישור מחיקה",
+                $"Are you sure you want to delete volunteer {SelectedVolunteer.FullName}?",
+                "Delete Confirmation",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning
             );
 
-            if (result == MessageBoxResult.Yes) // ביצוע מחיקה אם המשתמש מאשר
+            if (result == MessageBoxResult.Yes) // Proceed with deletion if confirmed
             {
                 try
                 {
-                    s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id); // מחיקת המתנדב בלוגיקה העסקית
-                    Volunteers.Remove(Volunteers.First(v => v.Id == SelectedVolunteer.Id)); // הסרה מהרשימה המקומית
-                    MessageBox.Show("המתנדב נמחק בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                    s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id); // Delete volunteer in BL
+                    Volunteers.Remove(Volunteers.First(v => v.Id == SelectedVolunteer.Id)); // Remove from local list
+                    MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"לא ניתן למחוק את המתנדב: {ex.Message}", "שגיאה במחיקה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unable to delete volunteer: {ex.Message}", "Deletion Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
+
         private void btnCallStatus_Click(object sender, RoutedEventArgs e)
         {
             int[] temp = s_bl.Call.GetCallCountsByStatus();
             int openCalls = temp[0];
             int closeCalls = temp[1];
-            int inprogressCalls= temp[2];
-            string message = $"Open calls: {openCalls}\nClose calls: {closeCalls}\nCalls in progress: {inprogressCalls}";
+            int inProgressCalls = temp[2];
+            string message = $"Open calls: {openCalls}\nClose calls: {closeCalls}\nCalls in progress: {inProgressCalls}";
             MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
         private void btnCallManage_Click(object sender, RoutedEventArgs e)
         {
-            CallsViewWindow cvw= new CallsViewWindow();
+            CallsViewWindow cvw = new CallsViewWindow();
             cvw.ShowDialog();
         }
+
         private void btnVolManage_Click(object sender, RoutedEventArgs e)
         {
-            VolunteerListWindow vlw= new VolunteerListWindow();
+            VolunteerListWindow vlw = new VolunteerListWindow();
             vlw.ShowDialog();
         }
 
-        private bool _isSimulationRunning = false; // משתנה לניהול מצב הסימולטור
+        private bool _isSimulationRunning = false; // Manage simulation state
 
         private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
         {
             if (_isSimulationRunning)
             {
-                MessageBox.Show("הסימולטור כבר פועל!", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("The simulator is already running!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             _isSimulationRunning = true;
-
-            // התחל סימולטור עם מחזור של 5 דקות
-            MessageBox.Show("הסימולטור הופעל בהצלחה!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             try
             {
@@ -241,85 +222,65 @@ namespace PL.Volunteer
                 {
                     while (_isSimulationRunning)
                     {
-                        // קידום שעון המערכת
-                        s_bl.Admin.AdvanceSystemClock(TimeUnit.Minute);
-
-                        // הוספת לוגיקה נוספת אם נדרש
+                        s_bl.Admin.AdvanceSystemClock(TimeUnit.Minute); // Advance system clock
                         PerformSimulationLogic();
-
-                        // המתנה של 5 שניות (לדוגמה, מחזור הסימולטור)
-                        Thread.Sleep(TimeSpan.FromSeconds(5));
+                        Thread.Sleep(TimeSpan.FromSeconds(5)); // Simulator cycle delay
                     }
                 });
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה במהלך פעולת הסימולטור: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // פונקציה לעצירת הסימולטור
         private void btnStpSimulat_Click(object sender, RoutedEventArgs e)
         {
             if (!_isSimulationRunning)
             {
-                MessageBox.Show("הסימולטור כבר כבוי!", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("The simulator is already stopped!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             _isSimulationRunning = false;
-            MessageBox.Show("הסימולטור הופסק בהצלחה!", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // לוגיקה נוספת של הסימולטור
         private void PerformSimulationLogic()
         {
-            // דוגמה לפעולה נוספת
             var clock = s_bl.Admin.GetSystemClock();
             Console.WriteLine($"Current system clock: {clock}");
         }
 
-        // פעולה להוספת מתנדב חדש
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var window = new VolunteerListWindow(); // פתיחת חלון הוספה
+                var window = new VolunteerListWindow();
                 window.ShowDialog();
-                queryVolunteerList(); // רענון הרשימה
+                queryVolunteerList(); // Refresh list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בהוספת מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error adding volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        // פונקציה לטעינת רשימת המתנדבים
+
         private void queryVolunteerList()
         {
-            Volunteers.Clear(); // ניקוי הרשימה
+            Volunteers.Clear();
             try
             {
-                //TODO
-                // var volunteers = s_bl?.Volunteer.GetVolunteersList(null, null) ?? Enumerable.Empty<BO.VolunteerInList>();
-                //foreach (var volunteer in volunteers)
-                {
-                    //TODO
-                    //Volunteers.Add(volunteer); // הוספת כל מתנדב לרשימה
-                }
+                // TODO: Implement volunteer retrieval
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        /// <summary>
-        /// מתודת אירוע עבור לחיצה על כפתור "Initialize Database"
-        /// </summary>
-        /// <param name="sender">האובייקט ששלח את האירוע</param>
-        /// <param name="e">פרטי האירוע</param>
+
         private void InitializeDB_Click(object sender, RoutedEventArgs e)
         {
-            // הודעת אישור למשתמש
             if (MessageBox.Show("Are you sure you want to initialize the database?",
                                 "Confirm Initialization",
                                 MessageBoxButton.YesNo,
@@ -327,34 +288,25 @@ namespace PL.Volunteer
             {
                 try
                 {
-                    // שינוי האייקון של העכבר לשעון חול
                     Mouse.OverrideCursor = Cursors.Wait;
 
-                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
                     foreach (Window window in Application.Current.Windows)
                     {
                         if (window != this)
                             window.Close();
                     }
 
-                    // קריאה למתודה InitializeDB
                     s_bl.Admin.InitializeDatabase();
                 }
                 finally
                 {
-                    // החזרת האייקון של העכבר למצב רגיל
                     Mouse.OverrideCursor = null;
                 }
             }
         }
-        /// <summary>
-        /// מתודת אירוע עבור לחיצה על כפתור "Reset Database"
-        /// </summary>
-        /// <param name="sender">האובייקט ששלח את האירוע</param>
-        /// <param name="e">פרטי האירוע</param>
+
         private void ResetDB_Click(object sender, RoutedEventArgs e)
         {
-            // הודעת אישור למשתמש
             if (MessageBox.Show("Are you sure you want to reset the database?",
                                 "Confirm Reset",
                                 MessageBoxButton.YesNo,
@@ -362,22 +314,18 @@ namespace PL.Volunteer
             {
                 try
                 {
-                    // שינוי האייקון של העכבר לשעון חול
                     Mouse.OverrideCursor = Cursors.Wait;
 
-                    // סגירת כל החלונות הפתוחים חוץ מהחלון הראשי
                     foreach (Window window in Application.Current.Windows)
                     {
                         if (window != this)
                             window.Close();
                     }
 
-                    // קריאה למתודה ResetDB
                     s_bl.Admin.ResetDatabase();
                 }
                 finally
                 {
-                    // החזרת האייקון של העכבר למצב רגיל
                     Mouse.OverrideCursor = null;
                 }
             }

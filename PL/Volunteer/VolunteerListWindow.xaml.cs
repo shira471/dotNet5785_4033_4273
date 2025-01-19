@@ -7,38 +7,37 @@ using System.Windows.Controls;
 
 namespace PL.Volunteer
 {
-    // חלון ניהול רשימת מתנדבים
+    // Window for managing the list of volunteers
     public partial class VolunteerListWindow : Window, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-       
 
-        // משתנה סטטי עבור BL
+        // Static instance for accessing the business logic layer (BL)
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-        // מאפיינים עבור הרשימה והמתנדב הנבחר
 
+        // ViewModel instance for binding the data to the UI
         public VolunteerListVM vm { get; set; }
 
-        // בנאי החלון
+        // Constructor to initialize the window and load the volunteer list
         public VolunteerListWindow()
         {
-            vm = new ();
-            DataContext = vm;
+            vm = new();
+            DataContext = vm; // Bind the ViewModel to the DataContext
             InitializeComponent();
             try
             {
-                queryVolunteerList(); // טעינת רשימת מתנדבים ראשונית
+                LoadVolunteerList(); // Initial loading of the volunteer list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // פונקציה לטעינת רשימת המתנדבים
-        private void queryVolunteerList()
+        // Function to load the volunteer list from the BL
+        private void LoadVolunteerList()
         {
-            vm.Volunteers.Clear(); // ניקוי הרשימה
+            vm.Volunteers.Clear(); // Clear the existing list
             try
             {
                 var volunteers = s_bl?.Volunteer.GetVolunteersList(null, vm.VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
@@ -49,146 +48,149 @@ namespace PL.Volunteer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת המתנדבים: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Function to count the number of calls assigned to a volunteer
         private int VolunteerCalls(object sender, EventArgs e)
         {
-            var calls = s_bl.Call.GetOpenCallsByVolunteer(vm.SelectedVolunteer.Id,null,null);
+            var calls = s_bl.Call.GetOpenCallsByVolunteer(vm.SelectedVolunteer.Id, null, null);
             int CallsNumber = calls.Count();
             return CallsNumber;
         }
-        // פונקציה לרענון הרשימה כאשר מתנדבים מתעדכנים
-        private void volunteerListObserver()
+
+        // Observer function to refresh the volunteer list when changes occur
+        private void VolunteerListObserver()
         {
-            queryVolunteerList();
+            LoadVolunteerList();
         }
 
-        // פעולה שמופעלת כשחלון נטען
+        // Event triggered when the window is loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                queryVolunteerList(); // טוען את הרשימה
-                s_bl?.Volunteer.AddObserver(volunteerListObserver); // הוספת תצפית על רשימת המתנדבים
+                LoadVolunteerList(); // Load the list
+                s_bl?.Volunteer.AddObserver(VolunteerListObserver); // Add observer to monitor changes
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading the window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // פעולה שמופעלת כשחלון נסגר
+        // Event triggered when the window is closed
         private void Window_Closed(object sender, EventArgs e)
         {
             try
             {
-                s_bl?.Volunteer.RemoveObserver(volunteerListObserver); // מסיר את התצפית על הרשימה
+                s_bl?.Volunteer.RemoveObserver(VolunteerListObserver); // Remove observer to stop monitoring
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בסגירת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error closing the window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-       // פעולה להוספת מתנדב חדש
+        // Function to add a new volunteer
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var window = new AddVolunteerWindow(); // פתיחת חלון הוספה
+                var window = new AddVolunteerWindow(); // Open the add volunteer window
                 window.ShowDialog();
 
-                queryVolunteerList(); // רענון הרשימה
+                LoadVolunteerList(); // Refresh the list after adding a volunteer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בהוספת מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error adding a volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // פעולה למחיקת מתנדב
+        // Function to delete a selected volunteer
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-           var SelectedVolunteer = vm.SelectedVolunteer;
-            if (SelectedVolunteer == null) // בדיקה אם נבחר מתנדב
+            var SelectedVolunteer = vm.SelectedVolunteer;
+            if (SelectedVolunteer == null) // Check if a volunteer is selected
             {
-                MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No volunteer selected for deletion.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             var result = MessageBox.Show(
-                $"האם אתה בטוח שברצונך למחוק את המתנדב {SelectedVolunteer.FullName}?",
-                "אישור מחיקה",
+                $"Are you sure you want to delete the volunteer {SelectedVolunteer.FullName}?",
+                "Delete Confirmation",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning
             );
 
-            if (result == MessageBoxResult.Yes) // ביצוע מחיקה אם המשתמש מאשר
+            if (result == MessageBoxResult.Yes) // Proceed with deletion if confirmed
             {
                 try
                 {
-                    s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id); // מחיקת המתנדב בלוגיקה העסקית
-                    vm.Volunteers.Remove(vm.Volunteers.First(v => v.Id == SelectedVolunteer.Id)); // הסרה מהרשימה המקומית
-                    MessageBox.Show("המתנדב נמחק בהצלחה.", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
+                    s_bl.Volunteer.DeleteVolunteer(SelectedVolunteer.Id); // Delete the volunteer in BL
+                    vm.Volunteers.Remove(vm.Volunteers.First(v => v.Id == SelectedVolunteer.Id)); // Remove from local list
+                    MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"לא ניתן למחוק את המתנדב: {ex.Message}", "שגיאה במחיקה", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Unable to delete volunteer: {ex.Message}", "Deletion Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
+
+        // Function to navigate back (close the current window)
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        // פעולה לצפייה בפרטי מתנדב
+
+        // Function to view details of the selected volunteer
         private void btnView_Click(object sender, RoutedEventArgs e)
         {
             if (vm.SelectedVolunteer == null)
             {
-                MessageBox.Show("לא נבחר מתנדב למחיקה.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No volunteer selected for viewing.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             try
             {
-                var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // מחיקת המתנדב בלוגיקה העסקית
-                                                                                                    // הצגת התוצאה
-                                                                                                    // בניית מחרוזת להצגה
-                string details = $"name: {volunteerDetails.FullName}\n" +
-                                 $"phone number: {volunteerDetails.Phone}\n" +
-                                 $"role: {volunteerDetails.Role}";
+                var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // Get volunteer details from BL
 
-                // הצגת התוצאה
-                MessageBox.Show(details, "details", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Construct a string with the volunteer's details
+                string details = $"Name: {volunteerDetails.FullName}\n" +
+                                 $"Phone Number: {volunteerDetails.Phone}\n" +
+                                 $"Role: {volunteerDetails.Role}";
+
+                // Display the details in a message box
+                MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"לא ניתן לצפות בפרטי המתנדב: {ex.Message}", "שגיאה בצפייה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Unable to view volunteer details: {ex.Message}", "View Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        // פעולה לעדכון מתנדב
+
+        // Function to update the selected volunteer
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            //if (sender is DataGrid dg && dg.SelectedItem is BO.Volunteer s)
-            //    SelectedVolunteer = s;
             if (vm.SelectedVolunteer == null)
             {
-                MessageBox.Show("לא נבחר מתנדב לעדכון.", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No volunteer selected for updating.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             try
             {
-                
-                var window = new AddVolunteerWindow(vm.SelectedVolunteer.Id);
+                var window = new AddVolunteerWindow(vm.SelectedVolunteer.Id); // Open the update volunteer window
                 window.ShowDialog();
-                queryVolunteerList(); // רענון הרשימה
+                LoadVolunteerList(); // Refresh the list after updating
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בעדכון מתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error updating volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

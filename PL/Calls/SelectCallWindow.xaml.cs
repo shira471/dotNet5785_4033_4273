@@ -12,38 +12,46 @@ namespace PL.Calls
     /// </summary>
     public partial class SelectCallWindow : Window, INotifyPropertyChanged
     {
+        // Event to notify the UI when a property changes
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        // Singleton instance of the business logic interface
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
+        // ViewModel instance for data binding
         public SelectCallWindowVM Vm { get; set; }
 
+        // ID of the volunteer interacting with the window
         private int VolunteerId;
- 
 
+        // Constructor for initializing the window with a specific volunteer ID
         public SelectCallWindow(int volunteerId)
         {
             VolunteerId = volunteerId;
 
+            // Initialize the ViewModel and set the DataContext for data binding
             Vm = new SelectCallWindowVM();
             DataContext = Vm;
             InitializeComponent();
+
             try
             {
+                // Load the call list when the window is initialized
                 queryCallList();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת קריאות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Load the list of open calls and populate the ViewModel's Calls collection
         private void queryCallList()
         {
             Vm.Calls.Clear();
             try
             {
-                var calls = s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null,null);
+                var calls = s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, null, null);
                 foreach (var call in calls)
                 {
                     Vm.Calls.Add(call);
@@ -51,64 +59,73 @@ namespace PL.Calls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת רשימת הקריאות: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading the list of calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Observer method to refresh the call list when changes occur
         private void CallListObserver()
         {
             queryCallList();
         }
 
+        // Event handler for when the window is loaded
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
                 queryCallList();
-                s_bl.Call.AddObserver(CallListObserver);
+                s_bl.Call.AddObserver(CallListObserver); // Add observer to track changes in call list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בטעינת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading the window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Event handler for when the window is closed
         private void Window_Closed(object sender, EventArgs e)
         {
             try
             {
-                s_bl.Call.RemoveObserver(CallListObserver);
+                s_bl.Call.RemoveObserver(CallListObserver); // Remove observer to stop tracking changes
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בסגירת החלון: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error closing the window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        // Event handler for when the ComboBox selection changes (applies a filter)
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Vm.ApplyFilter();
         }
 
+        // Event handler for the "Select" button click
         private void btnSelected_Click(object sender, RoutedEventArgs e)
         {
+            // Ensure a call is selected before proceeding
             if (Vm.SelectedCall == null)
             {
-                MessageBox.Show("לא נבחר קריאה", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No call selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             try
             {
-                // Adding the selected call to the volunteer's list
+                // Assign the selected call to the volunteer
                 s_bl.Call.AssignCallToVolunteer(VolunteerId, Vm.SelectedCall.Description);
 
-                MessageBox.Show($"קריאה {Vm.SelectedCall.Id} נוספה למתנדב {VolunteerId}", "הצלחה", MessageBoxButton.OK, MessageBoxImage.Information);
-                queryCallList(); // Refresh the list after assignment
+                // Display success message
+                MessageBox.Show($"Call {Vm.SelectedCall.Id} has been assigned to volunteer {VolunteerId}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Refresh the call list after the assignment
+                queryCallList();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"שגיאה בהוספת קריאה למתנדב: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error assigning call to volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
