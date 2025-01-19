@@ -40,4 +40,14 @@
     <startTime>2025-01-19T14:10:10.75586+02:00</startTime>
     <maximumTime>2025-01-25T15:14:10</maximumTime>
   </Call>
+  <Call>
+    <id>9</id>
+    <detail>take care</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-19T16:42:22.3819738+02:00</startTime>
+    <maximumTime>2025-01-19T18:42:22</maximumTime>
+  </Call>
 </ArrayOfCall>

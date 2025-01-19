@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
+        DataContext="{Binding vm, RelativeSource={RelativeSource Mode=Self}}"
         Title="Calls Management" Height="450" Width="800"
         Background="LightGray" FontFamily="Segoe UI" FontSize="14">
 
@@ -30,6 +31,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Call ID" Binding="{Binding CallId}" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Details" Binding="{Binding}" />
+                <DataGridTextColumn Header="call Type" Binding="{Binding CallType}" />
+                <!--<DataGridTextColumn Header="Adress" Binding="{Binding }" />-->
                 <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName}" />
                 <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments}" />
                 <DataGridTemplateColumn Header="Actions">

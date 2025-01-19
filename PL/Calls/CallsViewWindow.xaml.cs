@@ -24,23 +24,34 @@ namespace PL
     /// <summary>
     /// Interaction logic for CallsViewWindow.xaml
     /// </summary>
-    public partial class CallsViewWindow : Window, INotifyPropertyChanged
+    public partial class CallsViewWindow : Window
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
         // משתנה סטטי עבור BL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         // מאפיינים עבור הרשימה והמתנדב הנבחר
 
-        public CallViewVM vm { get; set; }
+        //public CallViewVM vm { get; set; }
+
+
+        public CallViewVM vm
+        {
+            get { return (CallViewVM)GetValue(vmProperty); }
+            set { SetValue(vmProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for vm.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty vmProperty =
+            DependencyProperty.Register("vm", typeof(CallViewVM), typeof(CallsViewWindow));
+
+
+
 
         public CallsViewWindow()
         {
-            vm = new CallViewVM();
-            DataContext = vm;
             InitializeComponent();
             try
             {
-                queryCallList();
+                vm = new CallViewVM();
             }
             catch (Exception ex)
             {
@@ -160,8 +171,9 @@ namespace PL
 
         private void DeleteCall_Click(object sender, RoutedEventArgs e)
         {
- 
-            if (vm.SelectedCall == null)
+            var SelectedCall = vm.SelectedCall;
+
+            if (SelectedCall == null)
             {
                 MessageBox.Show("Please select a call to delete.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -176,8 +188,8 @@ namespace PL
             {
                 try
                 {
-                    s_bl.Call.DeleteCall(vm.SelectedCall.CallId);
-                    vm.Calls.Remove(vm.SelectedCall);
+                    s_bl.Call.DeleteCall(SelectedCall.CallId);
+                    vm.Calls.Remove(SelectedCall);
                     MessageBox.Show("Call deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        DataContext="{Binding Vm, RelativeSource={RelativeSource Mode= Self}}"
         Title="Select Call Window" Height="640" Width="800" Background="Lavender" FontFamily="Segoe UI">
 
     <Grid Margin="10">
@@ -49,7 +50,7 @@
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
                 <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
                 <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="*" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

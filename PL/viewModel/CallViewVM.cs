@@ -1,11 +1,13 @@
-﻿using BO;
+﻿using BlApi;
+using BO;
 using PL;
 using System.Collections.ObjectModel;
 
 public class CallViewVM : ViewModelBase
 {
-    public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
 
+    public ObservableCollection<BO.CallInList> Calls { get; set; }
+    private readonly IBl s_bl = Factory.Get();
     // שדה פרטי לאחסון הערך של SelectedCall
     private BO.CallInList? _selectedCall;
 
@@ -22,9 +24,10 @@ public class CallViewVM : ViewModelBase
             }
         }
     }
-    
+
     public CallViewVM()
     {
         SelectedCall = new CallInList();
+        Calls = new(s_bl?.Call.GetCallsList(null, null, null) ?? Enumerable.Empty<BO.CallInList>());
     }
 }
