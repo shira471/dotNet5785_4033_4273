@@ -20,6 +20,7 @@
     <startTime>2025-01-19T16:42:22.3819738+02:00</startTime>
     <maximumTime>2025-01-19T18:42:22</maximumTime>
   </Call>
+<<<<<<< HEAD
   <Call>
     <id>7</id>
     <detail>take pepolr</detail>
@@ -40,4 +41,6 @@
     <startTime>2025-01-19T20:08:35</startTime>
     <maximumTime>2025-01-19T21:08:35</maximumTime>
   </Call>
+=======
+>>>>>>> ced898333398990a89f524d10c608785d93b0c2e
 </ArrayOfCall>

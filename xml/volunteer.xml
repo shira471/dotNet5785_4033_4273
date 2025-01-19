@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>212314033</idVol>
-    <adress>jerusalem</adress>
-    <name>Shira alfasi</name>
-    <email>syrhlpsy7@gmail.com</email>
-    <phoneNumber>0584084178</phoneNumber>
-    <password>58850090</password>
-    <latitude>34.5922650713197</latitude>
-    <longitude>-32.24445263209182</longitude>
-    <limitDestenation>6.36</limitDestenation>
-    <isActive>true</isActive>
-    <role>Manager</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>325004273</idVol>
     <adress>jerusalem</adress>
     <name>Ahuvi Winkler</name>
@@ -70,4 +56,49 @@
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
+<<<<<<< HEAD
+=======
+  <Volunteer>
+    <idVol>212314033</idVol>
+    <adress>jerusalem</adress>
+    <name>Shira alfas</name>
+    <email>syrhlpsy7@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
+    <password>58850090</password>
+    <latitude>34.5922650713197</latitude>
+    <longitude>-32.24445263209182</longitude>
+    <limitDestenation>6.36</limitDestenation>
+    <isActive>true</isActive>
+    <role>Manager</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>326549441</idVol>
+    <adress>jerusalem</adress>
+    <name>Hodaya Carcom</name>
+    <email>hodaya@gmail.com</email>
+    <phoneNumber>0509304196</phoneNumber>
+    <password>123HC</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>10</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>328603196</idVol>
+    <adress>Hanashi h6 jerusalem</adress>
+    <name>Soul Attal</name>
+    <email>shlomowattal@gmail.com</email>
+    <phoneNumber>0587851589</phoneNumber>
+    <password>Tbhkttbh1956122.</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>12</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+>>>>>>> ced898333398990a89f524d10c608785d93b0c2e
 </ArrayOfVolunteer>
