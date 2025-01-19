@@ -10,7 +10,7 @@ namespace BlApi;
 /// <summary>
 /// ממשק עבור ניהול קריאות
 /// </summary>
-public interface ICall: IObservable //stage 5 הרחבת ממשק
+public interface ICall : IObservable //stage 5 הרחבת ממשק
 
 {
     // 1. בקשת כמויות קריאות
@@ -67,5 +67,5 @@ public interface ICall: IObservable //stage 5 הרחבת ממשק
     // 11. בחירת קריאה לטיפול
     // מקצה קריאה למתנדב, מעדכנת את זמן הכניסה לטיפול.
     // אם הקריאה לא מתאימה לטיפול (למשל, כבר טופלה או פג תוקפה), נזרקת חריגה.
-    void AssignCallToVolunteer(int volunteerId, string callDes);
+    void AssignCallToVolunteer(int volunteerId, int callId);
 }

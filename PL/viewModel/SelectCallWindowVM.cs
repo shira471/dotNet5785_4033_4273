@@ -10,67 +10,33 @@ using System.Threading.Tasks;
 
 namespace PL.viewModel;
 
-public class SelectCallWindowVM : ViewModelBase
-{
-    public ObservableCollection<BO.OpenCallInList> Calls { get; set; }
-    private readonly IBl s_bl = Factory.Get(); 
-
-    private BO.OpenCallInList? selectedCall;
- 
-    public OpenCallInList? SelectedCall
+    public class SelectCallWindowVM : ViewModelBase
     {
-        get => selectedCall;
+    public ObservableCollection<BO.CallInList> Calls { get; set; }
+    private readonly IBl s_bl = Factory.Get();
+    // שדה פרטי לאחסון הערך של SelectedCall
+    private BO.CallInList? _selectedCall;
+
+    public int VolunteerId { get; }
+    public BO.CallInList? SelectedCall
+    {
+        get => _selectedCall;
         set
         {
-            if (selectedCall != value)
+            if (_selectedCall != value)
             {
-                selectedCall = value;
-                OnPropertyChanged(nameof(SelectedCall));
-            }
-        }
-    }
-    public SelectCallWindowVM()
-    {
-        selectedCall=new OpenCallInList();
-
-    }
-
-    private string? selectedFilterOption;
-    public string? SelectedFilterOption
-    {
-        get => selectedFilterOption;
-        set
-        {
-            if (selectedFilterOption != value)
-            {
-                selectedFilterOption = value;
-                ApplyFilter();
-                OnPropertyChanged(nameof(SelectedFilterOption));
+                _selectedCall = value;
+                Console.WriteLine($"SelectedCall changed: {_selectedCall?.CallId}"); // לוג לבדיקת שינוי
+                OnPropertyChanged(nameof(SelectedCall)); // יידע את ה-Binding שהערך השתנה
             }
         }
     }
 
-    //public void LoadCalls(int volunteerId)
-    //{
-    //    Calls.Clear();
-    //    var filteredCalls = new Call().GetOpenCallsByVolunteer(VolunteerId, null, null);
-    //    foreach (var call in filteredCalls)
-    //    {
-    //        Calls.Add(call);
-    //    }
-    //}
-
-    public void ApplyFilter()
+    public SelectCallWindowVM(int volunteerId)
     {
-        if (string.IsNullOrWhiteSpace(SelectedFilterOption)) return;
-
-        var filteredCalls = Calls.Where(c => c.Description.Contains(SelectedFilterOption, StringComparison.OrdinalIgnoreCase)).ToList();
-        Calls.Clear();
-        foreach (var call in filteredCalls)
-        {
-            Calls.Add(call);
-        }
+        VolunteerId = volunteerId;
+        SelectedCall = new CallInList();
+        Calls = new(s_bl?.Call.GetCallsList(CallField.Status, Status.Open, null) ?? Enumerable.Empty<BO.CallInList>());
     }
+   
 }
-
-
