@@ -47,7 +47,7 @@ namespace PL
                 MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        // פונקציה לטעינת רשימת המתנדבים
+        // פונקציה לטעינת רשימת הקריאות
         private void queryCallList()
         {
             vm.Calls.Clear(); // ניקוי הרשימה

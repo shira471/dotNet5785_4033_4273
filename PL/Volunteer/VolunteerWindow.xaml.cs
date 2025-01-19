@@ -24,14 +24,14 @@ namespace PL.Volunteer
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
         private readonly BlApi.IBl s_bl;
-        public bool IsEditing
-        {
-            get { return (bool)GetValue(IsEditingProperty); }
-            set { SetValue(IsEditingProperty, value); }
-        }
+        //public bool IsEditing
+        //{
+        //    get { return (bool)GetValue(IsEditingProperty); }
+        //    set { SetValue(IsEditingProperty, value); }
+        //}
 
-        public static readonly DependencyProperty IsEditingProperty =
-            DependencyProperty.Register("IsEditing", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(false));
+        //public static readonly DependencyProperty IsEditingProperty =
+        //    DependencyProperty.Register("IsEditing", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(false));
 
         public VolunteerWindow(string? id = null)
         {
@@ -55,10 +55,10 @@ namespace PL.Volunteer
                 Close();
             }
         }
-        private void EnableEditing_Click(object sender, RoutedEventArgs e)
-        {
-            IsEditing = true;
-        }
+        //private void EnableEditing_Click(object sender, RoutedEventArgs e)
+        //{
+        //    IsEditing = true;
+        //}
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
@@ -69,8 +69,8 @@ namespace PL.Volunteer
 
                 MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Disable editing after saving
-                IsEditing = false;
+                //// Disable editing after saving
+                //IsEditing = true;
             }
             catch (Exception ex)
             {
