@@ -38,7 +38,7 @@
                 <!--<Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />-->
                 <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" IsEnabled="{Binding IsEditing}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
 
-                <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+                <!--<Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />-->
 
             </StackPanel>
 
