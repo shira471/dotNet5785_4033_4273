@@ -20,14 +20,4 @@
     <startTime>2025-01-19T16:42:22.3819738+02:00</startTime>
     <maximumTime>2025-01-19T18:42:22</maximumTime>
   </Call>
-  <Call>
-    <id>7</id>
-    <detail>take pepolr</detail>
-    <adress>tel aviv</adress>
-    <latitude>32.0852999</latitude>
-    <longitude>34.78176759999999</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-16T16:07:36.6685022+02:00</startTime>
-    <maximumTime>2025-07-18T16:07:36</maximumTime>
-  </Call>
 </ArrayOfCall>
