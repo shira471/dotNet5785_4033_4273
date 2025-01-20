@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
+<<<<<<< HEAD
+    <id>9704</id>
+    <detail>Service request</detail>
+    <adress>202 Birch Blvd</adress>
+    <latitude>55.86896927040746</latitude>
+    <longitude>62.90782923304948</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2024-03-27T00:00:00</startTime>
+    <maximumTime>2025-03-27T00:10:00</maximumTime>
+  </Call>
+  <Call>
+    <id>9</id>
+    <detail>take care</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-19T16:42:22.3819738+02:00</startTime>
+    <maximumTime>2025-01-19T18:42:22</maximumTime>
+  </Call>
+  <Call>
+    <id>7</id>
+    <detail>take pepolr</detail>
+    <adress>tel aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+=======
     <id>3050</id>
     <detail>Call for assistance</detail>
     <adress>456 Oak Ave</adress>
     <latitude>46.02073589243986</latitude>
     <longitude>101.33721416825443</longitude>
+>>>>>>> 59b2a4fa4213601b4397110db38544784d3bcf0d
     <callType>Breakfast</callType>
     <startTime>2023-08-10T00:00:00</startTime>
     <maximumTime>2023-08-10T00:15:00</maximumTime>
   </Call>
+<<<<<<< HEAD
+  <Call>
+    <id>10</id>
+    <detail>food</detail>
+    <adress>tel aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+    <callType>dinner</callType>
+    <startTime>2025-01-19T20:08:35</startTime>
+    <maximumTime>2025-01-19T21:08:35</maximumTime>
+  </Call>
+=======
+>>>>>>> 59b2a4fa4213601b4397110db38544784d3bcf0d
 </ArrayOfCall>
