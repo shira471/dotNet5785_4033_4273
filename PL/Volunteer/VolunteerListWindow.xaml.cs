@@ -9,9 +9,9 @@ using System.Windows.Input;
 namespace PL.Volunteer;
 
 // Window for managing the list of volunteers
-public partial class VolunteerListWindow : Window, INotifyPropertyChanged
+public partial class VolunteerListWindow : Window
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
+   
 
     // Static instance for accessing the business logic layer (BL)
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -27,7 +27,8 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
         InitializeComponent();
         try
         {
-            LoadVolunteerList(); // Initial loading of the volunteer list
+           
+           vm.LoadVolunteerList(); // Initial loading of the volunteer list
         }
         catch (Exception ex)
         {
@@ -35,23 +36,8 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
         }
     }
 
-    // Function to load the volunteer list from the BL
-    private void LoadVolunteerList()
-    {
-        vm.Volunteers.Clear(); // Clear the existing list
-        try
-        {
-            var volunteers = s_bl?.Volunteer.GetVolunteersList(null, vm.VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
-            foreach (var volunteer in volunteers)
-            {
-                vm.Volunteers.Add(volunteer);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error loading volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
+  
+   
 
     // Function to count the number of calls assigned to a volunteer
     private int VolunteerCalls(object sender, EventArgs e)
@@ -64,7 +50,7 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
     // Observer function to refresh the volunteer list when changes occur
     private void VolunteerListObserver()
     {
-        LoadVolunteerList();
+       vm.LoadVolunteerList();
     }
 
     // Event triggered when the window is loaded
@@ -72,7 +58,7 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
     {
         try
         {
-            LoadVolunteerList(); // Load the list
+           vm.LoadVolunteerList(); // Load the list
             s_bl?.Volunteer.AddObserver(VolunteerListObserver); // Add observer to monitor changes
         }
         catch (Exception ex)
@@ -102,7 +88,7 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
             var window = new AddVolunteerWindow(); // Open the add volunteer window
             window.ShowDialog();
 
-            LoadVolunteerList(); // Refresh the list after adding a volunteer
+            vm.LoadVolunteerList(); // Refresh the list after adding a volunteer
         }
         catch (Exception ex)
         {
@@ -165,7 +151,7 @@ public partial class VolunteerListWindow : Window, INotifyPropertyChanged
                 {
                     var updateWindow = new AddVolunteerWindow(selectedVolunteer.Id); // פתח חלון לעדכון
                     updateWindow.ShowDialog();
-                    LoadVolunteerList(); // רענון הרשימה לאחר העדכון
+                    vm.LoadVolunteerList(); // רענון הרשימה לאחר העדכון
                 }
                 catch (Exception ex)
                 {

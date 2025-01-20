@@ -1,6 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
+<<<<<<< HEAD
+=======
+    <idVol>3946626</idVol>
+    <adress>587 Second Ave</adress>
+    <name>Shira Israelof</name>
+    <email>shira.israelof@gmail.com</email>
+    <phoneNumber>184957696</phoneNumber>
+    <password>mC4A1mgIT</password>
+    <latitude>34.241632980480176</latitude>
+    <longitude>173.68381825532163</longitude>
+    <limitDestenation>8.62</limitDestenation>
+    <isActive>false</isActive>
+    <role xsi:nil="true" />
+    <distanceType>air</distanceType>
+  </Volunteer>
+<<<<<<< HEAD
+	<Volunteer>
+		<idVol>212314033</idVol>
+		<adress>jerusalem</adress>
+		<name>Shira alfas</name>
+		<email>syrhlpsy7@gmail.com</email>
+		<phoneNumber>0584084178</phoneNumber>
+		<password>58850090</password>
+		<latitude>34.5922650713197</latitude>
+		<longitude>-32.24445263209182</longitude>
+		<limitDestenation>6.36</limitDestenation>
+		<isActive>true</isActive>
+		<role>Manager</role>
+		<distanceType>air</distanceType>
+	</Volunteer>
+	<Volunteer>
+		<idVol>326549441</idVol>
+		<adress>jerusalem</adress>
+		<name>Hodaya Carcom</name>
+		<email>hodaya@gmail.com</email>
+		<phoneNumber>0509304196</phoneNumber>
+		<password>123HC</password>
+		<latitude>31.768319</latitude>
+		<longitude>35.21371</longitude>
+		<limitDestenation>10</limitDestenation>
+		<isActive>true</isActive>
+		<role>Volunteer</role>
+		<distanceType>air</distanceType>
+	</Volunteer>
+	<Volunteer>
+		<idVol>328603196</idVol>
+		<adress>Hanashi h6 jerusalem</adress>
+		<name>Soul Attal</name>
+		<email>shlomowattal@gmail.com</email>
+		<phoneNumber>0587851589</phoneNumber>
+		<password>Tbhkttbh1956122.</password>
+		<latitude>31.768319</latitude>
+		<longitude>35.21371</longitude>
+		<limitDestenation>12</limitDestenation>
+		<isActive>true</isActive>
+		<role>Volunteer</role>
+		<distanceType>air</distanceType>
+	</Volunteer>
+	<Volunteer>
+		<idVol>325004273</idVol>
+		<adress>jerusalem</adress>
+		<name>Ahuvi Winkler</name>
+		<email>a@gmail.com</email>
+		<phoneNumber>0507678050</phoneNumber>
+		<password>1234567</password>
+		<latitude>31.768319</latitude>
+		<longitude>35.21371</longitude>
+		<limitDestenation>20</limitDestenation>
+		<isActive>true</isActive>
+		<role>Manager</role>
+		<distanceType>air</distanceType>
+	</Volunteer>
+=======
+<<<<<<< HEAD
+  <Volunteer>
+    <idVol>215943978</idVol>
+    <adress>hai taib 52</adress>
+    <name>Naama Kaufman</name>
+    <email>naamakaufman32@gmail.com</email>
+    <phoneNumber>0584654899</phoneNumber>
+    <password>0584654899</password>
+    <latitude>31.420771</latitude>
+    <longitude>34.588366</longitude>
+    <limitDestenation>12</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>588500900</idVol>
+    <adress>jerusalem</adress>
+    <name>haim alfasi</name>
+    <email>haim@gmail.com</email>
+    <phoneNumber>0548473425</phoneNumber>
+    <password>5885090</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>5</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>236154955</idVol>
+    <adress>jerusalem</adress>
+    <name>ayala alfasi</name>
+    <email>ayala.hey3@gmail.com</email>
+    <phoneNumber>0523671898</phoneNumber>
+    <password>2361549</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>4</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+>>>>>>> 9ad12644f3499c76d5b418f732e98fccca268f3b
     <idVol>212314033</idVol>
     <adress>jerusalem</adress>
     <name>shira alfasi</name>
@@ -112,4 +230,10 @@
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 59b2a4fa4213601b4397110db38544784d3bcf0d
+>>>>>>> 0b020301f2c5b34a96dccd3574e2e32b9c04d3c9
+>>>>>>> 9ad12644f3499c76d5b418f732e98fccca268f3b
 </ArrayOfVolunteer>

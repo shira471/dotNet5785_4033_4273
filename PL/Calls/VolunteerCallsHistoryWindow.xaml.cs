@@ -19,10 +19,9 @@ namespace PL.Calls;
 /// <summary>
 /// Interaction logic for VolunteerCallsHistoryWindow.xaml
 /// </summary>
-public partial class VolunteerCallsHistoryWindow : Window, INotifyPropertyChanged
+public partial class VolunteerCallsHistoryWindow : Window
 {
-    // Event used for property change notifications
-    public event PropertyChangedEventHandler? PropertyChanged;
+    
 
     // Reference to the business logic layer
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -42,7 +41,7 @@ public partial class VolunteerCallsHistoryWindow : Window, INotifyPropertyChange
     {
         VolunteerId = volunteerId;
 
-        Vm = new VolunteerCallsHistoryVM(); // Initialize the ViewModel
+        Vm = new VolunteerCallsHistoryVM(volunteerId); // Initialize the ViewModel
         DataContext = Vm; // Set the data context for data binding
         InitializeComponent();
    
@@ -80,10 +79,6 @@ public partial class VolunteerCallsHistoryWindow : Window, INotifyPropertyChange
     /// Event handler for when the ComboBox selection changes.
     /// Applies filtering logic to the displayed call list.
     /// </summary>
-    private void ComboBox_SelectionChanged(object sender, EventArgs e)
-    {
-        Vm.ApplyFilter(); // Apply filters defined in the ViewModel
-    }
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
         this.Close();

@@ -19,22 +19,22 @@
                    HorizontalAlignment="Center" 
                    Margin="0,0,0,10" />
 
-        <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
-            <!-- סינון -->
+        <!-- Filter and Sort Section -->
+        <StackPanel Orientation="Horizontal" Margin="5,50,5,5" Grid.Row="0" VerticalAlignment="Top">
+            <!-- Filter -->
             <TextBlock Text="Filter by Type:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
             <ComboBox Width="200" 
-              ItemsSource="{Binding CallTypes}" 
-              SelectedItem="{Binding SelectedFilterOption}" 
-              Margin="0,0,10,0" />
+                      ItemsSource="{Binding CallTypes}" 
+                      SelectedItem="{Binding SelectedFilterOption}" 
+                      Margin="0,0,10,0" />
 
-            <!-- מיון -->
+            <!-- Sort -->
             <TextBlock Text="Sort By:" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0" />
             <ComboBox Width="200" 
-              ItemsSource="{Binding SortOptions}" 
-              SelectedItem="{Binding SelectedSortOption}" 
-              Margin="0,0,10,0" />
+                      ItemsSource="{Binding SortOptions}" 
+                      SelectedItem="{Binding SelectedSortOption}" 
+                      Margin="0,0,10,0" />
         </StackPanel>
-
 
         <!-- DataGrid -->
         <DataGrid Grid.Row="1" 
@@ -57,7 +57,5 @@
                 <DataGridTextColumn Header="End Type" Binding="{Binding EndType}" Width="2*" />
             </DataGrid.Columns>
         </DataGrid>
-       
-    
     </Grid>
 </Window>
