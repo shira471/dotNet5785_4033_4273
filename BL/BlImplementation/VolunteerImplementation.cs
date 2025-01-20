@@ -154,9 +154,11 @@ public class VolunteerImplementation : IVolunteer
                 FullName = v.name,
                 Phone = v.phoneNumber,
                 mail = v.email,
-                IsActive = v.isActive
+                IsActive = v.isActive,
+                CurrentCallId = _dal.assignment.ReadAll()
+                       .Count(a => a.volunteerId == v.idVol && a.finishTime == null)
             });
-            
+
         }
         catch (Exception ex)
         {

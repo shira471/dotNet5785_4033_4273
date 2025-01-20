@@ -23,6 +23,13 @@
         Manager,    // תפקיד של מנהל
         Volunteer   // תפקיד של מתנדב
     }
+    public enum Status
+    {
+        open,
+        closed,
+        inProgres,
+        expired
+    }
 
     /// <summary>
     /// Defines the type of distance calculation methods available.

@@ -13,7 +13,6 @@ public class VolunteerListVM : ViewModelBase
 {
     public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
 
-
     private BO.VolunteerInList? selectedVolunteer;
     public BO.VolunteerInList? SelectedVolunteer
     {
@@ -47,6 +46,7 @@ public class VolunteerListVM : ViewModelBase
 
     // הפניה לשכבת ה-BL
     private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+
 
     // טעינת המתנדבים מה-BL
     public void LoadVolunteerList()

@@ -77,7 +77,7 @@ public partial class SelectCallWindow : Window
 
     private void CallsDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        var selectedCall = Vm.SelectedCall;
+        var selectedCall = Vm.Selected;
         if (selectedCall == null)
         {
             MessageBox.Show("No call selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -102,7 +102,7 @@ public partial class SelectCallWindow : Window
 
     private void FinishCall_Click(object sender, RoutedEventArgs e)
     {
-        var call = Vm.SelectedCall;
+        var call = Vm.Selected;
         if (call == null || call.Id == 0)
         {
             MessageBox.Show("No ongoing call to finish.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -131,7 +131,7 @@ public partial class SelectCallWindow : Window
 
         try
         {
-            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id);
+            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.CallId);
             MessageBox.Show("The call was marked as canceled.");
             queryCallList();
         }

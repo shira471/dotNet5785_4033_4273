@@ -1,83 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Assignment>
-    <id>4568</id>
-    <callId>2732</callId>
-    <volunteerId>6056160</volunteerId>
-    <startTime>2023-08-26T00:00:00</startTime>
-    <finishTime>2023-08-26T01:30:00</finishTime>
-    <assignKind>dinner</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>9632</id>
-    <callId>8862</callId>
-    <volunteerId>325004273</volunteerId>
-    <startTime>2024-09-18T00:00:00</startTime>
-    <finishTime>2024-09-18T01:28:00</finishTime>
-    <assignKind>dinner</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>5516</id>
-    <callId>1824</callId>
-    <volunteerId>1519225</volunteerId>
-    <startTime>2023-06-15T00:00:00</startTime>
-    <finishTime>2023-06-15T01:13:00</finishTime>
-    <assignKind>Breakfast</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>5220</id>
-    <callId>4151</callId>
-    <volunteerId>4916430</volunteerId>
-    <startTime>2023-05-28T00:00:00</startTime>
-    <finishTime>2023-05-28T00:39:00</finishTime>
-    <assignKind>lunch</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>1432</id>
-    <callId>8850</callId>
-    <volunteerId>4916430</volunteerId>
-    <startTime>2023-06-15T00:00:00</startTime>
-    <finishTime>2023-06-15T01:24:00</finishTime>
+    <id>9850</id>
+    <callId>5794</callId>
+    <volunteerId>212314033</volunteerId>
+    <startTime>2024-12-22T00:00:00</startTime>
+    <finishTime>2024-12-22T01:45:00</finishTime>
     <assignKind xsi:nil="true" />
   </Assignment>
   <Assignment>
-    <id>1874</id>
-    <callId>5809</callId>
-    <volunteerId>2008374</volunteerId>
-    <startTime>2023-09-16T00:00:00</startTime>
-    <finishTime>2023-09-16T00:34:00</finishTime>
-    <assignKind xsi:nil="true" />
-  </Assignment>
-  <Assignment>
-    <id>5452</id>
-    <callId>4505</callId>
-    <volunteerId>8916261</volunteerId>
-    <startTime>2024-08-21T00:00:00</startTime>
-    <finishTime>2024-08-21T01:34:00</finishTime>
-    <assignKind xsi:nil="true" />
-  </Assignment>
-  <Assignment>
-    <id>6906</id>
-    <callId>6461</callId>
-    <volunteerId>6056160</volunteerId>
-    <startTime>2023-02-25T00:00:00</startTime>
-    <finishTime>2023-02-25T01:42:00</finishTime>
+    <id>7251</id>
+    <callId>5495</callId>
+    <volunteerId>587132601</volunteerId>
+    <startTime>2023-07-08T00:00:00</startTime>
+    <finishTime>2023-07-08T01:38:00</finishTime>
     <assignKind>madication</assignKind>
   </Assignment>
   <Assignment>
-    <id>4501</id>
-    <callId>5818</callId>
-    <volunteerId>325004273</volunteerId>
-    <startTime>2023-03-30T00:00:00</startTime>
-    <finishTime>2023-03-30T01:18:00</finishTime>
+    <id>5213</id>
+    <callId>7281</callId>
+    <volunteerId>643153387</volunteerId>
+    <startTime>2023-05-30T00:00:00</startTime>
+    <finishTime>2023-05-30T00:38:00</finishTime>
     <assignKind>medicalEquipment</assignKind>
   </Assignment>
   <Assignment>
-    <id>1051</id>
-    <callId>8098</callId>
-    <volunteerId>2008374</volunteerId>
-    <startTime>2023-07-14T00:00:00</startTime>
-    <finishTime>2023-07-14T01:36:00</finishTime>
+    <id>8250</id>
+    <callId>9643</callId>
+    <volunteerId>205322973</volunteerId>
+    <startTime>2023-10-13T00:00:00</startTime>
+    <finishTime>2023-10-13T00:33:00</finishTime>
     <assignKind>Breakfast</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>2599</id>
+    <callId>4079</callId>
+    <volunteerId>205322973</volunteerId>
+    <startTime>2024-08-29T00:00:00</startTime>
+    <finishTime>2024-08-29T01:16:00</finishTime>
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>8170</id>
+    <callId>5030</callId>
+    <volunteerId>150184958</volunteerId>
+    <startTime>2025-01-11T00:00:00</startTime>
+    <finishTime>2025-01-11T00:40:00</finishTime>
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>3684</id>
+    <callId>7209</callId>
+    <volunteerId>587132601</volunteerId>
+    <startTime>2023-03-21T00:00:00</startTime>
+    <finishTime>2023-03-21T00:45:00</finishTime>
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>8168</id>
+    <callId>5666</callId>
+    <volunteerId>786368302</volunteerId>
+    <startTime>2023-08-11T00:00:00</startTime>
+    <finishTime>2023-08-11T00:41:00</finishTime>
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>1144</id>
+    <callId>9892</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2023-05-30T00:00:00</startTime>
+    <finishTime>2023-05-30T01:51:00</finishTime>
+    <assignKind>dinner</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>5499</id>
+    <callId>9157</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2023-06-12T00:00:00</startTime>
+    <finishTime>2023-06-12T00:49:00</finishTime>
+    <assignKind>lunch</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>0</id>
+    <callId>4</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2025-01-20T23:51:32.1730363+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind xsi:nil="true" />
   </Assignment>
 </ArrayOfAssignment>

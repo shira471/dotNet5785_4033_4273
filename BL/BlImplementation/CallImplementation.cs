@@ -44,6 +44,7 @@ public class CallImplementation : ICall
                 );
             _dal.call.Create(doCall);
             call.Status = Status.Open;
+            
             CallManager.Observers.NotifyListUpdated(); //stage 5
         }
         catch (DO.DalAlreadyExistsException ex)
@@ -69,7 +70,7 @@ public class CallImplementation : ICall
         {
             throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
         }
-
+        
         // יצירת שיוך חדש
         var assignment = new DO.Assignment
         {
@@ -295,12 +296,8 @@ public class CallImplementation : ICall
 
     public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType = null, Enum? sortField = null)
     {
-        // קבלת כל השיוכים של המתנדב לקריאות שטרם נסגרו
-        var assignments = _dal.assignment.ReadAll()
-            .Where(assign => assign.volunteerId == volunteerId && assign.finishTime == null); // קריאות פתוחות
-
-        var callIds = assignments.Select(assign => assign.callId);
-        var calls = _dal.call.ReadAll(c => callIds.Contains(c.id)); // קריאות פתוחות המתאימות למתנדב
+        // קבלת כל הקריאות הפתוחות (ללא finishTime)
+        var calls = _dal.call.ReadAll(c => c.maximumTime > DateTime.Now); // קריאות פתוחות בלבד
 
         // מציאת המתנדב (בהנחה שמאגר המתנדבים נקרא _dal.volunteer)
         var volunteer = _dal.volunteer.ReadAll().FirstOrDefault(v => v.idVol == volunteerId);
@@ -312,9 +309,10 @@ public class CallImplementation : ICall
         {
             throw new ArgumentException("Volunteer location is not provided.");
         }
+
         // מיזוג נתוני הקריאות והשיוכים ליצירת OpenCallInList
-        var openCalls = from assign in assignments
-                        join call in calls on assign.callId equals call.id
+        var openCalls = from call in calls
+                        where !_dal.assignment.ReadAll().Any(assign => assign.callId == call.id && assign.finishTime == null) // קריאה שלא הוקצתה למתנדב אחר
                         select new OpenCallInList
                         {
                             Id = call.id,
@@ -338,16 +336,17 @@ public class CallImplementation : ICall
             openCalls = sortField switch
             {
                 SortField.Id => openCalls.OrderBy(call => call.Id),
-               SortField.Address => openCalls.OrderBy(call => call.Address),
-              SortField.OpenTime => openCalls.OrderBy(call => call.OpenTime),
+                SortField.Address => openCalls.OrderBy(call => call.Address),
+                SortField.OpenTime => openCalls.OrderBy(call => call.OpenTime),
                 SortField.MaxFinishTime => openCalls.OrderBy(call => call.MaxEndTime),
-               SortField.DistanceOfCall => openCalls.OrderBy(call => call.DistanceFromVolunteer),
+                SortField.DistanceOfCall => openCalls.OrderBy(call => call.DistanceFromVolunteer),
                 _ => openCalls.OrderBy(call => call.Id) // ברירת מחדל
             };
-        };
-        
+        }
+
         return openCalls;
     }
+
 
 
     public void UpdateCallDetails(Call call)

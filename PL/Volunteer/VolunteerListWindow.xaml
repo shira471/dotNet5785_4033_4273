@@ -43,7 +43,7 @@
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="150" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Email" Binding="{Binding mail}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Calls" Binding="{Binding TotalCallsHandled}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Calls" Binding="{Binding CurrentCallId}" Width="100" IsReadOnly="True"/>
                 <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="100" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>

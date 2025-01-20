@@ -71,7 +71,7 @@ public static class Initialization
         foreach (string name in names)
         {
             // Random ID
-            int id = s_rand.Next(1000000, 9999999); // Assuming 7-digit IDs
+            int id = s_rand.Next(100000000, 999999999); // Assuming 7-digit IDs
                                                     // הוספת מזהה המתנדב לרשימה
             volunteerIds.Add(id);
             // מערך של 20 כתובות אמיתיות

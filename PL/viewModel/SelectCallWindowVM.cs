@@ -19,8 +19,8 @@ namespace PL.viewModel;
     public IEnumerable<BO.CallType> CallTypes { get; } = Enum.GetValues(typeof(BO.CallType)).Cast<BO.CallType>();
     public IEnumerable<BO.SortField> OpenCallSortField { get; } = Enum.GetValues(typeof(SortField)).Cast<BO.SortField>();
 
-    private BO.OpenCallInList? _selectedCall;
-    public BO.OpenCallInList? SelectedCall
+    private BO.CallInList? _selectedCall;
+    public BO.CallInList? SelectedCall
     {
         get => _selectedCall;
         set
@@ -29,6 +29,19 @@ namespace PL.viewModel;
             {
                 _selectedCall = value;
                 OnPropertyChanged(nameof(SelectedCall));
+            }
+        }
+    }
+    private BO.OpenCallInList? _selected;
+    public BO.OpenCallInList? Selected
+    {
+        get => _selected;
+        set
+        {
+            if (_selected != value)
+            {
+                _selected = value;
+                OnPropertyChanged(nameof(Selected));
             }
         }
     }
