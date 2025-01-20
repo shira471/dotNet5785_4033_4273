@@ -306,7 +306,11 @@ public class CallImplementation : ICall
         var volunteer = _dal.volunteer.ReadAll().FirstOrDefault(v => v.idVol == volunteerId);
         if (volunteer == null)
         {
-            throw new InvalidOperationException("המתנדב לא נמצא");
+            throw new InvalidOperationException("Volunteer not found.");
+        }
+        if (volunteer.latitude == null || volunteer.longitude == null)
+        {
+            throw new ArgumentException("Volunteer location is not provided.");
         }
         // מיזוג נתוני הקריאות והשיוכים ליצירת OpenCallInList
         var openCalls = from assign in assignments
@@ -329,16 +333,19 @@ public class CallImplementation : ICall
         }
 
         // מיון הקריאות לפי השדה הנבחר
-        if (sortField != null)
+        if (sortField != null && sortField is SortField)
         {
             openCalls = sortField switch
             {
-                CallField.Status => openCalls.OrderBy(c => c.OpenTime),
-                CallField.AssignedTo => openCalls.OrderBy(c => c.MaxEndTime),
-                _ => openCalls // ללא מיון אם השדה אינו נתמך
+                SortField.Id => openCalls.OrderBy(call => call.Id),
+               SortField.Address => openCalls.OrderBy(call => call.Address),
+              SortField.OpenTime => openCalls.OrderBy(call => call.OpenTime),
+                SortField.MaxFinishTime => openCalls.OrderBy(call => call.MaxEndTime),
+               SortField.DistanceOfCall => openCalls.OrderBy(call => call.DistanceFromVolunteer),
+                _ => openCalls.OrderBy(call => call.Id) // ברירת מחדל
             };
-        }
-
+        };
+        
         return openCalls;
     }
 

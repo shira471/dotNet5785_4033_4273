@@ -51,8 +51,8 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // 8. רשימת קריאות פתוחות לפי מתנדב
     // מחזירה קריאות פתוחות לבחירה עבור מתנדב מסוים, כולל חישוב מרחק מהמתנדב.
     // מאפשרת סינון לפי סוג קריאה ומיון לפי שדה מסוים.
-    IEnumerable<BO.OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? Status, Enum? sortField);
-
+     IEnumerable<BO.OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType = null, Enum? sortField = null);
+ 
     // 9. עדכון "סיום טיפול" בקריאה
     // מסיימת טיפול בקריאה על ידי מתנדב, מעדכנת את זמן הסיום וסוג הסיום כ"טופלה".
     // אם הנתונים לא חוקיים (למשל, הקצאה לא קיימת או שכבר טופלה), נזרקת חריגה.

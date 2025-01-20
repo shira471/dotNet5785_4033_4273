@@ -53,13 +53,19 @@
                   SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" 
                   Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
-        <!-- Add/Update Button -->
-        <Button Content="{Binding ButtonText}" 
-                Grid.Row="6" Grid.ColumnSpan="2" 
-                Height="40" Width="150"
-                Background="DodgerBlue" Foreground="White"
-                FontWeight="Bold"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                Click="btnAddUpdate_Click" />
+        <!-- כפתורים -->
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20">
+            <Button Content="Back" 
+                    Click="btnBack_Click" 
+                    Height="40" Width="150" 
+                    Margin="10" Background="LightCoral" 
+                    Foreground="White" FontWeight="Bold" />
+            <Button Content="{Binding ButtonText}" 
+                    Click="btnAddUpdate_Click" 
+                    Height="40" Width="150" 
+                    Margin="10" Background="DodgerBlue" 
+                    Foreground="White" FontWeight="Bold" />
+        </StackPanel>
+
     </Grid>
 </Window>

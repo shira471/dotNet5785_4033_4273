@@ -104,6 +104,8 @@ namespace PL.Volunteer
         //        MessageBox.Show("No ongoing call to finish.");
         //    }
         //}
+        
+
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);

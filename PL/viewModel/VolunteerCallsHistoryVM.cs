@@ -12,6 +12,7 @@ public class VolunteerCallsHistoryVM : ViewModelBase
 {
     public ObservableCollection<ClosedCallInList> ClosedCalls { get; set; } = new ObservableCollection<ClosedCallInList>();
 
+
     private ClosedCallInList? selectedClosedCall;
     public ClosedCallInList? SelectedClosedCall
     {

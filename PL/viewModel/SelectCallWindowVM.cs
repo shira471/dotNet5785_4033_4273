@@ -7,18 +7,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace PL.viewModel;
 
     public class SelectCallWindowVM : ViewModelBase
     {
-    public ObservableCollection<BO.CallInList> Calls { get; set; }
     private readonly IBl s_bl = Factory.Get();
-    // שדה פרטי לאחסון הערך של SelectedCall
-    private BO.CallInList? _selectedCall;
 
-    public int VolunteerId { get; }
-    public BO.CallInList? SelectedCall
+    public ObservableCollection<BO.OpenCallInList> Calls { get; set; }
+    public IEnumerable<BO.CallType> CallTypes { get; } = Enum.GetValues(typeof(BO.CallType)).Cast<BO.CallType>();
+    public IEnumerable<BO.SortField> OpenCallSortField { get; } = Enum.GetValues(typeof(SortField)).Cast<BO.SortField>();
+
+    private BO.OpenCallInList? _selectedCall;
+    public BO.OpenCallInList? SelectedCall
     {
         get => _selectedCall;
         set
@@ -26,8 +28,39 @@ namespace PL.viewModel;
             if (_selectedCall != value)
             {
                 _selectedCall = value;
-                Console.WriteLine($"SelectedCall changed: {_selectedCall?.CallId}"); // לוג לבדיקת שינוי
-                OnPropertyChanged(nameof(SelectedCall)); // יידע את ה-Binding שהערך השתנה
+                OnPropertyChanged(nameof(SelectedCall));
+            }
+        }
+    }
+
+    public int VolunteerId { get; }
+
+    private CallType? _filterCallType;
+    public CallType? FilterCallType
+    {
+        get => _filterCallType;
+        set
+        {
+            if (_filterCallType != value)
+            {
+                _filterCallType = value;
+                OnPropertyChanged(nameof(FilterCallType));
+                LoadCalls();
+            }
+        }
+    }
+
+    private SortField? _sortField;
+    public SortField? SortField
+    {
+        get => _sortField;
+        set
+        {
+            if (_sortField != value)
+            {
+                _sortField = value;
+                OnPropertyChanged(nameof(SortField));
+                LoadCalls();
             }
         }
     }
@@ -35,8 +68,25 @@ namespace PL.viewModel;
     public SelectCallWindowVM(int volunteerId)
     {
         VolunteerId = volunteerId;
-        SelectedCall = new CallInList();
-        Calls = new(s_bl?.Call.GetCallsList(CallField.Status, Status.Open, null) ?? Enumerable.Empty<BO.CallInList>());
+        Calls = new ObservableCollection<BO.OpenCallInList>();
+        LoadCalls();
     }
-   
+
+    public void LoadCalls()
+    {
+        Calls.Clear();
+        try
+        {
+            var calls = s_bl.Call.GetOpenCallsByVolunteer(VolunteerId, FilterCallType, SortField) ?? Enumerable.Empty<BO.OpenCallInList>();
+            foreach (var call in calls)
+            {
+                Calls.Add(call);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
 }

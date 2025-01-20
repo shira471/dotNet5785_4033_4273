@@ -68,9 +68,11 @@
         <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
                  Grid.Row="9" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
 
-        <!-- Add/Update Button -->
-        <Button Content="Add" Click="btnAddUpdate_Click" Grid.Row="10" Grid.ColumnSpan="2" Height="40" Width="150" 
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
-                Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+        <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
+            <Button Content="Back" Click="btnBack_Click" Height="40" Width="150" Margin="5"
+            Background="LightCoral" Foreground="White" FontWeight="Bold" />
+            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Height="40" Width="150" Margin="5"
+            Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+        </StackPanel>
     </Grid>
 </Window>

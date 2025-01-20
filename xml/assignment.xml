@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Assignment>
-    <id>4499</id>
-    <callId>9704</callId>
-    <volunteerId>236154955</volunteerId>
-    <startTime>2023-10-16T00:00:00</startTime>
-    <finishTime>2023-10-16T00:33:00</finishTime>
-    <assignKind xsi:nil="true" />
-  </Assignment>
-  <Assignment>
-    <id>0</id>
-    <callId>9</callId>
-    <volunteerId>236154955</volunteerId>
-    <startTime>2025-01-19T20:53:46.3423861+02:00</startTime>
-    <finishTime xsi:nil="true" />
-    <assignKind xsi:nil="true" />
+    <id>5086</id>
+    <callId>7771</callId>
+    <volunteerId>1376</volunteerId>
+    <startTime>2023-05-01T00:00:00</startTime>
+    <finishTime>2023-05-01T01:39:00</finishTime>
+    <assignKind>lunch</assignKind>
   </Assignment>
 </ArrayOfAssignment>

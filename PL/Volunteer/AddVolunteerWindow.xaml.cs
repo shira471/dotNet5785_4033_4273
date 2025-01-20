@@ -78,6 +78,12 @@ namespace PL.Volunteer
             DataContext = this;
         }
 
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            // סגור את החלון וחזור לחלון הקודם
+            Close();
+        }
+
         //public AddVolunteerWindow(int id = 0)
         //{
         //    InitializeComponent();

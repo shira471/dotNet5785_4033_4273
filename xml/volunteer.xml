@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <idVol>325004273</idVol>
-    <adress>jerusalem</adress>
-    <name>Ahuvi Winkler</name>
-    <email>a@gmail.com</email>
-    <phoneNumber>0507678050</phoneNumber>
-    <password>1234567</password>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <limitDestenation>20</limitDestenation>
-    <isActive>true</isActive>
-    <role>Manager</role>
+    <idVol>3946626</idVol>
+    <adress>587 Second Ave</adress>
+    <name>Shira Israelof</name>
+    <email>shira.israelof@gmail.com</email>
+    <phoneNumber>184957696</phoneNumber>
+    <password>mC4A1mgIT</password>
+    <latitude>34.241632980480176</latitude>
+    <longitude>173.68381825532163</longitude>
+    <limitDestenation>8.62</limitDestenation>
+    <isActive>false</isActive>
+    <role xsi:nil="true" />
     <distanceType>air</distanceType>
   </Volunteer>
+<<<<<<< HEAD
   <Volunteer>
     <idVol>215943978</idVol>
     <adress>hai taib 52</adress>
@@ -112,4 +113,6 @@
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
+=======
+>>>>>>> 59b2a4fa4213601b4397110db38544784d3bcf0d
 </ArrayOfVolunteer>
