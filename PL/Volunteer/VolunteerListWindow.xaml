@@ -13,19 +13,31 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- כותרת -->
+        <!-- Header -->
         <TextBlock Text="List of all volunteers" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" Foreground="Green" />
+
+        <!-- Filters and Sorting -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
+            <!-- Active Filter -->
+            <TextBlock Text="Filter Active:" VerticalAlignment="Center" Margin="0,0,5,0" />
+            <ComboBox Width="100" SelectedValue="{Binding IsActiveFilter, Mode=TwoWay}" Margin="5">
+                <ComboBoxItem Content="All" Tag="All" />
+                <ComboBoxItem Content="Active" Tag="Active" />
+                <ComboBoxItem Content="Inactive" Tag="Inactive" />
+       
+            </ComboBox>
+        </StackPanel>
 
         <!-- DataGrid -->
         <DataGrid ItemsSource="{Binding Volunteers}" 
-          SelectedValue="{Binding SelectedVolunteer, Mode=TwoWay}"
-          AutoGenerateColumns="False" 
-          Grid.Row="1" 
-          Margin="10" 
-          Background="White" 
-          BorderBrush="Gray"
-          Foreground="Black"
-          MouseDoubleClick="DataGrid_MouseDoubleClick">
+                  SelectedValue="{Binding SelectedVolunteer, Mode=TwoWay}" 
+                  AutoGenerateColumns="False" 
+                  Grid.Row="1" 
+                  Margin="10" 
+                  Background="White" 
+                  BorderBrush="Gray"
+                  Foreground="Black"
+                  MouseDoubleClick="DataGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
@@ -36,7 +48,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- כפתורים -->
+        <!-- Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Add" Width="139" Margin="5" Click="btnAdd_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
             <Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedVolunteer}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>

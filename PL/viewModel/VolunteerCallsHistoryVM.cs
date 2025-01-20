@@ -5,30 +5,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace PL.viewModel;
 
 public class VolunteerCallsHistoryVM : ViewModelBase
 {
+    private readonly int volunteerId;
+    private readonly BlApi.IBl s_bl = BlApi.Factory.Get();
     public ObservableCollection<ClosedCallInList> ClosedCalls { get; set; } = new ObservableCollection<ClosedCallInList>();
 
+    public IEnumerable<CallType> CallTypes { get; } = Enum.GetValues(typeof(CallType)).Cast<CallType>();
+    public IEnumerable<CallField> SortOptions { get; } = Enum.GetValues(typeof(CallField)).Cast<CallField>();
 
-    private ClosedCallInList? selectedClosedCall;
-    public ClosedCallInList? SelectedClosedCall
-    {
-        get => selectedClosedCall;
-        set
-        {
-            if (selectedClosedCall != value)
-            {
-                selectedClosedCall = value;
-                OnPropertyChanged(nameof(SelectedClosedCall));
-            }
-        }
-    }
-
-    private string? selectedFilterOption;
-    public string? SelectedFilterOption
+    private CallType? selectedFilterOption;
+    public CallType? SelectedFilterOption
     {
         get => selectedFilterOption;
         set
@@ -36,31 +27,47 @@ public class VolunteerCallsHistoryVM : ViewModelBase
             if (selectedFilterOption != value)
             {
                 selectedFilterOption = value;
-                ApplyFilter();
                 OnPropertyChanged(nameof(SelectedFilterOption));
+                LoadClosedCalls();
             }
         }
     }
 
-    //public void LoadClosedCalls(int volunteerId, Enum? callType = null, Enum? sortField = null)
-    //{
-    //    ClosedCalls.Clear();
-    //    var filteredClosedCalls = new BL().GetClosedCallsByVolunteer(volunteerId, callType, sortField);
-    //    foreach (var call in filteredClosedCalls)
-    //    {
-    //        ClosedCalls.Add(call);
-    //    }
-    //}
-
-    public void ApplyFilter()
+    private CallField? selectedSortOption;
+    public CallField? SelectedSortOption
     {
-        if (string.IsNullOrWhiteSpace(SelectedFilterOption)) return;
-
-        var filteredClosedCalls = ClosedCalls.Where(c => c.Address.Contains(SelectedFilterOption, StringComparison.OrdinalIgnoreCase)).ToList();
-        ClosedCalls.Clear();
-        foreach (var call in filteredClosedCalls)
+        get => selectedSortOption;
+        set
         {
-            ClosedCalls.Add(call);
+            if (selectedSortOption != value)
+            {
+                selectedSortOption = value;
+                OnPropertyChanged(nameof(SelectedSortOption));
+                LoadClosedCalls();
+            }
+        }
+    }
+
+    public VolunteerCallsHistoryVM(int volunteerId)
+    {
+        this.volunteerId = volunteerId;
+        LoadClosedCalls();
+    }
+
+    public void LoadClosedCalls()
+    {
+        ClosedCalls.Clear();
+        try
+        {
+            var calls = s_bl.Call.GetClosedCallsByVolunteer(volunteerId, SelectedFilterOption, SelectedSortOption) ?? Enumerable.Empty<ClosedCallInList>();
+            foreach (var call in calls)
+            {
+                ClosedCalls.Add(call);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error loading closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
