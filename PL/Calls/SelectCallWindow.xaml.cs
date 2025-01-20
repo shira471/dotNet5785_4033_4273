@@ -1,4 +1,5 @@
 ﻿using BO;
+using DO;
 using PL.viewModel;
 using System;
 using System.Collections.ObjectModel;
@@ -42,23 +43,14 @@ public partial class SelectCallWindow : Window
 
     private void queryCallList()
     {
-        Vm.Calls.Clear();
         try
-        {
-
-            // קריאה ל-GetCallsList
-            var calls = s_bl?.Call.GetCallsList(CallField.Status, Status.Open, null) ?? Enumerable.Empty<BO.CallInList>();
-            foreach (var call in calls)
             {
-                Vm.Calls.Add(call);
+                Vm.LoadCalls();
             }
-        }
-        catch (Exception ex)
-        {
-
-            MessageBox.Show($"Error loading call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-        }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
     }
 
     private void callListObserver()
@@ -68,15 +60,7 @@ public partial class SelectCallWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            queryCallList();
-            s_bl?.Call.AddObserver(callListObserver);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error loading window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        queryCallList();
     }
 
     private void Window_Closed(object sender, EventArgs e)
@@ -91,67 +75,75 @@ public partial class SelectCallWindow : Window
         }
     }
 
-    private void btnSelected_Click(object sender, RoutedEventArgs e)
+    private void CallsDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        var selected = Vm.SelectedCall;
-        if (selected == null)
+        var selectedCall = Vm.SelectedCall;
+        if (selectedCall == null)
         {
             MessageBox.Show("No call selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
+        var result = MessageBox.Show($"Do you want to handle call {selectedCall.Id}?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (result == MessageBoxResult.Yes)
+        {
+            try
+            {
+                s_bl.Call.AssignCallToVolunteer(Vm.VolunteerId, selectedCall.Id);
+                MessageBox.Show($"Call {selectedCall.Id} has been assigned to volunteer {Vm.VolunteerId}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                queryCallList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error assigning call to volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    private void FinishCall_Click(object sender, RoutedEventArgs e)
+    {
+        var call = Vm.SelectedCall;
+        if (call == null || call.Id == 0)
+        {
+            MessageBox.Show("No ongoing call to finish.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         try
         {
-            s_bl.Call.AssignCallToVolunteer(Vm.VolunteerId, Vm.SelectedCall.CallId);
-            MessageBox.Show($"Call {Vm.SelectedCall.Id} has been assigned to volunteer {Vm.VolunteerId}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            s_bl.Call.CloseCallAssignment(Vm.VolunteerId, call.Id);
+            MessageBox.Show("The call was marked as closed.");
             queryCallList();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error assigning call to volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-    private void FinishCall_Click(object sender, RoutedEventArgs e)
-    {
-        var call = Vm.SelectedCall;
-        if (call?.Id == null)
-        {
-            try
-            {
-                s_bl.Call.CloseCallAssignment(Vm.VolunteerId, call.CallId);
-                MessageBox.Show("The call was marked as closed.");
-                //LoadCallDetails();
-            }
-            catch
-            {
-                MessageBox.Show("Error closing the call. Please try again.");
-            }
-        }
-        else
-        {
-            MessageBox.Show("No ongoing call to finish.");
+            MessageBox.Show($"Error closing the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
     private void btnCanceled_Click(object sender, RoutedEventArgs e)
     {
         var call = Vm.SelectedCall;
-        if (call?.Id != null)
+        if (call == null || call.Id == 0)
         {
-            try
-            {
-                s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.CallId);
-                MessageBox.Show("The call was marked as closed.");
-                //LoadCallDetails();
-            }
-            catch
-            {
-                MessageBox.Show("Error closing the call. Please try again.");
-            }
+            MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
         }
-        else
+
+        try
         {
-            MessageBox.Show("No ongoing call to finish.");
+            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id);
+            MessageBox.Show("The call was marked as canceled.");
+            queryCallList();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+    private void btnBack_Click(object sender, RoutedEventArgs e)
+    {
+        this.Close();
+    }
+
 
 }

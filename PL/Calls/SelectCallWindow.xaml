@@ -5,10 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         DataContext="{Binding Vm, RelativeSource={RelativeSource Mode= Self}}"
-        Title="Select Call Window" Height="640" Width="800" Background="Lavender" FontFamily="Segoe UI">
+        Title="Select Call Window"
+        Height="640"
+        Width="800"
+        Background="Lavender"
+        FontFamily="Segoe UI">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -20,22 +25,28 @@
                    FontWeight="Bold" 
                    Foreground="DarkSlateBlue" 
                    HorizontalAlignment="Center" 
-                   Margin="0,0,0,10" />
+                   Margin="0,0,0,10" 
+                   Grid.Row="0" />
 
         <!-- Filter Section -->
-        <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
-            <TextBlock Text="Filter:" 
-                       FontWeight="Bold" 
-                       VerticalAlignment="Center" 
-                       Margin="0,0,10,0" />
-            <ComboBox Width="200" 
-                      Margin="0,0,10,0" 
-                      ItemsSource="{Binding FilterOptions}" 
-                      />
+        <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="1" VerticalAlignment="Center">
+            <!-- Filter -->
+            <TextBlock Text="Filter by Type:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <ComboBox Width="200"
+                      ItemsSource="{Binding CallTypes}"
+                      SelectedItem="{Binding FilterCallType}"
+                      Margin="0,0,10,0" />
+
+            <!-- Sort -->
+            <TextBlock Text="Sort By:" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <ComboBox Width="200"
+                      ItemsSource="{Binding OpenCallSortField}"
+                      SelectedItem="{Binding SortField}"
+                      Margin="0,0,10,0" />
         </StackPanel>
 
         <!-- DataGrid -->
-        <DataGrid Grid.Row="1" 
+        <DataGrid Grid.Row="2" 
                   ItemsSource="{Binding Calls}" 
                   SelectedItem="{Binding SelectedCall}" 
                   AutoGenerateColumns="False" 
@@ -45,27 +56,22 @@
                   BorderThickness="1" 
                   Background="White" 
                   AlternatingRowBackground="LightGray" 
-                  RowHeaderWidth="0">
+                  RowHeaderWidth="0"
+                  IsReadOnly="True"
+                   MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding CallId}" Width="*" />
-                <DataGridTextColumn Header="call Type" Binding="{Binding CallType}" Width="*" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="3*" />
-                <!--<DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
+                <DataGridTextColumn Header="Call Type" Binding="{Binding Tkoc}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
+                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime}" Width="2*" />
                 <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />-->
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Select" 
-                    Width="100" 
-                    Height="30" 
-                    Background="LightSkyBlue" 
-                    Foreground="DarkBlue" 
-                    FontWeight="Bold" 
-                    Margin="5" 
-                    Click="btnSelected_Click" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button Content="End call" 
                     Width="100" 
                     Height="30" 
@@ -81,7 +87,8 @@
                     Foreground="DarkBlue" 
                     FontWeight="Bold" 
                     Margin="5" 
-                    Click="btnCanceled_Click" />    
+                    Click="btnCanceled_Click" />
+            <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
         </StackPanel>
     </Grid>
 </Window>

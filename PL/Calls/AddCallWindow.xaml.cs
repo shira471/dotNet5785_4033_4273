@@ -25,14 +25,16 @@ namespace PL.Call
     {
 
         public ObservableCollection<CallType> CallTypes { get; set; }
+
         public BO.Call? CurrentCall
-            {
+        {
             get { return (BO.Call?)GetValue(CurrentCallProperty); }
             set { SetValue(CurrentCallProperty, value); }
-            }
+        }
 
         public static readonly DependencyProperty CurrentCallProperty =
-            DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallsViewWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(AddCallWindow), new PropertyMetadata(null));
+
         public string ButtonText
         {
             get { return (string)GetValue(ButtonTextProperty); }
@@ -40,7 +42,7 @@ namespace PL.Call
         }
 
         public static readonly DependencyProperty ButtonTextProperty =
-            DependencyProperty.Register("ButtonText", typeof(string), typeof(CallsViewWindow), new PropertyMetadata("Add"));
+            DependencyProperty.Register("ButtonText", typeof(string), typeof(AddCallWindow), new PropertyMetadata("Add"));
 
         private readonly BlApi.IBl s_bl;
 
@@ -54,8 +56,10 @@ namespace PL.Call
             if (id == 0)
             {
                 // Add mode: Initialize with default values
-                CurrentCall = new BO.Call { CallType = CallType.Emergency,
-                OpenTime = DateTime.Now
+                CurrentCall = new BO.Call
+                {
+                    CallType = CallType.Emergency,
+                    OpenTime = DateTime.Now
                 }; // ברירת מחדל
                 ButtonText = "Add";
             }
@@ -69,20 +73,18 @@ namespace PL.Call
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error loading volunteer: {ex.Message}");
+                    MessageBox.Show($"Error loading call: {ex.Message}");
                     Close();
                 }
             }
 
             DataContext = this;
         }
+
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                
-
-                // אם עברנו את כל הבדיקות
                 if (ButtonText == "Add")
                 {
                     s_bl.Call.AddCall(CurrentCall!);
@@ -101,7 +103,12 @@ namespace PL.Call
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
+        }
 
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            // סגור את החלון וחזור לחלון הקודם
+            Close();
         }
 
         private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)

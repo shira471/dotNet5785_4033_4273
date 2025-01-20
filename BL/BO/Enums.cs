@@ -26,7 +26,14 @@ public enum DistanceType
     DrivingDistance
 }
 
-
+public enum SortField
+{
+    Id,              // מיון לפי מספר קריאה
+    Address,         // מיון לפי כתובת
+    OpenTime,        // מיון לפי זמן פתיחת הקריאה
+    MaxFinishTime,   // מיון לפי הזמן המקסימלי של הקריאה
+    DistanceOfCall   // מיון לפי מרחק מהמתנדב
+}
 
 /// <summary>
 /// סוג הקריאה
