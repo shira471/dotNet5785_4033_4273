@@ -56,8 +56,6 @@
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
-<<<<<<< HEAD
-=======
   <Volunteer>
     <idVol>212314033</idVol>
     <adress>jerusalem</adress>
@@ -100,5 +98,18 @@
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
->>>>>>> ced898333398990a89f524d10c608785d93b0c2e
+  <Volunteer>
+    <idVol>209174440</idVol>
+    <adress>jerusalem</adress>
+    <name>yair yerushalmi</name>
+    <email>wallayir@gmail.com</email>
+    <phoneNumber>0585026046</phoneNumber>
+    <password>209174</password>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <limitDestenation>5</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
 </ArrayOfVolunteer>
