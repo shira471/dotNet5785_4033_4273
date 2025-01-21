@@ -1,6 +1,6 @@
 ﻿<config>
-    <dal>xml</dal>
-    <dal-packages>
+	<dal>xml</dal>
+	<dal-packages>
 		<xml namespace="Dal" class="DalXml">DalXml</xml>
-    </dal-packages>
+	</dal-packages>
 </config>

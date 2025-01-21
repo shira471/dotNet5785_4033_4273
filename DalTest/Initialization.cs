@@ -20,8 +20,7 @@ public static class Initialization
     // רשימות לשמירת מזהי קריאות ומתנדבים
     private static List<int> callIds = new List<int>();
     private static List<int> volunteerIds = new List<int>();
-
-
+   
 
     public static void creatVolunteer()
     {
@@ -29,7 +28,8 @@ public static class Initialization
         Random s_rand = new Random();
 
         // Predefined lists
-        string[] names = { "Dani Levy", "Eli Amar", "Yair Cohen", "Ariela Levin", "Dina Klein", "Shira Israelof" };
+        string[] names = { "Avigail barmi","Namma Koufman","Hodaya Carcom","Soll Atall","Rivka Azrad",
+                 "Sara Alvesson","Aviad Dan","Ori Dayan","Shimon Choen","Elia Malachi","Liam Leon","Yagel Levi","Ari Eitan","Noa Levi","Noam Blau" };
         double[]? coordinates = GetCoordinatesFromGoogle("jerusalem");
         if (coordinates == null)
         {
@@ -46,32 +46,15 @@ public static class Initialization
         volunteerIds.Add(325004273);
         string[] addresses = new string[]
          {
-        "123 Main St, New York, NY 10001",
-        "456 Oak Ave, San Francisco, CA 94102",
-        "789 Maple Dr, Chicago, IL 60605",
-        "101 Pine Rd, Los Angeles, CA 90001",
-        "202 Birch Blvd, Miami, FL 33101",
-        "303 Elm St, Dallas, TX 75201",
-        "404 Cedar Ln, Seattle, WA 98101",
-        "505 Willow Dr, Boston, MA 02110",
-        "606 Ash St, Denver, CO 80202",
-        "707 Birch St, Austin, TX 73301",
-        "808 Oak Ln, Phoenix, AZ 85001",
-        "909 Palm Blvd, Orlando, FL 32801",
-        "1001 Walnut St, Houston, TX 77001",
-        "1102 Redwood Ave, San Diego, CA 92101",
-        "1203 Cherry Rd, Nashville, TN 37201",
-        "1304 Pinehurst St, Salt Lake City, UT 84101",
-        "1405 Aspen Dr, Portland, OR 97201",
-        "1506 Spruce St, Minneapolis, MN 55101",
-        "1607 Poplar Ave, Indianapolis, IN 46201",
-        "1708 Cedar Ave, Philadelphia, PA 19103"
-         };
+        "15 King David St, Jerusalem, Israel", "27 Ben Yehuda St, Jerusalem, Israel", "2 Jaffa St, Jerusalem, Israel", "10 HaPalmach St, Jerusalem, Israel",
+        "3 Keren Hayesod St, Jerusalem, Israel","18 Shmuel HaNagid St, Jerusalem, Israel","5 Yaffo Rd, Jerusalem, Israel","6 Rabbi Akiva St, Jerusalem, Israel","34 Ein Karem, Jerusalem, Israel","12 HaNevi'im St, Jerusalem, Israel",
+        "22 Mamilla Mall, Jerusalem, Israel","7 Zion Sq, Jerusalem, Israel","16 Herzl St, Jerusalem, Israel","40 Hillel St, Jerusalem, Israel","14 Agron St, Jerusalem, Israel","28 Emek Refaim St, Jerusalem, Israel"};
+
         // Loop through all names
         foreach (string name in names)
         {
             // Random ID
-            int id = s_rand.Next(1000000, 9999999); // Assuming 7-digit IDs
+            int id = s_rand.Next(100000000, 999999999); // Assuming 7-digit IDs
                                                     // הוספת מזהה המתנדב לרשימה
             volunteerIds.Add(id);
             // מערך של 20 כתובות אמיתיות
@@ -138,107 +121,77 @@ public static class Initialization
     //}
 
     public static void creatCall()
-    {
-        // Random instance
-        Random s_rand = new Random();
-
-        // Predefined lists
-        string[] details = {
+{
+    string[] details = {
         "Call for assistance", "Emergency call", "Routine check-in",
         "Follow-up call", "Service request", "Technical support",
         "Customer inquiry", "Appointment reminder", "Complaint report",
         "Survey feedback"
     };
-        string[] addresses = new string[]
-            {
-        "3327 Ridgewood St, Suite 300, Chicago, IL 60601",
-        "2144 Woodfield Rd, San Francisco, CA 94102",
-        "7783 High Street, Denver, CO 80202",
-        "506 Wycliff Ave, Los Angeles, CA 90012",
-        "1699 Cherry Hill Road, Philadelphia, PA 19104",
-        "2751 Hemlock Ln, Miami, FL 33101",
-        "8361 Elmwood Ave, Houston, TX 77006",
-        "4319 Maplewood Dr, Boston, MA 02118",
-        "5986 Chestnut Dr, Dallas, TX 75205",
-        "1181 Lakeview Blvd, Seattle, WA 98109",
-        "2482 Green Hills Rd, Phoenix, AZ 85018",
-        "8937 Pinewood Ln, New York, NY 10027",
-        "5059 Cascade St, Portland, OR 97201",
-        "6767 Birchwood Dr, Atlanta, GA 30303",
-        "4509 Tanglewood Rd, Chicago, IL 60607",
-        "2158 Vine St, San Diego, CA 92103",
-        "3933 Redwood Ave, Salt Lake City, UT 84103",
-        "1022 Pine Ridge Rd, Las Vegas, NV 89109",
-        "7144 Waterford Dr, Los Angeles, CA 90036",
-        "2321 Cross Creek Rd, Austin, TX 73301"
-            };
 
-        // Use system clock from s_dalConfig.Clock
-        DateTime systemClock = s_dal.config.clock;
-        DateTime start = new DateTime(systemClock.Year - 2, 1, 1);
-        int range = (systemClock - start).Days;
+    string[] addresses = {
+        "15 King David St, Jerusalem, Israel",
+        "27 Ben Yehuda St, Jerusalem, Israel",
+        "52 Jaffa St, Jerusalem, Israel",
+        "10 HaPalmach St, Jerusalem, Israel",
+        "3 Keren Hayesod St, Jerusalem, Israel",
+        "18 Shmuel HaNagid St, Jerusalem, Israel",
+        "25 Yaffo Rd, Jerusalem, Israel",
+        "6 Rabbi Akiva St, Jerusalem, Israel",
+        "34 Ein Karem, Jerusalem, Israel",
+        "12 HaNevi'im St, Jerusalem, Israel"
+    };
 
-        // Loop through all predefined details
-        foreach (string detail in details)
+    DateTime systemClock = s_dal.config.clock;
+    DateTime start = new DateTime(systemClock.Year - 2, 1, 1);
+    int range = (systemClock - start).Days;
+
+    foreach (string detail in details)
+    {
+        //int id = Config.NextCallId; // שימוש במספר רץ
+        string address = addresses[s_rand.Next(addresses.Length)];
+
+        double[]? coordinates = GetCoordinatesFromGoogle(address);
+        if (coordinates == null)
         {
-            // Random ID for the call
-            int id = s_rand.Next(1000, 9999);
-            // הוספת מזהה הקריאה לרשימה
-            callIds.Add(id);
-            // מערך של 20 כתובות רנדומליות עבור קריאות
-            
-            // Random address
-            string address = addresses[s_rand.Next(addresses.Length)];
-
-            double[]? coordinates = GetCoordinatesFromGoogle(address);
-            if (coordinates == null)
-            {
-                throw new Exception($"Could not fetch coordinates for address: {address}");
-            }
-            double latitude = coordinates[0];
-            double longitude = coordinates[1];
-
-
-            // Random call type (Hamal enum)
-            Hamal? callType = GetRandomHamalValue();
-
-            // Random start time and maximum time
-            DateTime startTime = start.AddDays(s_rand.Next(range));
-            DateTime maximumTime = startTime.AddMinutes(s_rand.Next(1, 60));
-
-            // Create the call and save it in the database
-            s_dal.call.Create(new Call(id, detail, address, latitude, longitude, callType, startTime, maximumTime));
+            throw new Exception($"Could not fetch coordinates for address: {address}");
         }
+
+        double latitude = coordinates[0];
+        double longitude = coordinates[1];
+        DateTime startTime = start.AddDays(s_rand.Next(range));
+        DateTime maximumTime = startTime.AddMinutes(s_rand.Next(1, 60));
+
+        if (startTime.Year > 2024) startTime = new DateTime(2024, 12, 31, 23, 59, 59);
+        if (maximumTime.Year > 2024) maximumTime = new DateTime(2024, 12, 31, 23, 59, 59);
+
+        s_dal.call.Create(new Call(0, detail, address, latitude, longitude, GetRandomHamalValue(), startTime, maximumTime));
+        callIds.Add(0); // שמירת ה-ID ברשימה
     }
+}
 
 
     public static void creatAssignment()
     {
         Random s_rand = new Random();
 
-        // שימוש במזהים שנשמרו
         foreach (int callId in callIds)
         {
-            // Random ID for the assignment
-            int id = s_rand.Next(1000, 9999);
+            // אקראי: לא לכל קריאה תיווצר משימה
+            if (s_rand.Next(0, 3) == 0) // 1 מתוך 3 קריאות נשארות ללא משימה
+                continue;
 
-            // בחירת מתנדב אקראי מתוך הרשימה
+            int id = s_rand.Next(1000, 9999);
             int volunteerId = volunteerIds[s_rand.Next(volunteerIds.Count)];
 
-            // Random start time
             DateTime systemNow = s_dal.config.clock;
             DateTime start = new DateTime(systemNow.Year - 2, 1, 1);
             int range = (int)(systemNow - start).TotalDays;
             DateTime startTime = start.AddDays(s_rand.Next(range));
-
-            // Random finish time
             DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121));
 
-            // Random endOfAssign (Hamal enum)
             Hamal? endOfAssign = GetRandomHamalValue();
-
-            // Create the assignment and save it in the database
-            s_dal.assignment.Create(new Assignment(id, callId, volunteerId, startTime, finishTime, endOfAssign));
+            s_dal.assignment.Create(new Assignment(0, callId, volunteerId, startTime, finishTime, endOfAssign));
         }
     }
 

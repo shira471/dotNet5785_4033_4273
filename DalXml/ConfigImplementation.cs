@@ -16,7 +16,7 @@ internal class ConfigImplementation : Iconfig
     }
 
     public TimeSpan RiskTimeRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public int MaxRange { get ; set; }
+    public int MaxRange { get; set; }
 
     public int GetNextCallId()
     {
@@ -34,6 +34,5 @@ internal class ConfigImplementation : Iconfig
         Config.Reset();
     }
 }
-
 
 

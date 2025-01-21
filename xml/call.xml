@@ -1,103 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <id>2732</id>
+    <id>0</id>
     <detail>Call for assistance</detail>
-    <adress>6767 Birchwood Dr, Atlanta, GA 30303</adress>
-    <latitude>33.8259717</latitude>
-    <longitude>-84.374827</longitude>
+    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
+    <latitude>31.7750888</latitude>
+    <longitude>35.218195</longitude>
     <callType xsi:nil="true" />
-    <startTime>2024-09-20T00:00:00</startTime>
-    <maximumTime>2024-09-20T00:58:00</maximumTime>
-  </Call>
-  <Call>
-    <id>8862</id>
-    <detail>Emergency call</detail>
-    <adress>5059 Cascade St, Portland, OR 97201</adress>
-    <latitude>45.505603</latitude>
-    <longitude>-122.6882145</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2023-12-10T00:00:00</startTime>
-    <maximumTime>2023-12-10T00:37:00</maximumTime>
-  </Call>
-  <Call>
-    <id>1824</id>
-    <detail>Routine check-in</detail>
-    <adress>4509 Tanglewood Rd, Chicago, IL 60607</adress>
-    <latitude>41.8733696</latitude>
-    <longitude>-87.650714</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2023-10-09T00:00:00</startTime>
-    <maximumTime>2023-10-09T00:52:00</maximumTime>
-  </Call>
-  <Call>
-    <id>4151</id>
-    <detail>Follow-up call</detail>
-    <adress>2144 Woodfield Rd, San Francisco, CA 94102</adress>
-    <latitude>37.7786871</latitude>
-    <longitude>-122.4212424</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2023-07-08T00:00:00</startTime>
-    <maximumTime>2023-07-08T00:15:00</maximumTime>
-  </Call>
-  <Call>
-    <id>8850</id>
-    <detail>Service request</detail>
-    <adress>1022 Pine Ridge Rd, Las Vegas, NV 89109</adress>
-    <latitude>36.128561</latitude>
-    <longitude>-115.1711298</longitude>
-    <callType>dinner</callType>
-    <startTime>2023-11-19T00:00:00</startTime>
-    <maximumTime>2023-11-19T00:39:00</maximumTime>
-  </Call>
-  <Call>
-    <id>5809</id>
-    <detail>Technical support</detail>
-    <adress>6767 Birchwood Dr, Atlanta, GA 30303</adress>
-    <latitude>33.8259717</latitude>
-    <longitude>-84.374827</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2023-12-28T00:00:00</startTime>
-    <maximumTime>2023-12-28T00:56:00</maximumTime>
-  </Call>
-  <Call>
-    <id>4505</id>
-    <detail>Customer inquiry</detail>
-    <adress>4319 Maplewood Dr, Boston, MA 02118</adress>
-    <latitude>42.3377967</latitude>
-    <longitude>-71.0705763</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-02-26T00:00:00</startTime>
-    <maximumTime>2024-02-26T00:51:00</maximumTime>
-  </Call>
-  <Call>
-    <id>6461</id>
-    <detail>Appointment reminder</detail>
-    <adress>2751 Hemlock Ln, Miami, FL 33101</adress>
-    <latitude>25.7783254</latitude>
-    <longitude>-80.1990136</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-03-31T00:00:00</startTime>
-    <maximumTime>2024-03-31T00:43:00</maximumTime>
-  </Call>
-  <Call>
-    <id>5818</id>
-    <detail>Complaint report</detail>
-    <adress>8937 Pinewood Ln, New York, NY 10027</adress>
-    <latitude>40.8138912</latitude>
-    <longitude>-73.96243270000001</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2023-10-05T00:00:00</startTime>
-    <maximumTime>2023-10-05T00:51:00</maximumTime>
-  </Call>
-  <Call>
-    <id>8098</id>
-    <detail>Survey feedback</detail>
-    <adress>7144 Waterford Dr, Los Angeles, CA 90036</adress>
-    <latitude>34.0620744</latitude>
-    <longitude>-118.4581357</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-05-19T00:00:00</startTime>
-    <maximumTime>2024-05-19T00:16:00</maximumTime>
+    <startTime>2023-09-02T00:00:00</startTime>
+    <maximumTime>2023-09-02T00:24:00</maximumTime>
   </Call>
 </ArrayOfCall>

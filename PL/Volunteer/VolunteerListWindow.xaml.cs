@@ -36,8 +36,6 @@ public partial class VolunteerListWindow : Window
         }
     }
 
-  
-   
 
     // Function to count the number of calls assigned to a volunteer
     private int VolunteerCalls(object sender, EventArgs e)

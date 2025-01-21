@@ -31,7 +31,7 @@ internal class CallImplementation : Icall
         DataSource.calls.RemoveAll(v => v is DO.Call);
     }
 
-   
+
     public Call? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find a volunteer by ID.
