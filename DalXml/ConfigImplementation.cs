@@ -18,14 +18,14 @@ internal class ConfigImplementation : Iconfig
     public TimeSpan RiskTimeRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public int MaxRange { get; set; }
 
-    public int GetNextCallId()
+    public int GetNextAssignmentId()
     {
         return (int)Config.NextAssignmentId; // מחזיר את הערך של המספר הרץ הבא עבור Assignments מ- Config
     }
 
     public int getNextCallId()
     {
-        return Config.NextAssignmentId; // גם כאן מחזיר את המספר הרץ הבא עבור Assignments
+        return Config.NextCallId; // גם כאן מחזיר את המספר הרץ הבא עבור Assignments
     }
 
 

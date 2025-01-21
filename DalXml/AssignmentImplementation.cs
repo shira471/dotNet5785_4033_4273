@@ -8,10 +8,16 @@ internal class AssignmentImplementation : Iassignment
     public void Create(Assignment item)
     {
         List<Assignment> assignments = XMLTools.LoadListFromXMLSerializer<Assignment>(Config.s_assignments_xml);
-        if (assignments.Any(it => it.id == item.id))
+        if (assignments.Any(it => it.callId == item.callId))
             throw new DalAlreadyExistsException($"Assignment with ID={item.id} already exists");
 
+        int newId = Config.NextAssignmentId; // קבלת המזהה הרץ
+        item = item with { id = newId }; // עדכון המזהה במשימה החדשה
+
+        // הוסף את המשימה לרשימה
         assignments.Add(item);
+
+        // שמור את הרשימה המעודכנת בקובץ
         XMLTools.SaveListToXMLSerializer(assignments, Config.s_assignments_xml);
     }
 

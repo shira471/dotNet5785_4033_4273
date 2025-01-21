@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+=======
+<ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Assignment>
+    <id>1</id>
+    <callId>3</callId>
+    <volunteerId>852310206</volunteerId>
+    <startTime>2024-05-04T00:29:00</startTime>
+    <finishTime>2024-05-04T17:29:00</finishTime>
+    <assignKind>handeled</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>2</id>
+    <callId>12</callId>
+    <volunteerId>530893876</volunteerId>
+    <startTime>2025-01-21T16:41:24.9456263+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind xsi:nil="true" />
+  </Assignment>
+  <Assignment>
+    <id>3</id>
+    <callId>14</callId>
+    <volunteerId>145093040</volunteerId>
+    <startTime>2025-01-21T17:05:02.9670483+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>handeled</assignKind>
+  </Assignment>
+</ArrayOfAssignment>
+>>>>>>> 8b714589b717216332ed22421dbe6d9571f34890

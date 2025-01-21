@@ -58,7 +58,7 @@ namespace PL.Call
                 // Add mode: Initialize with default values
                 CurrentCall = new BO.Call
                 {
-                    CallType = CallType.Emergency,
+                    CallType = CallType.Breakfast,            // חמל לארוחת בוקר
                     OpenTime = DateTime.Now
                 }; // ברירת מחדל
                 ButtonText = "Add";

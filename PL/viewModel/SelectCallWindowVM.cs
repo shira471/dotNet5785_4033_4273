@@ -48,8 +48,8 @@ namespace PL.viewModel;
 
     public int VolunteerId { get; }
 
-    private CallType? _filterCallType;
-    public CallType? FilterCallType
+    private BO.CallType? _filterCallType;
+    public BO.CallType? FilterCallType
     {
         get => _filterCallType;
         set

@@ -9,9 +9,18 @@ internal class AssignmentImplementation : Iassignment
 {
     public void Create(Assignment item)
     {
-        int newId = Config.GetNextAssignId;
-        Assignment newItem = item with { id = newId };
-        DataSource.assignments.Add(newItem);
+     
+        if (item.id == 0)
+        {
+            int newId = Config.GetNextAssignId;
+            Assignment newItem = item with { id = newId };
+            DataSource.assignments.Add(newItem);
+        }
+        else
+        {    
+            DataSource.assignments.Add(item);
+        }
+       
     }
 
     public void Delete(int id)

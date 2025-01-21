@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Reflection.Metadata;
 using BL.Helpers;
 using BlApi;
 using BO;
@@ -29,16 +31,20 @@ public class CallImplementation : ICall
             throw new ArgumentNullException("Call cannot be null.");
         }
 
+        if (call.MaxEndTime < call.OpenTime)
+        {
+            throw new ArgumentException("End time cannot be earlier than start time.");
+        }
         try
         {
             var temp = VolunteerManager.GetCoordinatesFromGoogle(call.Address);
             var doCall = new DO.Call(
-                id: _dal.config.getNextCallId(), // ייווצר מזהה חדש ב-DAL
+                id: 0, // ייווצר מזהה חדש ב-DAL
             detail: call.Description,
             adress: call.Address,
             latitude: temp[0],
             longitude: temp[1],
-            callType: (DO.Hamal?)call.CallType,
+            callType: (DO.CallType?)call.CallType,
             startTime: call.OpenTime,
             maximumTime: call.MaxEndTime
                 );
@@ -71,13 +77,14 @@ public class CallImplementation : ICall
         {
             throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
         }
-        
+
         // יצירת שיוך חדש
         var assignment = new DO.Assignment
         {
             callId = callId,
             volunteerId = volunteerId,
-            startTime = AdminManager.Now
+            startTime = AdminManager.Now,
+            assignKind = DO.Hamal.handeled
         };
         _dal.assignment.Create(assignment);
         var x = ConvertToBOCall(call);
@@ -123,17 +130,18 @@ public class CallImplementation : ICall
         // בדיקת הקריאה
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
+        // יצירת שיוך חדש
+      
 
-        // מחיקת השיוך
-        _dal.assignment.Delete(assign.id);
-
-        // עדכון סטטוס הקריאה אם יש צורך
-        if (call.callType != null)
+        _dal.assignment.Update(new DO.Assignment
         {
-            var updatedCall = call with { callType = null };
-            _dal.call.Update(updatedCall);
-        }
-
+            id = assign.id, // הוספת מזהה ה-assignment
+            callId = assign.callId,
+            volunteerId = assign.volunteerId,
+            startTime = assign.startTime,
+            assignKind = assign.assignKind
+        });
+       
         // עדכון צופים
         CallManager.Observers.NotifyListUpdated(); // Stage 5
     }
@@ -176,7 +184,7 @@ public class CallImplementation : ICall
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
 
-        var updatedCall = call with { callType = null };
+        var updatedCall = call with { maximumTime=DateTime.Now };
         _dal.call.Update(updatedCall);
     }
 
@@ -187,27 +195,24 @@ public class CallImplementation : ICall
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
 
-        // בדיקת סטטוס הקריאה
-        if (call.callType == null)
+        // בדיקת אם הקריאה הסתיימה
+        var currentTime = DateTime.Now;
+        var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
+
+        if (assignments.Any(a => a.finishTime != null) || (call.maximumTime != null && currentTime > call.maximumTime))
         {
             throw new Exception($"Cannot delete a completed call with ID={callId}.");
         }
 
         // בדיקת שיוכים פעילים לקריאה
-        var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
-        if (assignments.Any(a => a.assignKind == null))
+        if (assignments.Any())
         {
             throw new Exception($"Cannot delete a call with active assignments (Call ID={callId}).");
         }
 
         try
         {
-            // מחיקת כל השיוכים הקשורים לקריאה
-            foreach (var assignment in assignments)
-            {
-                _dal.assignment.Delete(assignment.id);
-            }
-
+            // מחיקת הקריאה
             _dal.call.Delete(callId);
         }
         catch (Exception ex)
@@ -345,12 +350,11 @@ public class CallImplementation : ICall
         {
             throw new ArgumentException("Volunteer location is not provided.");
         }
-
         // מיזוג נתוני הקריאות והשיוכים ליצירת OpenCallInList
         var openCalls = from call in calls
                         let assignment = _dal.assignment.ReadAll()
                             .FirstOrDefault(assign => assign.callId == call.id && assign.finishTime == null)
-                        where assignment == null || assignment.volunteerId == volunteerId // כלול קריאות ללא שיוך או קריאות של המתנדב הנוכחי
+                        where assignment == null || (assignment.volunteerId == volunteerId && assignment.finishTime == null) // רק קריאות ללא שיוך או קריאות של המתנדב הנוכחי
                         select new OpenCallInList
                         {
                             Id = call.id,
@@ -361,6 +365,22 @@ public class CallImplementation : ICall
                             MaxEndTime = call.maximumTime,
                             DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude)
                         };
+
+        //// מיזוג נתוני הקריאות והשיוכים ליצירת OpenCallInList
+        //var openCalls = from call in calls
+        //                let assignment = _dal.assignment.ReadAll()
+        //                    .FirstOrDefault(assign => assign.callId == call.id && assign.finishTime == null)
+        //                where assignment == null || assignment.volunteerId == volunteerId // כלול קריאות ללא שיוך או קריאות של המתנדב הנוכחי
+        //                select new OpenCallInList
+        //                {
+        //                    Id = call.id,
+        //                    Tkoc = (TheKindOfCall)(call.callType ?? 0), // המרת Enum עבור סוג הקריאה
+        //                    Description = call.detail,
+        //                    Address = call.adress,
+        //                    OpenTime = call.startTime ?? DateTime.MinValue,
+        //                    MaxEndTime = call.maximumTime,
+        //                    DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude)
+        //                };
 
         // סינון לפי סוג הקריאה אם צוין
         if (callType != null)
@@ -385,7 +405,43 @@ public class CallImplementation : ICall
         return openCalls;
     }
 
+    public Call? GetAssignedCallByVolunteer(int volunteerId)
+    {
+        // בדיקת מתנדב
+        var volunteer = _dal.volunteer.Read(volunteerId);
+        if (volunteer == null)
+        {
+            throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
+        }
 
+        // חיפוש הקצאה פעילה למתנדב
+        var assignment = _dal.assignment.ReadAll()
+            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.handeled);
+        if (assignment == null)
+        {
+            return null;
+        }
+
+        // קריאת פרטי הקריאה
+        var call = _dal.call.Read(assignment.callId);
+        if (call == null)
+        {
+            throw new KeyNotFoundException($"Call with ID {assignment.callId} not found.");
+        }
+
+        // החזרת פרטי הקריאה
+        return new BO.Call
+        {
+            Id = call.id,
+            Description = call.detail,
+            Address = call.adress,
+            Latitude = call.latitude,
+            Longitude = call.longitude,
+            CallType = (BO.CallType)call.callType.GetValueOrDefault(),
+            OpenTime = call.startTime ?? throw new InvalidOperationException("Start time is null."),
+            MaxEndTime = call.maximumTime
+        };
+    }
 
     public void UpdateCallDetails(Call call)
     {
@@ -416,7 +472,7 @@ public class CallImplementation : ICall
             adress = call.Address,
             latitude = coordinates[0],
             longitude = coordinates[1],
-            callType = (DO.Hamal?)call.CallType,
+            callType = (DO.CallType?)call.CallType,
             startTime = call.OpenTime,
             maximumTime = call.MaxEndTime
         };
@@ -581,4 +637,5 @@ CallManager.Observers.RemoveListObserver(listObserver); //stage 5
     public void RemoveObserver(int id, Action observer) =>
 CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
+    
 }
