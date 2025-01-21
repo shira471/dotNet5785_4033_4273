@@ -5,14 +5,17 @@
     /// </summary>
     public enum Hamal
     {
-        Breakfast,            // חמל לארוחת בוקר
-        lunch,                // חמל לארוחת צהריים
-        dinner,               // חמל לארוחת ערב
-        madication,           // חמל לתרופות
-        medicalEquipment,     // חמל לציוד רפואי
-        militaryEquipment,    // חמל לציוד צבאי
-        OriginLocation,       // מיקום המקור
-        //role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
+        handeled,
+        cancelByVolunteer,
+        cancelByManager
+        //Breakfast,            // חמל לארוחת בוקר
+        //lunch,                // חמל לארוחת צהריים
+        //dinner,               // חמל לארוחת ערב
+        //madication,           // חמל לתרופות
+        //medicalEquipment,     // חמל לציוד רפואי
+        //militaryEquipment,    // חמל לציוד צבאי
+        //OriginLocation,       // מיקום המקור
+        ////role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
     }
 
     /// <summary>
@@ -22,6 +25,13 @@
     {
         Manager,    // תפקיד של מנהל
         Volunteer   // תפקיד של מתנדב
+    }
+    public enum Status
+    {
+        open,
+        closed,
+        inProgres,
+        expired
     }
 
     /// <summary>

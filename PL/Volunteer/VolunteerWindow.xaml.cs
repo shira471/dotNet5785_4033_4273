@@ -9,7 +9,7 @@ namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window
     {
-        public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
+       // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
 
         public BO.Volunteer? CurrentVolunteer
         {
@@ -121,7 +121,7 @@ namespace PL.Volunteer
 
         private void LoadCallDetails()
         {
-            // VolunteerCalls = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer.Id, null, null);
+            var VolunteerCalls = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer.Id, null, null);
         }
     }
 }

@@ -48,7 +48,7 @@
         <!-- DataGrid -->
         <DataGrid Grid.Row="2" 
                   ItemsSource="{Binding Calls}" 
-                  SelectedItem="{Binding SelectedCall}" 
+                  SelectedItem="{Binding Selected, Mode=TwoWay}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
@@ -80,6 +80,14 @@
                     FontWeight="Bold" 
                     Margin="5" 
                     Click="FinishCall_Click" />
+            <!--<Button Content="Select call" 
+                    Width="100" 
+                    Height="30" 
+                    Background="LightSkyBlue" 
+                    Foreground="DarkBlue" 
+                    FontWeight="Bold" 
+                    Margin="5" 
+                    Click="SelectCall_Click" />-->
             <Button Content="Cancel call" 
                     Width="100" 
                     Height="30" 
