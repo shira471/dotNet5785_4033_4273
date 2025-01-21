@@ -21,7 +21,11 @@ internal static class Config
         get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextAssignmentId");
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextAssignmentId", value);
     }
-
+    internal static int NextCallId
+    {
+        get => XMLTools.GetAndIncreaseConfigIntVal(s_data_config_xml, "NextCallId");
+        private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextCallId", value);
+    }
     // תכונה לניהול השעון (Clock)
     internal static DateTime Clock
     {
@@ -42,6 +46,7 @@ internal static class Config
 
     internal static void Reset()
     {
+        NextCallId = 1;
         NextAssignmentId = 1; // אתחול המספר הרץ
         Clock = DateTime.Now; // אתחול השעון
         // RiskRange = TimeSpan.Zero; // אתחול טווח הזמן

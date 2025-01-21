@@ -7,8 +7,8 @@ public record Call
     string adress,
     double? latitude=null,
     double? longitude = null,
-    Hamal? callType = null,
-    DateTime? startTime = null,
+    CallType? callType = null,
+    DateTime? startTime=null,
     DateTime? maximumTime = null
     )
 {

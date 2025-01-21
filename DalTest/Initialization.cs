@@ -109,10 +109,10 @@ public static class Initialization
     }
 
     // Helper method to get a random value of the Hamal enum, or null
-    private static Hamal? GetRandomHamalValue()
+    private static CallType? GetRandomHamalValue()
     {
-        Array values = Enum.GetValues(typeof(Hamal));
-        return s_rand.Next(0, 2) == 1 ? (Hamal)values.GetValue(s_rand.Next(values.Length)) : (Hamal?)null;
+        Array values = Enum.GetValues(typeof(CallType));
+        return (CallType)values.GetValue(s_rand.Next(values.Length));
     }
     //private static Role? GetRandomRoleValue()
     //{
@@ -173,25 +173,71 @@ public static class Initialization
 
     public static void creatAssignment()
     {
-        Random s_rand = new Random();
+        var allCalls = s_dal!.call.ReadAll();
+        var allVolunteers = s_dal!.volunteer.ReadAll();
 
-        foreach (int callId in callIds)
+        // Track assigned calls to ensure each call appears in only one assignment
+        var assignedCalls = new HashSet<int>();
+
+        // Remove the last two volunteers from the list
+        var availableVolunteers = allVolunteers.Take(allVolunteers.Count() - 2).ToList();
+
+        // Define the latest valid date (31 December 2024)
+        DateTime maxValidDate = new DateTime(2024, 12, 31, 23, 59, 59);
+
+        // Generate assignments for approximately one-third of the calls
+        foreach (var call in allCalls)
         {
-            // אקראי: לא לכל קריאה תיווצר משימה
-            if (s_rand.Next(0, 3) == 0) // 1 מתוך 3 קריאות נשארות ללא משימה
+            // יוזמה יזומה: דילוג על קריאות בהסתברות של 2/3
+            if (s_rand.Next(0, 3) != 0) // הסתברות של 2 מתוך 3 לדלג
                 continue;
 
-            int id = s_rand.Next(1000, 9999);
-            int volunteerId = volunteerIds[s_rand.Next(volunteerIds.Count)];
+            // בחירת מתנדב אקראי מתוך המתנדבים הזמינים
+            int volunteerIndex = s_rand.Next(0, availableVolunteers.Count());
+            var selectedVolunteer = availableVolunteers[volunteerIndex];
 
-            DateTime systemNow = s_dal.config.clock;
-            DateTime start = new DateTime(systemNow.Year - 2, 1, 1);
-            int range = (int)(systemNow - start).TotalDays;
-            DateTime startTime = start.AddDays(s_rand.Next(range));
-            DateTime finishTime = startTime.AddMinutes(s_rand.Next(30, 121));
+            DateTime treatmentStartTime = call.startTime.Value.AddHours(s_rand.Next(1, 36));
 
-            Hamal? endOfAssign = GetRandomHamalValue();
-            s_dal.assignment.Create(new Assignment(0, callId, volunteerId, startTime, finishTime, endOfAssign));
+            if (call.maximumTime.HasValue)
+            {
+                treatmentStartTime = treatmentStartTime < call.maximumTime.Value
+                    ? treatmentStartTime
+                    : call.maximumTime.Value.AddMinutes(-20);
+            }
+
+            if (treatmentStartTime > maxValidDate)
+            {
+                treatmentStartTime = maxValidDate;
+            }
+
+            // הגדרת זמן סיום הטיפול
+            DateTime? treatmentEndTime = null;
+
+            // בחירת סוג הטיפול (Hamal) אקראי
+            Hamal assignKind = (Hamal)s_rand.Next(0, 3);
+
+            switch (assignKind)
+            {
+                case Hamal.handeled:
+                    treatmentEndTime = treatmentStartTime.AddHours(s_rand.Next(1, 24));
+                    break;
+                case Hamal.cancelByVolunteer:
+                case Hamal.cancelByManager:
+                    treatmentEndTime = null; // ביטול – אין זמן סיום
+                    break;
+            }
+
+            // הוספת הקריאה לרשימת הקריאות שהוקצו
+            assignedCalls.Add(call.id);
+
+            // יצירת השמה חדשה
+            s_dal!.assignment.Create(new Assignment(
+                0, // מזהה יוקצה אוטומטית
+                call.id,
+                selectedVolunteer.idVol,
+                treatmentStartTime,
+                treatmentEndTime,
+                assignKind));
         }
     }
 

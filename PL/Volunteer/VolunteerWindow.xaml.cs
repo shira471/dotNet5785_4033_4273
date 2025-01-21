@@ -9,7 +9,7 @@ namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window
     {
-       // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
+        // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
 
         public BO.Volunteer? CurrentVolunteer
         {
@@ -76,7 +76,7 @@ namespace PL.Volunteer
                 //IsEditing = false;
 
                 // ביטול עריכה לאחר שמירה
-               // IsEditing = false;
+                // IsEditing = false;
             }
             catch (Exception ex)
             {
@@ -84,27 +84,27 @@ namespace PL.Volunteer
             }
         }
 
-        //private void FinishCall_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (CurrentVolunteer?.Id != null)
-        //    {
-        //        try
-        //        {
-        //            s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
-        //            MessageBox.Show("The call was marked as closed.");
-        //            LoadCallDetails();
-        //        }
-        //        catch
-        //        {
-        //            MessageBox.Show("Error closing the call. Please try again.");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("No ongoing call to finish.");
-        //    }
-        //}
-        
+        private void FinishCall_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentVolunteer?.Id != null)
+            {
+                try
+                {
+                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
+                    MessageBox.Show("The call was marked as closed.");
+                    LoadCallDetails();
+                }
+                catch
+                {
+                    MessageBox.Show("Error closing the call. Please try again.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No ongoing call to finish.");
+            }
+        }
+
 
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
@@ -121,7 +121,7 @@ namespace PL.Volunteer
 
         private void LoadCallDetails()
         {
-            var VolunteerCalls = s_bl.Call.GetOpenCallsByVolunteer(CurrentVolunteer.Id, null, null);
+            var VolunteerCalls = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
         }
     }
 }

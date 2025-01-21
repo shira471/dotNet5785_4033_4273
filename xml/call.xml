@@ -1,143 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <id>4667</id>
-    <detail>Call for assistance</detail>
-    <adress>2482 Green Hills Rd, Phoenix, AZ 85018</adress>
-    <latitude>33.4962205</latitude>
-    <longitude>-111.9641728</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-12-27T00:00:00</startTime>
-    <maximumTime>2024-12-27T00:49:00</maximumTime>
-  </Call>
-  <Call>
-    <id>4004</id>
-    <detail>Emergency call</detail>
-    <adress>506 Wycliff Ave, Los Angeles, CA 90012</adress>
-    <latitude>34.0653347</latitude>
-    <longitude>-118.243891</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-12-30T00:00:00</startTime>
-    <maximumTime>2024-12-30T00:20:00</maximumTime>
-  </Call>
-  <Call>
-    <id>4763</id>
-    <detail>Routine check-in</detail>
-    <adress>2158 Vine St, San Diego, CA 92103</adress>
-    <latitude>32.7391204</latitude>
-    <longitude>-117.1798099</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-06-21T00:00:00</startTime>
-    <maximumTime>2024-06-21T00:35:00</maximumTime>
-  </Call>
-  <Call>
-    <id>4484</id>
-    <detail>Follow-up call</detail>
-    <adress>2321 Cross Creek Rd, Austin, TX 73301</adress>
-    <latitude>30.36862649999999</latitude>
-    <longitude>-97.7321372</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2025-01-04T00:00:00</startTime>
-    <maximumTime>2025-01-04T00:22:00</maximumTime>
-  </Call>
-  <Call>
-    <id>5331</id>
-    <detail>Service request</detail>
-    <adress>5059 Cascade St, Portland, OR 97201</adress>
-    <latitude>45.505603</latitude>
-    <longitude>-122.6882145</longitude>
-    <callType>cancelByManager</callType>
-    <startTime>2024-03-10T00:00:00</startTime>
-    <maximumTime>2024-03-10T00:13:00</maximumTime>
-  </Call>
-  <Call>
-    <id>8226</id>
-    <detail>Technical support</detail>
-    <adress>1699 Cherry Hill Road, Philadelphia, PA 19104</adress>
-    <latitude>39.9559682</latitude>
-    <longitude>-75.1680499</longitude>
-    <callType>cancelByVolunteer</callType>
-    <startTime>2024-06-27T00:00:00</startTime>
-    <maximumTime>2024-06-27T00:27:00</maximumTime>
-  </Call>
-  <Call>
-    <id>9338</id>
-    <detail>Customer inquiry</detail>
-    <adress>2482 Green Hills Rd, Phoenix, AZ 85018</adress>
-    <latitude>33.4962205</latitude>
-    <longitude>-111.9641728</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2023-10-10T00:00:00</startTime>
-    <maximumTime>2023-10-10T00:05:00</maximumTime>
-  </Call>
-  <Call>
-    <id>7064</id>
-    <detail>Appointment reminder</detail>
-    <adress>3327 Ridgewood St, Suite 300, Chicago, IL 60601</adress>
-    <latitude>41.8839927</latitude>
-    <longitude>-87.61970559999999</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-11-03T00:00:00</startTime>
-    <maximumTime>2024-11-03T00:31:00</maximumTime>
-  </Call>
-  <Call>
-    <id>5443</id>
-    <detail>Complaint report</detail>
-    <adress>2751 Hemlock Ln, Miami, FL 33101</adress>
-    <latitude>25.7783254</latitude>
-    <longitude>-80.1990136</longitude>
-    <callType>cancelByVolunteer</callType>
-    <startTime>2023-11-03T00:00:00</startTime>
-    <maximumTime>2023-11-03T00:31:00</maximumTime>
-  </Call>
-  <Call>
-    <id>8436</id>
-    <detail>Survey feedback</detail>
-    <adress>1699 Cherry Hill Road, Philadelphia, PA 19104</adress>
-    <latitude>39.9559682</latitude>
-    <longitude>-75.1680499</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2024-12-17T00:00:00</startTime>
-    <maximumTime>2024-12-17T00:05:00</maximumTime>
-  </Call>
-  <Call>
     <id>1</id>
-    <detail>lalalala</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>handeled</callType>
-    <startTime>2025-01-21T10:57:01.7409919+02:00</startTime>
-    <maximumTime>2025-03-21T10:57:01</maximumTime>
-  </Call>
-  <Call>
-    <id>3</id>
-    <detail>nnnnnnnnnn</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>handeled</callType>
-    <startTime>2025-01-21T10:57:44.6893726+02:00</startTime>
-    <maximumTime>2025-01-23T10:57:44</maximumTime>
+    <detail>Call for assistance</detail>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2023-10-19T00:00:00</startTime>
+    <maximumTime>2023-10-19T00:38:00</maximumTime>
   </Call>
   <Call>
     <id>2</id>
-    <detail>ffffffffffffff</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType xsi:nil="true" />
-    <startTime>2025-01-21T10:57:25.4490911+02:00</startTime>
-    <maximumTime>2026-01-21T10:57:25</maximumTime>
+    <detail>Emergency call</detail>
+    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
+    <latitude>31.779519</latitude>
+    <longitude>35.2144685</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2024-07-24T00:00:00</startTime>
+    <maximumTime>2024-07-24T00:08:00</maximumTime>
   </Call>
   <Call>
-    <id>4</id>
-    <detail>kkkkkkk</detail>
+    <id>3</id>
+    <detail>Routine check-in</detail>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2024-05-04T00:00:00</startTime>
+    <maximumTime>2024-05-04T00:49:00</maximumTime>
+  </Call>
+  <Call>
+    <id>5</id>
+    <detail>Service request</detail>
+    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
+    <latitude>31.7797312</latitude>
+    <longitude>35.2179737</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2024-12-02T00:00:00</startTime>
+    <maximumTime>2024-12-02T00:24:00</maximumTime>
+  </Call>
+  <Call>
+    <id>6</id>
+    <detail>Technical support</detail>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2023-07-11T00:00:00</startTime>
+    <maximumTime>2023-07-11T00:29:00</maximumTime>
+  </Call>
+  <Call>
+    <id>7</id>
+    <detail>Customer inquiry</detail>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2023-02-22T00:00:00</startTime>
+    <maximumTime>2023-02-22T00:41:00</maximumTime>
+  </Call>
+  <Call>
+    <id>8</id>
+    <detail>Appointment reminder</detail>
+    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
+    <latitude>31.7807877</latitude>
+    <longitude>35.2147251</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2024-04-09T00:00:00</startTime>
+    <maximumTime>2024-04-09T00:13:00</maximumTime>
+  </Call>
+  <Call>
+    <id>9</id>
+    <detail>Complaint report</detail>
+    <adress>25 Yaffo Rd, Jerusalem, Israel</adress>
+    <latitude>31.7805362</latitude>
+    <longitude>35.2217499</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2024-04-13T00:00:00</startTime>
+    <maximumTime>2024-04-13T00:43:00</maximumTime>
+  </Call>
+  <Call>
+    <id>10</id>
+    <detail>Survey feedback</detail>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2024-12-15T00:00:00</startTime>
+    <maximumTime>2024-12-15T00:53:00</maximumTime>
+  </Call>
+  <Call>
+    <id>12</id>
+    <detail>food</detail>
     <adress>jerusalem</adress>
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
-    <callType>handeled</callType>
-    <startTime>2025-01-21T11:09:56.4987454+02:00</startTime>
-    <maximumTime>2026-01-21T11:09:56</maximumTime>
+    <callType>madication</callType>
+    <startTime>2025-01-21T16:37:18.6083383+02:00</startTime>
+    <maximumTime>2025-01-22T16:37:18</maximumTime>
+  </Call>
+  <Call>
+    <id>14</id>
+    <detail>dd</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2025-01-21T16:37:59.4259133+02:00</startTime>
+    <maximumTime>2025-01-22T16:37:59</maximumTime>
+  </Call>
+  <Call>
+    <id>15</id>
+    <detail>d</detail>
+    <adress>israel</adress>
+    <latitude>31.046051</latitude>
+    <longitude>34.851612</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2025-01-21T16:39:28.8549471+02:00</startTime>
+    <maximumTime>2025-01-23T16:39:28</maximumTime>
   </Call>
 </ArrayOfCall>

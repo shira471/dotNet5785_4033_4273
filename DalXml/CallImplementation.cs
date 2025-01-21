@@ -8,11 +8,17 @@ internal class CallImplementation : Icall
     // יצירת קריאה חדשה
     public void Create(Call item)
     {
+        // טען את רשימת הקריאות מהקובץ
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
-        if (calls.Any(it => it.id == item.id))
-            throw new DalAlreadyExistsException($"Call with ID={item.id} already exists");
 
+        // השג את המזהה הרץ הבא ועדכן את ה-ID של הקריאה
+        int newId = Config.NextCallId; // קבלת המזהה הרץ
+        item = item with { id = newId }; // עדכון המזהה בקריאה החדשה
+
+        // הוסף את הקריאה לרשימה
         calls.Add(item);
+
+        // שמור את הרשימה המעודכנת בקובץ
         XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml);
     }
 

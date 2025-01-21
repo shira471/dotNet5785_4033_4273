@@ -44,4 +44,9 @@ internal class ConfigImplementation : Iconfig
         _clock = DateTime.Now; // מאתחל את השעון לזמן הנוכחי
         _riskTimeRange = TimeSpan.Zero; // מאתחל את טווח הזמן
     }
+
+    public int GetNextAssignmentId()
+    {
+        return Config.GetNextAssignId;
+    }
 }

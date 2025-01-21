@@ -13,6 +13,8 @@ namespace BlApi;
 public interface ICall : IObservable //stage 5 הרחבת ממשק
 
 {
+
+    Call? GetAssignedCallByVolunteer(int volunteerId);
     // 1. בקשת כמויות קריאות
     // מחזירה מערך של מספר הקריאות לפי סטטוס הקריאה. 
     // משתמשת ב-GroupBy או LINQ group by.

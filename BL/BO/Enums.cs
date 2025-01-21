@@ -40,10 +40,14 @@ public enum SortField
 /// </summary>
 public enum CallType
 {
-    Emergency,
-    Routine,
-    Maintenance,
-    None
+    Breakfast,            // חמל לארוחת בוקר
+    lunch,                // חמל לארוחת צהריים
+    dinner,               // חמל לארוחת ערב
+    madication,           // חמל לתרופות
+    medicalEquipment,     // חמל לציוד רפואי
+    militaryEquipment,    // חמל לציוד צבאי
+    OriginLocation,       // מיקום המקור
+    //role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
 }
 /// <summary>
 /// טיפוס Enum ליחידות זמן (דקה, שעה, יום, שנה).
@@ -79,8 +83,17 @@ public enum Status
 /// </summary>
 public enum TheKindOfCall
 {
-    Medical,
-    Technical,
-    Social,
-    Other
+    Breakfast,            // חמל לארוחת בוקר
+    lunch,                // חמל לארוחת צהריים
+    dinner,               // חמל לארוחת ערב
+    madication,           // חמל לתרופות
+    medicalEquipment,     // חמל לציוד רפואי
+    militaryEquipment,    // חמל לציוד צבאי
+    OriginLocation,       // מיקום המקור
+}
+public enum Hamal
+{
+    handeled,
+    cancelByVolunteer,
+    cancelByManager
 }
