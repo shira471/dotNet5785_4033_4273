@@ -122,7 +122,7 @@ public partial class SelectCallWindow : Window
     }
     private void btnCanceled_Click(object sender, RoutedEventArgs e)
     {
-        var call = Vm.SelectedCall;
+        var call = Vm.Selected;
         if (call == null || call.Id == 0)
         {
             MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -131,7 +131,7 @@ public partial class SelectCallWindow : Window
 
         try
         {
-            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.CallId);
+            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id);
             MessageBox.Show("The call was marked as canceled.");
             queryCallList();
         }

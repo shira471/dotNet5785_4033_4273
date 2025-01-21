@@ -8,7 +8,7 @@ public static class Config
     public static DateTime clock { set; get; } = DateTime.Now;
     internal static void Reset()
     {
-        nextAssinmentId = GetNextAssignId;
+        nextAssinmentId = 0;
         clock = DateTime.Now;
     }
     internal static TimeSpan riskRange { set; get; } = TimeSpan.Zero;
