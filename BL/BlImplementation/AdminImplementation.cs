@@ -8,7 +8,7 @@ using Helpers;
 // <summary>
 // מימוש ממשק לניהול מערכת
 // </summary>
-internal class AdminImplementation : IAdmin
+public class AdminImplementation : IAdmin
 {
     private static TimeSpan _riskTimeSpan = TimeSpan.FromMinutes(30); // ערך ברירת מחדל
 

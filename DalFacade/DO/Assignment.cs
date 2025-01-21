@@ -8,6 +8,7 @@ public record Assignment
     DateTime? startTime = null,
     DateTime? finishTime = null,
     Hamal? assignKind = null
+    
     )
 {
     public Assignment() : this(0, 0, 0) { }

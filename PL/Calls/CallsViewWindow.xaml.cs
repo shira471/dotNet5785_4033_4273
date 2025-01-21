@@ -56,6 +56,26 @@ public partial class CallsViewWindow : Window
             MessageBox.Show($"Viewing details for call {vm.SelectedCall.CallId}", "Call Details");
         }
     }
+    private void btnCancel_Click(object sender, RoutedEventArgs e)
+    {
+        var call = vm.SelectedCall;
+        if (call == null || call.Id == 0)
+        {
+            MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        try
+        {
+            var VolunteerId=s_bl.Volunteer.GetVolunteerForCall(call.CallId);
+            s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId);
+            MessageBox.Show("The call was marked as canceled.");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {

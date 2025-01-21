@@ -275,6 +275,14 @@ public class VolunteerImplementation : IVolunteer
     {
         return id > 0 && id.ToString().Length == 9;
     }
+    public int GetVolunteerForCall(int callId)
+    {
+        return _dal.assignment.ReadAll()
+            .Where(a => a.callId == callId)
+            .Select(a => a.volunteerId)
+            .FirstOrDefault(); // מחזיר את הערך הראשון או 0 אם אין תוצאות
+    }
+
 
     public void AddObserver(Action listObserver) =>
         VolunteerManager.Observers.AddListObserver(listObserver);

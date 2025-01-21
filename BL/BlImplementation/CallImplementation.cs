@@ -43,8 +43,9 @@ public class CallImplementation : ICall
             maximumTime: call.MaxEndTime
                 );
             _dal.call.Create(doCall);
-            call.Status = Status.Open;
-            
+            call.Status = Status.open;
+            AdminImplementation admin = new AdminImplementation();
+            UpdateStatus(call, admin.GetRiskTimeSpan());
             CallManager.Observers.NotifyListUpdated(); //stage 5
         }
         catch (DO.DalAlreadyExistsException ex)
@@ -79,7 +80,9 @@ public class CallImplementation : ICall
             startTime = AdminManager.Now
         };
         _dal.assignment.Create(assignment);
-
+        var x = ConvertToBOCall(call);
+        x.Status = Status.inProgres;
+        
         // עדכון התצפיתנים
         CallManager.Observers.NotifyListUpdated();
     }
@@ -231,17 +234,17 @@ public class CallImplementation : ICall
             if (call.maximumTime.HasValue && call.maximumTime <= DateTime.Now)
             {
                 // אם זמן המקסימום חלף, הקריאה נסגרת
-                status = Status.Closed;
+                status = Status.closed;
             }
-            //else if (call.startTime.HasValue)
-            //{
-            //    // אם יש זמן התחלה אך עדיין לא הסתיימה
-            //    status = Status.InProgress;
-            //}
+            else if (call.startTime.HasValue)
+            {
+                // אם יש זמן התחלה אך עדיין לא הסתיימה
+                status = Status.inProgres;
+            }
             else
             {
                 // אחרת, הקריאה ממתינה לטיפול
-                status = Status.Open;
+                status = Status.open;
             }
 
             // הגדלת הספירה עבור הסטטוס המתאים
@@ -435,7 +438,7 @@ public class CallImplementation : ICall
     public void UpdateCallStatus(Call call, bool isFinish)
     {
         if (isFinish)
-            call.Status = Status.Closed;
+            call.Status = Status.closed;
     }
 
 
@@ -449,7 +452,8 @@ public class CallImplementation : ICall
         var latestAssignments = assignments
             .GroupBy(a => a.callId)
             .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
-
+        AdminImplementation admin = new();
+        
         // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
                               join assign in latestAssignments on call.id equals assign?.callId into callGroup
@@ -468,10 +472,8 @@ public class CallImplementation : ICall
                                   CompletionTime = assign?.finishTime != null
                                       ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
                                       : null,
-                                  Status = assign != null && assign.finishTime.HasValue
-                                      ? Status.Closed
-                                      : Status.Open,
-                                  TotalAssignments = assignments.Count(a => a.callId == call.id)
+                                  TotalAssignments = assignments.Count(a => a.callId == call.id),
+                                  Status = UpdateStatus(ConvertToBOCall(call), admin.GetRiskTimeSpan())
                               };
 
         // סינון הקריאות לפי שדה וערך (אם נבחרו)
@@ -502,6 +504,72 @@ public class CallImplementation : ICall
 
         return callAssignments;
     }
+    public Status UpdateStatus(Call call, TimeSpan riskTime)
+    {
+        
+        if (call.MaxEndTime.HasValue)
+        {
+            var timeRemaining = call.MaxEndTime.Value - DateTime.Now;
+
+            // אם הזמן של הקריאה עבר (timeRemaining < 0), החזיר סטטוס "פג תוקף"
+            if (timeRemaining <= TimeSpan.Zero)
+            {
+                return Status.expired;
+            }
+
+            // אם הקריאה פתוחה ולא בטיפול
+            if (call.Status == Status.open)
+            {
+                // קריאה פתוחה בסיכון
+                if (timeRemaining <= riskTime)
+                {
+                    return Status.openInRisk;
+                }
+                // קריאה פתוחה רגילה
+                return Status.open;
+            }
+
+            // אם הקריאה בטיפול
+            if (call.Status == Status.inProgres)
+            {
+                // קריאה בטיפול בסיכון
+                if (timeRemaining <= riskTime)
+                {
+                    return Status.openInRisk;
+                }
+                // קריאה בטיפול רגילה
+                return Status.inProgres;
+            }
+
+            // אם הקריאה סיימה טיפול (סגורה)
+            if (call.Status == Status.closed)
+            {
+                return Status.closed;
+            }
+        }
+
+        // אם לא נמצא סטטוס מתאים, נשאיר את הסטטוס הקיים
+        return call.Status;
+    }
+
+
+
+    public BO.Call ConvertToBOCall(DO.Call doCall)
+    {
+        return new BO.Call
+        {
+            Id = doCall.id,
+            CallType = (BO.CallType)(doCall.callType ?? 0), // המרה מסוג אם צריך
+            Description = doCall.detail,
+            Address = doCall.adress,
+            Latitude = doCall.latitude,
+            Longitude = doCall.longitude,
+            OpenTime = doCall.startTime ?? DateTime.MinValue,
+            MaxEndTime = doCall.maximumTime
+
+        };
+    }
+
 
 
     public void AddObserver(Action listObserver) =>

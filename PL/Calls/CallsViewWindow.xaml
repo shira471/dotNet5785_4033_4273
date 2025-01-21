@@ -53,6 +53,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Add Call" Width="150" Margin="5" Click="btnAdd_Click" Background="DodgerBlue" Foreground="White" FontWeight="Bold" Padding="5" />
             <Button Content="View Call" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedCall}" Background="DarkOrange" Foreground="White" FontWeight="Bold" Padding="5" />
+            <Button Content="Cancel Call" Width="150" Margin="5" Click="btnCancel_Click" IsEnabled="{Binding SelectedCall}" Background="Red" Foreground="White" FontWeight="Bold" Padding="5" />
             <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightCoral" Foreground="White" FontWeight="Bold" Padding="5" />
         </StackPanel>
     </Grid>

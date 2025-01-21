@@ -64,6 +64,7 @@ public interface IVolunteer: IObservable //stage 5 הרחבת ממשק
     /// <exception cref="InvalidDataException">נזרקת אם הפרטים אינם תקינים</exception>
     /// <exception cref="DuplicateException">נזרקת אם כבר קיים מתנדב עם תעודת הזהות</exception>
     void AddVolunteer(BO.Volunteer volunteer);
+    int GetVolunteerForCall(int callId);
 }
 
    

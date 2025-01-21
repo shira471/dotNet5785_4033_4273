@@ -7,7 +7,8 @@
     {
         handeled,
         cancelByVolunteer,
-        cancelByManager
+        cancelByManager,
+        handelExpired
         //Breakfast,            // חמל לארוחת בוקר
         //lunch,                // חמל לארוחת צהריים
         //dinner,               // חמל לארוחת ערב
@@ -26,13 +27,7 @@
         Manager,    // תפקיד של מנהל
         Volunteer   // תפקיד של מתנדב
     }
-    public enum Status
-    {
-        open,
-        closed,
-        inProgres,
-        expired
-    }
+    
 
     /// <summary>
     /// Defines the type of distance calculation methods available.

@@ -69,11 +69,13 @@ public enum CallField
 /// </summary>
 public enum Status
 {
-    Open = 0,
-    Closed = 1,
-    InProgrese=2
+    open,
+    closed,
+    inProgres,
+    expired,
+    openInRisk,
+    closeInRisk
 }
-
 /// <summary>
 /// סוגי הקריאות האפשריים (דוגמת ENUM)
 /// </summary>
