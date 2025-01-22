@@ -21,20 +21,22 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Full Name:" Width="150" />
-                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.FullName}" />
+                <TextBox Width="200" Text="{Binding CurrentVolunteer.FullName}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Phone:" Width="150" />
-                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.Phone}" />
+                <TextBox Width="200" Text="{Binding CurrentVolunteer.Phone}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Email:" Width="150" />
-                <TextBox Width="200" IsEnabled="True" Text="{Binding CurrentVolunteer.Email}" />
+                <TextBox Width="200" Text="{Binding CurrentVolunteer.Email}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Active:" Width="150" />
-                <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" VerticalAlignment="Center" Click="ActiveCheckBox_Click"/>
+                <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" VerticalAlignment="Center"
+                          Checked="ActiveCheckBox_Checked" Unchecked="ActiveCheckBox_Unchecked" />
             </StackPanel>
+
             <!-- כפתורים לעדכון ושמירה -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
                 <Button Content="Update details" Width="150" Margin="5" Click="SaveChanges_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
@@ -45,16 +47,19 @@
         <GroupBox Header="Call in Progress" Grid.Row="2" Margin="10" Background="LightGray" BorderBrush="Gray">
             <StackPanel Margin="5">
                 <TextBlock FontSize="14" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding CallDetails}" Margin="5" />
-                <Button Content="End call" Width="200" HorizontalAlignment="Center" Margin="5" Click="FinishCall_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" IsEnabled="{Binding IsCallActive}" />
-                <Button Content="Cancellation of treatment" Width="200" HorizontalAlignment="Center" Margin="5" Click="CancellationCall_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+                <Button Content="End call" Width="200" HorizontalAlignment="Center" Margin="5" Click="FinishCall_Click"
+                        Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" IsEnabled="{Binding IsCallActive}" />
+                <Button Content="Cancellation of treatment" Width="200" HorizontalAlignment="Center" Margin="5" Click="CancellationCall_Click"
+                        Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" IsEnabled="{Binding IsCallActive}" />
             </StackPanel>
         </GroupBox>
 
         <!-- כפתורים לגישה למסכים נוספים -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Select call to handle" Width="150" Margin="5" Click="SelectCall_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-            <Button Content="My calls history" Width="150" Margin="5" Click="ShowMyCallsHistory_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"
-                IsEnabled="{Binding IsVolunteerActive}" />
+            <Button Content="Select call to handle" Width="150" Margin="5" Click="SelectCall_Click"
+                    Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" IsEnabled="{Binding IsVolunteerActive}" />
+            <Button Content="My calls history" Width="150" Margin="5" Click="ShowMyCallsHistory_Click"
+                    Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
         </StackPanel>
     </Grid>
 </Window>

@@ -38,7 +38,7 @@
     <latitude>31.77298219999999</latitude>
     <longitude>35.2302499</longitude>
     <limitDestenation>19.5</limitDestenation>
-    <isActive>false</isActive>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
@@ -53,20 +53,6 @@
     <longitude>35.218195</longitude>
     <limitDestenation>37.57</limitDestenation>
     <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>173979562</idVol>
-    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
-    <name>Hodaya Carcom</name>
-    <email>hodaya.carcom@gmail.com</email>
-    <phoneNumber>0532476163</phoneNumber>
-    <password>6tXaa9V8</password>
-    <latitude>31.7807877</latitude>
-    <longitude>35.2147251</longitude>
-    <limitDestenation>19.44</limitDestenation>
-    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
@@ -235,6 +221,20 @@
     <longitude>35.2188743</longitude>
     <limitDestenation>48.58</limitDestenation>
     <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>173979562</idVol>
+    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
+    <name>Hodaya Carcom</name>
+    <email>hodaya.carcom@gmail.com</email>
+    <phoneNumber>0532476163</phoneNumber>
+    <password>6tXaa9V8</password>
+    <latitude>31.7807877</latitude>
+    <longitude>35.2147251</longitude>
+    <limitDestenation>19.44</limitDestenation>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
