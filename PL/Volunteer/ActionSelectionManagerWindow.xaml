@@ -1,0 +1,20 @@
+﻿<Window x:Class="PL.ActionSelectionManagerWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Select Action" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- טקסט דינמי -->
+        <TextBlock Text="{Binding ActionMessage}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" 
+                   FontWeight="Bold" FontSize="16" TextWrapping="Wrap" />
+
+        <!-- כפתורים -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Button Content="Update" Width="100" Margin="10" Click="Update_Click" />
+            <Button Content="Delete" Width="100" Margin="10" Click="Delete_Click" />
+            <Button Content="Cancel Assignment" Width="100" Margin="10" Click="Cancel_Click" />
+            <Button Content="View Call" Width="100" Margin="10" Click="btnView_Click" />
+
+        </StackPanel>
+    </Grid>
+</Window>

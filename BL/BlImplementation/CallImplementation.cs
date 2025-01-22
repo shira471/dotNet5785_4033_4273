@@ -137,7 +137,6 @@ public class CallImplementation : ICall
         {
             id = assign.id, // הוספת מזהה ה-assignment
             callId = assign.callId,
-            volunteerId = assign.volunteerId,
             startTime = assign.startTime,
             assignKind = assign.assignKind
         });
