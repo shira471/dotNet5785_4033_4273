@@ -49,33 +49,33 @@ public partial class CallsViewWindow : Window
         vm.LoadCalls();
     }
 
-    private void btnView_Click(object sender, RoutedEventArgs e)
-    {
-        if (vm.SelectedCall != null)
-        {
-            MessageBox.Show($"Viewing details for call {vm.SelectedCall.CallId}", "Call Details");
-        }
-    }
-    private void btnCancel_Click(object sender, RoutedEventArgs e)
-    {
-        var call = vm.SelectedCall;
-        if (call == null || call.Id == 0)
-        {
-            MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
+    //private void btnView_Click(object sender, RoutedEventArgs e)
+    //{
+    //    if (vm.SelectedCall != null)
+    //    {
+    //        MessageBox.Show($"Viewing details for call {vm.SelectedCall.CallId}", "Call Details");
+    //    }
+    //}
+    //private void btnCancel_Click(object sender, RoutedEventArgs e)
+    //{
+    //    var call = vm.SelectedCall;
+    //    if (call == null || call.Id == 0)
+    //    {
+    //        MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+    //        return;
+    //    }
 
-        try
-        {
-            var VolunteerId=s_bl.Volunteer.GetVolunteerForCall(call.CallId);
-            s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId);
-            MessageBox.Show("The call was marked as canceled.");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
+    //    try
+    //    {
+    //        var VolunteerId=s_bl.Volunteer.GetVolunteerForCall(call.CallId);
+    //        s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId);
+    //        MessageBox.Show("The call was marked as canceled.");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+    //    }
+    //}
 
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
@@ -93,7 +93,7 @@ public partial class CallsViewWindow : Window
         var selectedCall = vm.SelectedCall;
 
         // פתח את חלון הבחירה
-        var actionWindow = new ActionSelectionWindow("call");
+        var actionWindow = new ActionSelectionManagerWindow("call");
         var result = actionWindow.ShowDialog();
 
         if (result == true)
@@ -124,6 +124,34 @@ public partial class CallsViewWindow : Window
                     MessageBox.Show($"Error deleting call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            else if (actionWindow.IsCancel)
+            {
+                var call = selectedCall;
+                if (call == null || call.Id == 0)
+                {
+                    MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                try
+                {
+                    var VolunteerId = s_bl.Volunteer.GetVolunteerForCall(call.CallId);
+                    s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId);
+                    MessageBox.Show("The call was marked as canceled.");
+                    vm.LoadCalls(); // רענון הרשימה
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else if (actionWindow.IsView)
+            {
+                if (selectedCall != null)
+                {
+                    MessageBox.Show($"Viewing details for call {selectedCall.CallId}", "Call Details");
+                }
+            }
+            
         }
         else if (actionWindow.IsCancel) // Cancel
         {

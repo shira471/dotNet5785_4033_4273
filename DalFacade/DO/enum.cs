@@ -7,7 +7,6 @@
     {
         handeled,
         cancelByVolunteer,
-<<<<<<< HEAD
         cancelByManager,
         handelExpired
         //Breakfast,            // חמל לארוחת בוקר
@@ -18,9 +17,6 @@
         //militaryEquipment,    // חמל לציוד צבאי
         //OriginLocation,       // מיקום המקור
         ////role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל)
-=======
-        cancelByManager
->>>>>>> 8b714589b717216332ed22421dbe6d9571f34890
     }
 
     /// <summary>
