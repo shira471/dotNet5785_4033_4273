@@ -15,62 +15,79 @@ using Newtonsoft.Json.Linq;
 using PL.Calls;
 using PL.viewModel;
 
-namespace PL;
-
-/// <summary>
-/// Interaction logic for ActionSelectionWindow.xaml
-/// </summary>
-public partial class ActionSelectionManagerWindow : Window
+namespace PL
 {
-    // Singleton instance of the business logic interface
-    static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    /// <summary>
+    /// Interaction logic for ActionSelectionManagerWindow.xaml
+    /// This window allows the user to select an action (Update, Delete, View, or Cancel) for a specific entity.
+    /// </summary>
+    public partial class ActionSelectionManagerWindow : Window
+    {
+        // Singleton instance of the business logic interface (BL)
+        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-    // ViewModel instance for data binding
-    public ActionManagerVM Vm
-    {
-        get { return (ActionManagerVM)GetValue(vMProperty); }
-        set { SetValue(vMProperty, value); }
-    }
-    // Using a DependencyProperty as the backing store for Vm.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty vMProperty =
-        DependencyProperty.Register("Vm", typeof(ActionManagerVM), typeof(ActionSelectionManagerWindow));
-    public bool IsUpdate { get; private set; }
-    public bool IsDelete { get; private set; }
-    public bool IsCancel { get; private set; }
-    public bool IsView { get; private set;}
-    public string ActionMessage { get; set; }
-   
-    public ActionSelectionManagerWindow(string entityName)
-    {
-        InitializeComponent();
-        ActionMessage = $"Select an action for the {entityName}:";
-        DataContext = this; // מגדיר את ה-DataContext כדי שה-Binding יעבוד
-    }
+        // ViewModel instance for data binding to the UI
+        public ActionManagerVM Vm
+        {
+            get { return (ActionManagerVM)GetValue(vMProperty); }
+            set { SetValue(vMProperty, value); }
+        }
 
-    private void Update_Click(object sender, RoutedEventArgs e)
-    {
-        IsUpdate = true;
-        DialogResult = true;
-        Close();
-    }
+        // Dependency property for the ViewModel, enabling data binding and other features like animations
+        public static readonly DependencyProperty vMProperty =
+            DependencyProperty.Register("Vm", typeof(ActionManagerVM), typeof(ActionSelectionManagerWindow));
 
-    private void Delete_Click(object sender, RoutedEventArgs e)
-    {
-        IsDelete = true;
-        DialogResult = true;
-        Close();
-    }
-    private void btnView_Click(object sender, RoutedEventArgs e)
-    {
-        IsView = true;
-        DialogResult = true;
-        Close();
-    }
-    private void Cancel_Click(object sender, RoutedEventArgs e)
-    {
+        // Properties to indicate the selected action
+        public bool IsUpdate { get; private set; } // Indicates if the "Update" action was chosen
+        public bool IsDelete { get; private set; } // Indicates if the "Delete" action was chosen
+        public bool IsCancel { get; private set; } // Indicates if the "Cancel" action was chosen
+        public bool IsView { get; private set; }   // Indicates if the "View" action was chosen
 
-        IsCancel = true;
-        DialogResult = true;
-        Close();
+        // Message to display in the window about the available actions
+        public string ActionMessage { get; set; }
+
+        // Constructor: Initializes the window and sets up the action message
+        public ActionSelectionManagerWindow(string entityName)
+        {
+            InitializeComponent();
+
+            // Set the action message dynamically based on the entity name
+            ActionMessage = $"Select an action for the {entityName}:";
+
+            // Set the DataContext to this window instance to enable data binding
+            DataContext = this;
+        }
+
+        // Event handler for the "Update" button click
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
+            IsUpdate = true;      // Mark the "Update" action as selected
+            DialogResult = true;  // Set the dialog result to true
+            Close();              // Close the window
+        }
+
+        // Event handler for the "Delete" button click
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            IsDelete = true;      // Mark the "Delete" action as selected
+            DialogResult = true;  // Set the dialog result to true
+            Close();              // Close the window
+        }
+
+        // Event handler for the "View" button click
+        private void btnView_Click(object sender, RoutedEventArgs e)
+        {
+            IsView = true;        // Mark the "View" action as selected
+            DialogResult = true;  // Set the dialog result to true
+            Close();              // Close the window
+        }
+
+        // Event handler for the "Cancel" button click
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            IsCancel = true;      // Mark the "Cancel" action as selected
+            DialogResult = true;  // Set the dialog result to true
+            Close();              // Close the window
+        }
     }
 }

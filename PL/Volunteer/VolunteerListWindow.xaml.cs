@@ -11,8 +11,6 @@ namespace PL.Volunteer;
 // Window for managing the list of volunteers
 public partial class VolunteerListWindow : Window
 {
-   
-
     // Static instance for accessing the business logic layer (BL)
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
@@ -22,13 +20,13 @@ public partial class VolunteerListWindow : Window
     // Constructor to initialize the window and load the volunteer list
     public VolunteerListWindow()
     {
-        vm = new();
+        vm = new(); // Create a new ViewModel instance
         DataContext = vm; // Bind the ViewModel to the DataContext
-        InitializeComponent();
+        InitializeComponent(); // Initialize UI components
+
         try
         {
-           
-           vm.LoadVolunteerList(); // Initial loading of the volunteer list
+            vm.LoadVolunteerList(); // Initial loading of the volunteer list
         }
         catch (Exception ex)
         {
@@ -36,19 +34,19 @@ public partial class VolunteerListWindow : Window
         }
     }
 
-
     // Function to count the number of calls assigned to a volunteer
     private int VolunteerCalls(object sender, EventArgs e)
     {
+        // Get a list of open calls for the selected volunteer
         var calls = s_bl.Call.GetOpenCallsByVolunteer(vm.SelectedVolunteer.Id, null, null);
-        int CallsNumber = calls.Count();
+        int CallsNumber = calls.Count(); // Count the calls
         return CallsNumber;
     }
 
     // Observer function to refresh the volunteer list when changes occur
     private void VolunteerListObserver()
     {
-       vm.LoadVolunteerList();
+        vm.LoadVolunteerList(); // Reload the volunteer list
     }
 
     // Event triggered when the window is loaded
@@ -56,7 +54,7 @@ public partial class VolunteerListWindow : Window
     {
         try
         {
-           vm.LoadVolunteerList(); // Load the list
+            vm.LoadVolunteerList(); // Load the volunteer list
             s_bl?.Volunteer.AddObserver(VolunteerListObserver); // Add observer to monitor changes
         }
         catch (Exception ex)
@@ -70,7 +68,7 @@ public partial class VolunteerListWindow : Window
     {
         try
         {
-            s_bl?.Volunteer.RemoveObserver(VolunteerListObserver); // Remove observer to stop monitoring
+            s_bl?.Volunteer.RemoveObserver(VolunteerListObserver); // Remove observer to stop monitoring changes
         }
         catch (Exception ex)
         {
@@ -83,9 +81,8 @@ public partial class VolunteerListWindow : Window
     {
         try
         {
-            var window = new AddVolunteerWindow(); // Open the add volunteer window
-            window.ShowDialog();
-
+            var window = new AddVolunteerWindow(); // Open the "Add Volunteer" window
+            window.ShowDialog(); // Wait for the window to close
             vm.LoadVolunteerList(); // Refresh the list after adding a volunteer
         }
         catch (Exception ex)
@@ -94,11 +91,10 @@ public partial class VolunteerListWindow : Window
         }
     }
 
-
     // Function to navigate back (close the current window)
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        this.Close(); // Close the window
     }
 
     // Function to view details of the selected volunteer
@@ -106,12 +102,15 @@ public partial class VolunteerListWindow : Window
     {
         if (vm.SelectedVolunteer == null)
         {
+            // Show an error if no volunteer is selected
             MessageBox.Show("No volunteer selected for viewing.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
+
         try
         {
-            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // Get volunteer details from BL
+            // Get volunteer details from the business logic layer
+            var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id);
 
             // Construct a string with the volunteer's details
             string details = $"Name: {volunteerDetails.FullName}\n" +
@@ -127,41 +126,48 @@ public partial class VolunteerListWindow : Window
         }
     }
 
+    // Event triggered when a volunteer is double-clicked in the DataGrid
     private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (vm.SelectedVolunteer == null)
         {
+            // Show a message if no volunteer is selected
             MessageBox.Show("No volunteer selected.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
         var selectedVolunteer = vm.SelectedVolunteer;
 
-        // פתח את חלון הבחירה עם השם המתאים
+        // Open the action selection window
         var actionWindow = new ActionSelectionWindow("volunteer");
         var result = actionWindow.ShowDialog();
 
         if (result == true)
         {
-            if (actionWindow.IsUpdate) // Update
+            if (actionWindow.IsUpdate) // Handle the "Update" action
             {
                 try
                 {
-                    var updateWindow = new AddVolunteerWindow(selectedVolunteer.Id); // פתח חלון לעדכון
+                    // Open the "Add Volunteer" window for updating
+                    var updateWindow = new AddVolunteerWindow(selectedVolunteer.Id);
                     updateWindow.ShowDialog();
-                    vm.LoadVolunteerList(); // רענון הרשימה לאחר העדכון
+                    vm.LoadVolunteerList(); // Refresh the list after the update
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error updating volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else if (actionWindow.IsDelete) // Delete
+            else if (actionWindow.IsDelete) // Handle the "Delete" action
             {
                 try
                 {
-                    s_bl.Volunteer.DeleteVolunteer(selectedVolunteer.Id); // מחיקה מה-BL
-                    vm.Volunteers.Remove(vm.Volunteers.First(v => v.Id == selectedVolunteer.Id)); // הסרה מהרשימה המקומית
+                    // Delete the volunteer using the business logic layer
+                    s_bl.Volunteer.DeleteVolunteer(selectedVolunteer.Id);
+
+                    // Remove the volunteer from the local list
+                    vm.Volunteers.Remove(vm.Volunteers.First(v => v.Id == selectedVolunteer.Id));
+
                     MessageBox.Show("Volunteer deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -170,7 +176,7 @@ public partial class VolunteerListWindow : Window
                 }
             }
         }
-        else if (actionWindow.IsCancel) // Cancel
+        else if (actionWindow.IsCancel) // Handle the "Cancel" action
         {
             MessageBox.Show("Action canceled.", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
         }

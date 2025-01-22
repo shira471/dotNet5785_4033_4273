@@ -64,8 +64,7 @@ public enum CallField
 {
     None,
     Status,
-    AssignedTo,
-    Priority
+    AssignedTo
 }
 
 /// <summary>
