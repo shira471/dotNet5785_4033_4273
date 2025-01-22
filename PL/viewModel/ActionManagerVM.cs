@@ -10,6 +10,7 @@ namespace PL.viewModel
     public class ActionManagerVM: ViewModelBase
     {
         private readonly IBl s_bl = Factory.Get();
+     
         private BO.CallInList? _selectedCall;
         public BO.CallInList? SelectedCall
         {

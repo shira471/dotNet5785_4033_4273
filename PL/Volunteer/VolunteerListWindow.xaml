@@ -51,7 +51,7 @@
         <!-- Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Add" Width="139" Margin="5" Click="btnAdd_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
-            <Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedVolunteer}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
+            <!--<Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedVolunteer}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>-->
             <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
         </StackPanel>
     </Grid>

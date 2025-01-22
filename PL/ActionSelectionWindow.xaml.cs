@@ -22,6 +22,8 @@ public partial class ActionSelectionWindow : Window
     public bool IsUpdate { get; private set; }
     public bool IsDelete { get; private set; }
     public bool IsCancel { get; private set; }
+    public bool IsView { get; private set; }
+    public bool IsViewCall { get; private set; }
     public string ActionMessage { get; set; }
 
     public ActionSelectionWindow(string entityName)
@@ -49,6 +51,18 @@ public partial class ActionSelectionWindow : Window
     {
         IsCancel = true;
         DialogResult = false; // קובע שהפעולה בוטלה
+        Close();
+    }
+    private void View_Click(object sender, RoutedEventArgs e)
+    {
+        IsView = true;
+        DialogResult = true; // קובע שהפעולה בוטלה
+        Close();
+    }
+    private void ViewCall_Click(object sender, RoutedEventArgs e)
+    {
+        IsViewCall = true;
+        DialogResult = true; // קובע שהפעולה בוטלה
         Close();
     }
 }
