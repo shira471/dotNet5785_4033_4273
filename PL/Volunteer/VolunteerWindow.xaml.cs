@@ -13,7 +13,7 @@ namespace PL.Volunteer
     public partial class VolunteerWindow : Window, INotifyPropertyChanged
     {
         // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
-        public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? false;
+        public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? true;
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -72,6 +72,7 @@ namespace PL.Volunteer
             try
             {
                 CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(int.Parse(volunteerId));
+                OnPropertyChanged(nameof(CurrentVolunteer));
                 OnPropertyChanged(nameof(IsVolunteerActive));
             }
             catch (Exception ex)
@@ -100,6 +101,14 @@ namespace PL.Volunteer
         }
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
+            if (IsCallActive && !CurrentVolunteer.IsActive)
+            {
+                MessageBox.Show("Cannot deactivate a volunteer with an active call.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CurrentVolunteer.IsActive = true;
+                OnPropertyChanged(nameof(CurrentVolunteer.IsActive));
+                return;
+            }
+
             try
             {
                 // שמירה במערכת ה-BL
@@ -201,6 +210,20 @@ namespace PL.Volunteer
              {
               PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
              }
+
+        private void ActiveCheckBox_Checked(object sender, RoutedEventArgs e) { }
+
+        private void ActiveCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (IsCallActive)
+            {
+                MessageBox.Show("Cannot deactivate a volunteer with an active call.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (sender is CheckBox checkBox)
+                {
+                    checkBox.IsChecked = true;
+                }
+            }
+        }
     }
   }
 

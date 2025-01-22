@@ -16,4 +16,31 @@
     <finishTime xsi:nil="true" />
     <assignKind>handeled</assignKind>
   </Assignment>
+<<<<<<< HEAD
+=======
+  <Assignment>
+    <id>7</id>
+    <callId>12</callId>
+    <volunteerId>0</volunteerId>
+    <startTime>2025-01-22T11:49:09.4876342+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>handeled</assignKind>
+  </Assignment>
+=======
+    <id>4</id>
+    <callId>11</callId>
+    <volunteerId>455707906</volunteerId>
+    <startTime>2025-01-22T11:36:22.292652+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>handeled</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>5</id>
+    <callId>1</callId>
+    <volunteerId>173979562</volunteerId>
+    <startTime>2025-01-22T12:25:15.82322+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>handeled</assignKind>
+  </Assignment>
+>>>>>>> 0f0531e9fd4cf56a7f8f4d7543adb99a0e7d280e
 </ArrayOfAssignment>

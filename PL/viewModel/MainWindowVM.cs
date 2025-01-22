@@ -72,10 +72,24 @@ namespace PL.Volunteer
                     Application.Current.MainWindow.Close();
                 }
             }
-            catch
+            catch(Exception ex) 
             {
-                ErrorMessage = "Login failed. Please check your credentials.";
-                ErrorVisibility = "Visible";
+                var result = MessageBox.Show($"Login failed: {ex.Message}\nWould you like to try again?",
+                 "Login Error",
+                 MessageBoxButton.OKCancel,
+                 MessageBoxImage.Warning);
+
+                // אם המשתמש לוחץ "Cancel", סוגרים את האפליקציה
+                if (result == MessageBoxResult.Cancel)
+                {
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    // המשתמש בחר לנסות שוב – נשאר בחלון
+                    ErrorVisibility = "Visible";
+                }
+
             }
         }
 
