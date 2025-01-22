@@ -131,12 +131,13 @@ public partial class SelectCallWindow : Window
 
         try
         {
-            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id);
+            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id,BO.Role.Volunteer);
             MessageBox.Show("The call was marked as canceled.");
-            queryCallList();
+            queryCallList(); // Reload the call list after the operation
         }
         catch (Exception ex)
         {
+            // Display an error message if canceling the call fails
             MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

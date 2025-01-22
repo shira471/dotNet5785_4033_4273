@@ -96,7 +96,7 @@ internal class VolunteerWindowVM : ViewModelBase
 
         try
         {
-            _bl.Call.CancelCallAssignment(_volunteerId, AssignedCall.Id);
+            _bl.Call.CancelCallAssignment(_volunteerId, AssignedCall.Id,BO.Role.Volunteer);
             MessageBox.Show("The call assignment has been canceled.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             LoadAssignedCall();
         }

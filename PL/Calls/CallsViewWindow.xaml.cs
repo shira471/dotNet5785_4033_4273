@@ -135,7 +135,7 @@ public partial class CallsViewWindow : Window
                 try
                 {
                     var VolunteerId = s_bl.Volunteer.GetVolunteerForCall(call.CallId);
-                    s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId);
+                    s_bl.Call.CancelCallAssignment(VolunteerId, call.CallId,Role.Manager);
                     MessageBox.Show("The call was marked as canceled.");
                     vm.LoadCalls(); // רענון הרשימה
                 }
