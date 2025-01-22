@@ -29,20 +29,6 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>696646711</idVol>
-    <adress>5 Yaffo Rd, Jerusalem, Israel</adress>
-    <name>Avigail barmi</name>
-    <email>avigail.barmi@gmail.com</email>
-    <phoneNumber>0557768073</phoneNumber>
-    <password>LjxlqT1hZ7</password>
-    <latitude>31.7765193</latitude>
-    <longitude>35.2266923</longitude>
-    <limitDestenation>44.19</limitDestenation>
-    <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>617199775</idVol>
     <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
@@ -235,6 +221,20 @@
     <longitude>35.2283058</longitude>
     <limitDestenation>18.7</limitDestenation>
     <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>696646711</idVol>
+    <adress>5 Yaffo Rd, Jerusalem, Israel</adress>
+    <name>Avigail barmi</name>
+    <email>avigail.barmi@gmail.com</email>
+    <phoneNumber>0557768073</phoneNumber>
+    <password>LjxlqT1hZ7</password>
+    <latitude>31.7765193</latitude>
+    <longitude>35.2266923</longitude>
+    <limitDestenation>44.19</limitDestenation>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
