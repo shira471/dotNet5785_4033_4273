@@ -79,7 +79,7 @@ public static class Initialization
             double limitDestination = Math.Round(s_rand.NextDouble() * 45 + 5, 2);
 
             // Random active status
-            bool isActive = s_rand.Next(0, 2) == 1;
+            bool isActive = s_rand.Next(0, 100) >= 33;
 
             
             // Call the BL function to get coordinates
@@ -111,8 +111,12 @@ public static class Initialization
     // Helper method to get a random value of the Hamal enum, or null
     private static CallType? GetRandomHamalValue()
     {
-        Array values = Enum.GetValues(typeof(CallType));
-        return (CallType)values.GetValue(s_rand.Next(values.Length));
+        var validValues = Enum.GetValues(typeof(CallType))
+                 .Cast<CallType>()
+                 .Where(kind => kind != CallType.none)
+                 .ToArray();
+
+        return validValues[s_rand.Next(validValues.Length)];
     }
     //private static Role? GetRandomRoleValue()
     //{
