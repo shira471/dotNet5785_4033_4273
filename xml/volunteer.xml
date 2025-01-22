@@ -71,20 +71,6 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>354586303</idVol>
-    <adress>34 Ein Karem, Jerusalem, Israel</adress>
-    <name>Soll Atall</name>
-    <email>soll.atall@gmail.com</email>
-    <phoneNumber>0509920409</phoneNumber>
-    <password>lIiLtI</password>
-    <latitude>31.7673945</latitude>
-    <longitude>35.1620779</longitude>
-    <limitDestenation>32</limitDestenation>
-    <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>242728322</idVol>
     <adress>2 Jaffa St, Jerusalem, Israel</adress>
     <name>Rivka Azrad</name>
@@ -136,20 +122,6 @@
     <latitude>31.7760473</latitude>
     <longitude>35.2193304</longitude>
     <limitDestenation>24.73</limitDestenation>
-    <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>915926653</idVol>
-    <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
-    <name>Shimon Choen</name>
-    <email>shimon.choen@gmail.com</email>
-    <phoneNumber>0547505194</phoneNumber>
-    <password>bDWdj4G</password>
-    <latitude>31.7776609</latitude>
-    <longitude>35.2249756</longitude>
-    <limitDestenation>33.99</limitDestenation>
     <isActive>false</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
@@ -235,6 +207,34 @@
     <longitude>35.2266923</longitude>
     <limitDestenation>25.74</limitDestenation>
     <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>354586303</idVol>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <name>Soll Atall</name>
+    <email>soll.atall@gmail.com</email>
+    <phoneNumber>0509920409</phoneNumber>
+    <password>lIiLtI</password>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <limitDestenation>32</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>915926653</idVol>
+    <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
+    <name>Shimon Choen</name>
+    <email>shimon.choen@gmail.com</email>
+    <phoneNumber>0547505194</phoneNumber>
+    <password>bDWdj4G</password>
+    <latitude>31.7776609</latitude>
+    <longitude>35.2249756</longitude>
+    <limitDestenation>33.99</limitDestenation>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>

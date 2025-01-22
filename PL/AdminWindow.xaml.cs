@@ -183,14 +183,25 @@ namespace PL.Volunteer
 
         private void btnCallStatus_Click(object sender, RoutedEventArgs e)
         {
+            // קריאה למתודה שמחזירה את מספר הקריאות לפי סטטוסים
             int[] temp = s_bl.Call.GetCallCountsByStatus();
-            int openCalls = temp[4];
-            int closeCalls = temp[3];
-            int inProgressCalls = temp[2];
-            int openInRiskCalls = temp[0];
-            int expiredCalls = temp[1];
-            int closeInRiskCalls = temp[5];
-            string message = $"Open calls: {openCalls}\nClose calls: {closeCalls}\nCalls in progress: {inProgressCalls}\nOpen in risk calls: {openInRiskCalls}\nClose in risk calls: {closeInRiskCalls}\nExpired Calls: {expiredCalls}";
+            // שליפת הסטטוסים על פי סדרם ב-Enum Status
+            int openCalls = temp[(int)Status.open];
+            int closeCalls = temp[(int)Status.closed];
+            int inProgressCalls = temp[(int)Status.inProgres];
+            int openInRiskCalls = temp[(int)Status.openInRisk];
+            int expiredCalls = temp[(int)Status.expired];
+            int closeInRiskCalls = temp[(int)Status.closeInRisk];
+
+            // בניית ההודעה להצגה
+            string message = $"Open calls: {openCalls}\n" +
+                             $"Close calls: {closeCalls}\n" +
+                             $"Calls in progress: {inProgressCalls}\n" +
+                             $"Open in risk calls: {openInRiskCalls}\n" +
+                             $"Close in risk calls: {closeInRiskCalls}\n" +
+                             $"Expired Calls: {expiredCalls}";
+
+            // הצגת ההודעה
             MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

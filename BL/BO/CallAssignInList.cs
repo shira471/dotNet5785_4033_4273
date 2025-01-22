@@ -31,17 +31,7 @@ public class CallAssignInList
     /// <summary>
     /// סוג סיום הטיפול
     /// </summary>
-    public AssignmentEndType? EndType { get; set; }
+    public Hamal? EndType { get; set; }
 }
 
-    /// <summary>
-    /// סוגי סיום הטיפול
-    /// </summary>
-    public enum AssignmentEndType
-    {
-        Completed,
-        CancelledByVolunteer,
-        Expired,
-        OpenCancelled
-    }
-
+   

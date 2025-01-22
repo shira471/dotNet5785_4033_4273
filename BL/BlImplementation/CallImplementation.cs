@@ -160,31 +160,27 @@ public class CallImplementation : ICall
         // בדיקת הקריאה
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
-     
+
         // קביעת סוג הביטול בהתאם לתפקיד
-        Hamal newAssignKind;
-        if (role == BO.Role.Manager)
+        Hamal newAssignKind = role switch
         {
-            newAssignKind = Hamal.cancelByManager;
-        }
-        else if (role == BO.Role.Volunteer)
+            BO.Role.Manager => Hamal.cancelByManager,
+            BO.Role.Volunteer => Hamal.cancelByVolunteer,
+            _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
+        };
+
+        // עדכון האובייקט הקיים
+        var updatedAssignment = assign with
         {
-            newAssignKind = Hamal.cancelByVolunteer;
-        }
-        else
-        {
-            throw new Exception($"Role {role} is not authorized to cancel assignments.");
-        }
-        _dal.assignment.Update(new DO.Assignment
-        {
-            id = assign.id, // הוספת מזהה ה-assignment
-            callId = assign.callId,
-            volunteerId = assign.volunteerId,
-            startTime = assign.startTime,
             assignKind = (DO.Hamal)newAssignKind
-    });
+        };
+
+        _dal.assignment.Update(updatedAssignment);
+
+        // עדכון סטטוס הקריאה
         var x = ConvertToBOCall(call);
         x.Status = Status.open;
+
         // עדכון צופים
         CallManager.Observers.NotifyListUpdated(); // Stage 5
     }
@@ -739,5 +735,76 @@ CallManager.Observers.RemoveObserver(id, observer); //stage 5
                 }
             );
     }
+    public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
+    {
+        // שליפת הקריאה
+        var call = _dal.call.Read(callId) ??
+            throw new Exception($"Call with ID={callId} does not exist.");
 
+        // שליפת כל ההשמות הקשורות לקריאה
+        var assignments = _dal.assignment.ReadAll()
+            .Where(a => a.callId == callId)
+            .ToList();
+
+        if (!assignments.Any())
+        {
+            throw new Exception($"No assignments found for Call ID={callId}.");
+        }
+
+        // מיפוי ההשמות למודל BO
+        var assignmentList = assignments.Select(assign =>
+        {
+            var volunteer = _dal.volunteer.Read(assign.volunteerId);
+
+            return new CallAssignInList
+            {
+                VolunteerId = assign.volunteerId,
+                VolunteerName = volunteer?.name,
+                EntryTime = assign.startTime ?? DateTime.MinValue,
+                EndTime = assign.finishTime,
+                EndType = (BO.Hamal)assign.assignKind
+            };
+        });
+
+        return assignmentList;
+    }
+    public CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId)
+    {
+        // שליפת מתנדב
+        var volunteer = _dal.volunteer.Read(volunteerId) ??
+            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+        if (volunteer.latitude == null || volunteer.longitude == null)
+        {
+            throw new Exception($"Location data for Volunteer ID={volunteerId} is not provided.");
+        }
+
+        // שליפת השיוך הפעיל של המתנדב
+        var activeAssignment = _dal.assignment.ReadAll()
+            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
+
+        if (activeAssignment == null)
+        {
+            return null; // אין שיוך פעיל
+        }
+
+        // שליפת הקריאה הקשורה לשיוך הפעיל
+        var call = _dal.call.Read(activeAssignment.callId) ??
+            throw new Exception($"Call with ID={activeAssignment.callId} does not exist.");
+
+        // יצירת האובייקט CallInProgress
+        return new CallInProgress
+        {
+            Id = activeAssignment.id,
+            CallId = call.id,
+            CallType = (CallType)(call.callType ?? 0),
+            Description = call.detail,
+            FullAddress = call.adress,
+            OpenTime = call.startTime ?? DateTime.MinValue,
+            MaxCloseTime = call.maximumTime,
+            EntryTime = activeAssignment.startTime ?? DateTime.MinValue,
+            DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude),
+            Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
+        };
+    }
 }
