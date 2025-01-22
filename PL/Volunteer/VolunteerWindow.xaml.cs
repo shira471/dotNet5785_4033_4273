@@ -147,27 +147,7 @@ namespace PL.Volunteer
             }
         }
 
-        private void CancellationCall_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsCallActive)
-            {
-                try
-                {
-                    var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId);
-                    MessageBox.Show("The call was marked as cancelled.");
-                    LoadCallDetails();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error ccancelled the call: {ex.Message}");
-                }
-            }
-            else
-            {
-                MessageBox.Show("No active call to cancelled.");
-            }
-        }
+   
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
@@ -202,18 +182,7 @@ namespace PL.Volunteer
                 MessageBox.Show("No active call to cancelled.");
             }
         }
-        private void SelectCall_Click(object sender, RoutedEventArgs e)
-        {
-            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
-            LoadCallDetails();
-        }
-        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
-        {
-            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
-            LoadCallDetails();
-        }
+       
 
         /// <summary>
         /// טוען פרטי השיחה הפעילה של המתנדב.
