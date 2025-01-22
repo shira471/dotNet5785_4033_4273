@@ -65,6 +65,7 @@ public interface IVolunteer: IObservable //stage 5 הרחבת ממשק
     /// <exception cref="DuplicateException">נזרקת אם כבר קיים מתנדב עם תעודת הזהות</exception>
     void AddVolunteer(BO.Volunteer volunteer);
     int GetVolunteerForCall(int callId);
+    //CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId);
 }
 
    

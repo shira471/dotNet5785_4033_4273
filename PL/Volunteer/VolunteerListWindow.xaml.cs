@@ -1,4 +1,5 @@
 ﻿using BO;
+using DO;
 using PL.viewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -186,28 +187,34 @@ public partial class VolunteerListWindow : Window
                 {
                     MessageBox.Show($"Error viewing volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                if (actionWindow.IsViewCall) // View call
-                    try
-                    {
-                        var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // Get volunteer details from BL
+            }
+            if (actionWindow.IsViewCall)
+            { // View call
+                try
+                {
+                    var volunteerDetails = s_bl.Call.GetActiveAssignmentForVolunteer(selectedVolunteer.Id); // Get volunteer details from BL
 
-                        // Construct a string with the volunteer's details
-                        string details = $"Name: {volunteerDetails.FullName}\n" +
-                                         $"Phone Number: {volunteerDetails.Phone}\n" +
-                                         $"Role: {volunteerDetails.Role}";
+                    // Construct a string with the volunteer's details
+                    string details = $"Assingment ID: {volunteerDetails.Id}\n" +
+                                 $"Call ID:{volunteerDetails.CallId}\n" +
+                                 $"Description: {volunteerDetails.Description}\n" +
+                                 $"Address: {volunteerDetails.FullAddress}\n" +
+                                 $"Entery time: {volunteerDetails.EntryTime}\n" +
+                                 $"Distance from volunteer: {volunteerDetails.DistanceFromVolunteer};";
 
-                        // Display the details in a message box
-                        MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    catch (Exception ex)
+                    // Display the details in a message box
+                    MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Error viewing call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
             }
-        }
-        else if (actionWindow.IsCancel) // Cancel
-        {
-            MessageBox.Show("Action canceled.", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
+            else if (actionWindow.IsCancel) // Cancel
+            {
+                MessageBox.Show("Action canceled.", "Cancel", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
     }
 }
