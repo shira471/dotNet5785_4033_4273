@@ -121,54 +121,90 @@ public static class Initialization
     //}
 
     public static void creatCall()
-{
-    string[] details = {
+    {
+        string[] details = {
         "Call for assistance", "Emergency call", "Routine check-in",
         "Follow-up call", "Service request", "Technical support",
         "Customer inquiry", "Appointment reminder", "Complaint report",
-        "Survey feedback"
+        "Survey feedback",
+        "Medical emergency assistance", "Lost child at park", "Car accident report",
+        "House fire alert", "Tree blocking road", "Water pipe burst",
+        "Animal rescue request", "Missing person report", "Flooded street cleanup",
+        "Electric outage report"
     };
 
-    string[] addresses = {
+        string[] addresses = {
         "15 King David St, Jerusalem, Israel",
         "27 Ben Yehuda St, Jerusalem, Israel",
         "52 Jaffa St, Jerusalem, Israel",
         "10 HaPalmach St, Jerusalem, Israel",
-        "3 Keren Hayesod St, Jerusalem, Israel",
-        "18 Shmuel HaNagid St, Jerusalem, Israel",
-        "25 Yaffo Rd, Jerusalem, Israel",
-        "6 Rabbi Akiva St, Jerusalem, Israel",
-        "34 Ein Karem, Jerusalem, Israel",
-        "12 HaNevi'im St, Jerusalem, Israel"
+       "3 Keren Hayesod St, Jerusalem, Israel",
+       "18 Shmuel HaNagid St, Jerusalem, Israel",
+       "25 Yaffo Rd, Jerusalem, Israel",
+       "6 Rabbi Akiva St, Jerusalem, Israel",
+       "34 Ein Karem, Jerusalem, Israel",
+      "12 HaNevi'im St, Jerusalem, Israel",
+    "22 Mamilla Mall, Jerusalem, Israel",
+    "7 Zion Square, Jerusalem, Israel",
+    "16 Herzl St, Jerusalem, Israel",
+    "40 Hillel St, Jerusalem, Israel",
+    "14 Agron St, Jerusalem, Israel",
+    "28 Emek Refaim St, Jerusalem, Israel",
+    "4 David Remez St, Jerusalem, Israel",
+    "20 HaNevi'im St, Jerusalem, Israel",
+    "5 Hahistadrut St, Jerusalem, Israel",
+    "9 Yitzhak Rabin Blvd, Jerusalem, Israel"
     };
 
-    DateTime systemClock = s_dal.config.clock;
-    DateTime start = new DateTime(systemClock.Year - 2, 1, 1);
-    int range = (systemClock - start).Days;
+        // בסיס לזמנים: השעון הנוכחי
+        DateTime now = DateTime.Now;
 
-    foreach (string detail in details)
-    {
-        //int id = Config.NextCallId; // שימוש במספר רץ
-        string address = addresses[s_rand.Next(addresses.Length)];
-
-        double[]? coordinates = GetCoordinatesFromGoogle(address);
-        if (coordinates == null)
+        foreach (string detail in details)
         {
-            throw new Exception($"Could not fetch coordinates for address: {address}");
+            // כתובת אקראית
+            string address = addresses[s_rand.Next(addresses.Length)];
+
+            // קבלת קורדינטות לכתובת
+            double[]? coordinates = GetCoordinatesFromGoogle(address);
+            if (coordinates == null)
+            {
+                throw new Exception($"Could not fetch coordinates for address: {address}");
+            }
+
+            double latitude = coordinates[0];
+            double longitude = coordinates[1];
+
+            // יצירת תאריך התחלה
+            DateTime startTime = now.AddDays(-s_rand.Next(1, 30)).AddHours(s_rand.Next(0, 24));
+
+            // הסתברות של 50% שזמן הסיום יהיה בעתיד
+            DateTime maximumTime;
+            if (s_rand.Next(0, 2) == 0)
+            {
+                // זמן סיום רנדומלי בין 1 ל-30 ימים בעתיד
+                maximumTime = now.AddDays(s_rand.Next(1, 30)).AddHours(s_rand.Next(0, 24));
+            }
+            else
+            {
+                // זמן סיום רגיל אחרי תחילת הקריאה
+                maximumTime = startTime.AddMinutes(s_rand.Next(30, 180)); // 30 עד 180 דקות אחרי תחילת הקריאה
+            }
+
+            // יצירת קריאה חדשה והוספתה
+            s_dal!.call.Create(new Call(
+                0, // מזהה אוטומטי
+                detail,
+                address,
+                latitude,
+                longitude,
+                GetRandomHamalValue(),
+                startTime,
+                maximumTime
+            ));
+
+            callIds.Add(0); // שמירת מזהה הקריאה
         }
-
-        double latitude = coordinates[0];
-        double longitude = coordinates[1];
-        DateTime startTime = start.AddDays(s_rand.Next(range));
-        DateTime maximumTime = startTime.AddMinutes(s_rand.Next(1, 60));
-
-        if (startTime.Year > 2024) startTime = new DateTime(2024, 12, 31, 23, 59, 59);
-        if (maximumTime.Year > 2024) maximumTime = new DateTime(2024, 12, 31, 23, 59, 59);
-
-        s_dal.call.Create(new Call(0, detail, address, latitude, longitude, GetRandomHamalValue(), startTime, maximumTime));
-        callIds.Add(0); // שמירת ה-ID ברשימה
     }
-}
 
 
     public static void creatAssignment()
@@ -176,68 +212,70 @@ public static class Initialization
         var allCalls = s_dal!.call.ReadAll();
         var allVolunteers = s_dal!.volunteer.ReadAll();
 
-        // Track assigned calls to ensure each call appears in only one assignment
         var assignedCalls = new HashSet<int>();
+        var availableVolunteers = allVolunteers.ToList();
 
-        // Remove the last two volunteers from the list
-        var availableVolunteers = allVolunteers.Take(allVolunteers.Count() - 2).ToList();
-
-        // Define the latest valid date (31 December 2024)
-        DateTime maxValidDate = new DateTime(2024, 12, 31, 23, 59, 59);
-
-        // Generate assignments for approximately one-third of the calls
         foreach (var call in allCalls)
         {
-            // יוזמה יזומה: דילוג על קריאות בהסתברות של 2/3
-            if (s_rand.Next(0, 3) != 0) // הסתברות של 2 מתוך 3 לדלג
+            // דילוג על קריאות בהסתברות של 50%
+            if (s_rand.Next(0, 2) == 0) // דילוג על חצי מהקריאות
                 continue;
 
-            // בחירת מתנדב אקראי מתוך המתנדבים הזמינים
-            int volunteerIndex = s_rand.Next(0, availableVolunteers.Count());
+            // בחירת מתנדב אקראי
+            int volunteerIndex = s_rand.Next(availableVolunteers.Count);
             var selectedVolunteer = availableVolunteers[volunteerIndex];
 
-            DateTime treatmentStartTime = call.startTime.Value.AddHours(s_rand.Next(1, 36));
+            // יצירת תאריך התחלת טיפול
+            DateTime treatmentStartTime = call.startTime.Value.AddHours(s_rand.Next(1, 12)); // עד 12 שעות אחרי תחילת הקריאה
 
-            if (call.maximumTime.HasValue)
+            // הגבלת זמן תחילת הטיפול למקסימום המוגדר בקריאה
+            if (call.maximumTime.HasValue && treatmentStartTime > call.maximumTime.Value)
             {
-                treatmentStartTime = treatmentStartTime < call.maximumTime.Value
-                    ? treatmentStartTime
-                    : call.maximumTime.Value.AddMinutes(-20);
+                treatmentStartTime = call.maximumTime.Value;
+            }
+         
+             DateTime? treatmentEndTime = null;
+            Hamal assignKind;
+            if (s_rand.Next(0, 2) == 0) // הסתברות של 50% שהמשימה תסתיים
+            {
+                treatmentEndTime = treatmentStartTime.AddHours(s_rand.Next(1, 6)); // זמן סיום בין 1 ל-6 שעות
+                if (call.maximumTime.HasValue && treatmentEndTime > call.maximumTime.Value)
+                {
+                    treatmentEndTime = call.maximumTime.Value; // ודא שזמן הסיום לא עובר את זמן הסיום של הקריאה
+                }
+                assignKind = Hamal.handeled; // המשימה הושלמה
+            }
+            else
+            {
+                if (s_rand.Next(0, 2) == 0) // הסתברות של 50% להיות "בטיפול"
+                {
+                    // בטיפול: אין זמן סיום, וזמן התחלת הטיפול הוא לפני עכשיו
+                    if (treatmentStartTime <= DateTime.Now)
+                    {
+                        assignKind = Hamal.inTreatment; // מוגדר כ"בטיפול"
+                    }
+                    else
+                    {
+                        // אם לא מתאים להיות בטיפול, מסמן כבוטל
+                        assignKind = (Hamal)s_rand.Next((int)Hamal.cancelByVolunteer, (int)Hamal.handelExpired + 1);
+                    }
+                }
+                else
+                {
+                    // בחירה בין ביטול על ידי מתנדב או מנהל
+                    assignKind = (Hamal)s_rand.Next((int)Hamal.cancelByVolunteer, (int)Hamal.handelExpired + 1);
+                }
             }
 
-            if (treatmentStartTime > maxValidDate)
-            {
-                treatmentStartTime = maxValidDate;
-            }
-
-            // הגדרת זמן סיום הטיפול
-            DateTime? treatmentEndTime = null;
-
-            // בחירת סוג הטיפול (Hamal) אקראי
-            Hamal assignKind = (Hamal)s_rand.Next(0, 3);
-
-            switch (assignKind)
-            {
-                case Hamal.handeled:
-                    treatmentEndTime = treatmentStartTime.AddHours(s_rand.Next(1, 24));
-                    break;
-                case Hamal.cancelByVolunteer:
-                case Hamal.cancelByManager:
-                    treatmentEndTime = null; // ביטול – אין זמן סיום
-                    break;
-            }
-
-            // הוספת הקריאה לרשימת הקריאות שהוקצו
-            assignedCalls.Add(call.id);
-
-            // יצירת השמה חדשה
+            // יצירת ההשמה
             s_dal!.assignment.Create(new Assignment(
-                0, // מזהה יוקצה אוטומטית
+                0, // מזהה אוטומטי
                 call.id,
                 selectedVolunteer.idVol,
                 treatmentStartTime,
                 treatmentEndTime,
-                assignKind));
+                assignKind
+            ));
         }
     }
 

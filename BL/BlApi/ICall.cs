@@ -64,7 +64,7 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // מבטלת טיפול בקריאה. אם המבקש הוא המתנדב עצמו, סוג הביטול הוא "ביטול עצמי".
     // אם המבקש הוא מנהל, סוג הביטול הוא "ביטול מנהל".
     // אם הנתונים לא חוקיים, נזרקת חריגה מתאימה.
-    void CancelCallAssignment(int requesterId, int assignmentId);
+    void CancelCallAssignment(int requesterId, int assignmentId,BO.Role role);
 
     // 11. בחירת קריאה לטיפול
     // מקצה קריאה למתנדב, מעדכנת את זמן הכניסה לטיפול.

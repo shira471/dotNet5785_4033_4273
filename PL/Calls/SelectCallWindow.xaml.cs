@@ -131,7 +131,7 @@ public partial class SelectCallWindow : Window
 
         try
         {
-            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id);
+            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id,BO.Role.Volunteer);
             MessageBox.Show("The call was marked as canceled.");
             queryCallList();
         }

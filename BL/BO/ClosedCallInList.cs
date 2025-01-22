@@ -26,11 +26,11 @@ public class ClosedCallInList
     public DateTime? ActualEndTime { get; init; }
 
     // סוג סיום הטיפול (אופציונלי)
-    public EndType? EndType { get; init; }
+    public Hamal? EndType { get; init; }
 
     // קונסטרוקטור
     public ClosedCallInList(int id, CallType callType, string address, DateTime openTime,
-                            DateTime assignmentStartTime, DateTime? actualEndTime, EndType? endType)
+                            DateTime assignmentStartTime, DateTime? actualEndTime, Hamal? endType)
     {
         Id = id;
         CallType = callType;

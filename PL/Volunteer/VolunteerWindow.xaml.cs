@@ -154,7 +154,7 @@ namespace PL.Volunteer
                 try
                 {
                     var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId);
+                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId,Role.Volunteer);
                     MessageBox.Show("The call was marked as cancelled.");
                     LoadCallDetails();
                 }

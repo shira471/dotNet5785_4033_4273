@@ -95,7 +95,9 @@ public enum TheKindOfCall
 }
 public enum Hamal
 {
+    inTreatment,
     handeled,
     cancelByVolunteer,
-    cancelByManager
+    cancelByManager,
+    handelExpired,
 }
