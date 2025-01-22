@@ -19,7 +19,7 @@ using System.Data;
 public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
-   
+
     public void AddVolunteer(BO.Volunteer volunteer)
     {
         if (volunteer == null)
@@ -113,7 +113,7 @@ public class VolunteerImplementation : IVolunteer
                 Longitude = volunteerDO.longitude,
                 MaxDistance = volunteerDO.limitDestenation,
                 Role = (BO.Role?)volunteerDO.role
-               
+
             };
         }
         catch (Exception ex)
@@ -172,23 +172,23 @@ public class VolunteerImplementation : IVolunteer
 
     public string Login(string username, string password)
     {
-            int userId=int.Parse(username);
-            var vol = _dal.volunteer.Read(userId);
-          
-            if (vol == null)
-            {
-                throw new UnauthorizedAccessException("Invalid username or password.");
-            }
-            if (vol.password != password)
-            {
-                throw new UnauthorizedAccessException("Invalid username or password.");
-            }
-            return vol.role switch
-            {
-                DO.Role.Manager => "Manager",
-                DO.Role.Volunteer => "Volunteer",
-                _ => throw new BlInvalidValueException("Invalid role.")
-            };
+        int userId = int.Parse(username);
+        var vol = _dal.volunteer.Read(userId);
+
+        if (vol == null)
+        {
+            throw new UnauthorizedAccessException("Invalid username or password.");
+        }
+        if (vol.password != password)
+        {
+            throw new UnauthorizedAccessException("Invalid username or password.");
+        }
+        return vol.role switch
+        {
+            DO.Role.Manager => "Manager",
+            DO.Role.Volunteer => "Volunteer",
+            _ => throw new BlInvalidValueException("Invalid role.")
+        };
     }
 
     public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
@@ -265,9 +265,9 @@ public class VolunteerImplementation : IVolunteer
 
     private bool IsValidEmail(string email)
     {
-        
-            var mail = new System.Net.Mail.MailAddress(email);
-            return mail.Address == email;
+
+        var mail = new System.Net.Mail.MailAddress(email);
+        return mail.Address == email;
     }
 
     private bool IsValidPhoneNumber(string phoneNumber)
@@ -299,5 +299,6 @@ public class VolunteerImplementation : IVolunteer
 
     public void RemoveObserver(int id, Action observer) =>
         VolunteerManager.Observers.RemoveObserver(id, observer);
+
 }
 

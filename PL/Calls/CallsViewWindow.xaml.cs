@@ -146,9 +146,19 @@ public partial class CallsViewWindow : Window
             }
             else if (actionWindow.IsView)
             {
-                if (selectedCall != null)
+                try
                 {
-                    MessageBox.Show($"Viewing details for call {selectedCall.CallId}", "Call Details");
+                    var CallDetails = s_bl.Call.GetAssignmentsForCall(selectedCall.CallId); // Get volunteer details from BL
+
+                    // המרת המידע לטקסט להצגת End Type בלבד
+                    var details = string.Join("  ", CallDetails.Select(a => $"End Type: {a.EndType}  "));
+
+                    // הצגת המידע ב־MessageBox
+                    MessageBox.Show(details, "Call Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error fetching call details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
