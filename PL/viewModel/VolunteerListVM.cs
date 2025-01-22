@@ -54,13 +54,14 @@ public class VolunteerListVM : ViewModelBase
         Volunteers.Clear();
         try
         {
+            
+            bool? isActive=null;
+            if (IsActiveFilter == "Inactive")
+                isActive = false;
+            else if (IsActiveFilter == "Active")
+                isActive = true;
             // תרגום הפילטר לערכים מתאימים
-            bool? isActive = IsActiveFilter switch
-            {
-                "Active" => true,
-                "Inactive" => false,
-                _ => null
-            };
+            
 
             var volunteers = s_bl.Volunteer.GetVolunteersList(isActive, VolunteerSortBy) ?? Enumerable.Empty<BO.VolunteerInList>();
 

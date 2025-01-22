@@ -29,15 +29,7 @@ namespace PL.Volunteer
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
         private readonly BlApi.IBl s_bl;
-        //public bool IsEditing
-        //{
-        //    get { return (bool)GetValue(IsEditingProperty); }
-        //    set { SetValue(IsEditingProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty IsEditingProperty =
-        //    DependencyProperty.Register("IsEditing", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(false));
-
+        
         public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
@@ -81,10 +73,7 @@ namespace PL.Volunteer
                 Close();
             }
         }
-        //private void EnableEditing_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IsEditing = true;
-        //}
+       
         private void ActiveCheckBox_Click(object sender, RoutedEventArgs e)
         {
             // אם יש קריאה פעילה, לא לאפשר שינוי למצב "לא פעיל"
@@ -147,39 +136,7 @@ namespace PL.Volunteer
             }
         }
 
-        private void CancellationCall_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsCallActive)
-            {
-                try
-                {
-                    var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId);
-                    MessageBox.Show("The call was marked as cancelled.");
-                    LoadCallDetails();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error ccancelled the call: {ex.Message}");
-                }
-            }
-            else
-            {
-                MessageBox.Show("No active call to cancelled.");
-            }
-        }
-        private void SelectCall_Click(object sender, RoutedEventArgs e)
-        {
-            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
-            LoadCallDetails();
-        }
-        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
-        {
-            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
-            LoadCallDetails();
-        }
+  
 
         private void CancellationCall_Click(object sender, RoutedEventArgs e)
         {

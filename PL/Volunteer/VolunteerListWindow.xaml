@@ -20,12 +20,12 @@
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
             <!-- Active Filter -->
             <TextBlock Text="Filter Active:" VerticalAlignment="Center" Margin="0,0,5,0" />
-            <ComboBox Width="100" SelectedValue="{Binding IsActiveFilter, Mode=TwoWay}" Margin="5">
-                <ComboBoxItem Content="All" Tag="All" />
-                <ComboBoxItem Content="Active" Tag="Active" />
-                <ComboBoxItem Content="Inactive" Tag="Inactive" />
-       
+            <ComboBox Width="100" SelectedValue="{Binding IsActiveFilter, Mode=TwoWay}" SelectedValuePath="Content" Margin="5">
+                <ComboBoxItem Content="All" />
+                <ComboBoxItem Content="Active" />
+                <ComboBoxItem Content="Inactive" />
             </ComboBox>
+
         </StackPanel>
 
         <!-- DataGrid -->
@@ -33,11 +33,11 @@
                   SelectedValue="{Binding SelectedVolunteer, Mode=TwoWay}" 
                   AutoGenerateColumns="False" 
                   Grid.Row="1" 
-                  Margin="10" 
+                  Margin="10,25,10,45" 
                   Background="White" 
                   BorderBrush="Gray"
                   Foreground="Black"
-                  MouseDoubleClick="DataGrid_MouseDoubleClick">
+                  MouseDoubleClick="DataGrid_MouseDoubleClick" Grid.RowSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
