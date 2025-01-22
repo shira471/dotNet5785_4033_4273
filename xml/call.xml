@@ -3,111 +3,101 @@
   <Call>
     <id>1</id>
     <detail>Call for assistance</detail>
-    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
-    <latitude>31.7681613</latitude>
-    <longitude>35.2127055</longitude>
-    <callType>madication</callType>
-    <startTime>2023-11-13T00:00:00</startTime>
-    <maximumTime>2023-11-13T00:09:00</maximumTime>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
+    <callType>dinner</callType>
+    <startTime>2023-10-28T00:00:00</startTime>
+    <maximumTime>2023-10-28T00:02:00</maximumTime>
   </Call>
   <Call>
     <id>2</id>
     <detail>Emergency call</detail>
-    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
-    <latitude>31.7750888</latitude>
-    <longitude>35.218195</longitude>
-    <callType>lunch</callType>
-    <startTime>2023-12-18T00:00:00</startTime>
-    <maximumTime>2023-12-18T00:24:00</maximumTime>
+    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
+    <latitude>31.7797312</latitude>
+    <longitude>35.2179737</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2024-08-09T00:00:00</startTime>
+    <maximumTime>2024-08-09T00:01:00</maximumTime>
   </Call>
   <Call>
     <id>3</id>
     <detail>Routine check-in</detail>
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
+    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
+    <latitude>31.7797312</latitude>
+    <longitude>35.2179737</longitude>
     <callType>medicalEquipment</callType>
-    <startTime>2023-05-06T00:00:00</startTime>
-    <maximumTime>2023-05-06T00:33:00</maximumTime>
+    <startTime>2024-08-11T00:00:00</startTime>
+    <maximumTime>2024-08-11T00:47:00</maximumTime>
   </Call>
   <Call>
     <id>4</id>
     <detail>Follow-up call</detail>
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2024-07-24T00:00:00</startTime>
-    <maximumTime>2024-07-24T00:52:00</maximumTime>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <callType>lunch</callType>
+    <startTime>2023-12-23T00:00:00</startTime>
+    <maximumTime>2023-12-23T00:09:00</maximumTime>
   </Call>
   <Call>
     <id>5</id>
     <detail>Service request</detail>
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2024-09-02T00:00:00</startTime>
-    <maximumTime>2024-09-02T00:50:00</maximumTime>
+    <adress>25 Yaffo Rd, Jerusalem, Israel</adress>
+    <latitude>31.7805362</latitude>
+    <longitude>35.2217499</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2024-11-29T00:00:00</startTime>
+    <maximumTime>2024-11-29T00:52:00</maximumTime>
   </Call>
   <Call>
     <id>6</id>
     <detail>Technical support</detail>
-    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
-    <latitude>31.779519</latitude>
-    <longitude>35.2144685</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2023-12-19T00:00:00</startTime>
-    <maximumTime>2023-12-19T00:49:00</maximumTime>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
+    <callType>lunch</callType>
+    <startTime>2023-11-03T00:00:00</startTime>
+    <maximumTime>2023-11-03T00:04:00</maximumTime>
   </Call>
   <Call>
     <id>7</id>
     <detail>Customer inquiry</detail>
-    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
-    <latitude>31.7807877</latitude>
-    <longitude>35.2147251</longitude>
+    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
+    <latitude>31.7797312</latitude>
+    <longitude>35.2179737</longitude>
     <callType>Breakfast</callType>
-    <startTime>2023-10-18T00:00:00</startTime>
-    <maximumTime>2023-10-18T00:21:00</maximumTime>
+    <startTime>2024-06-27T00:00:00</startTime>
+    <maximumTime>2024-06-27T00:37:00</maximumTime>
   </Call>
   <Call>
     <id>8</id>
     <detail>Appointment reminder</detail>
-    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
-    <latitude>31.779519</latitude>
-    <longitude>35.2144685</longitude>
+    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
+    <latitude>31.7750888</latitude>
+    <longitude>35.218195</longitude>
     <callType>militaryEquipment</callType>
-    <startTime>2023-11-23T00:00:00</startTime>
-    <maximumTime>2023-11-23T00:06:00</maximumTime>
+    <startTime>2023-04-19T00:00:00</startTime>
+    <maximumTime>2023-04-19T00:20:00</maximumTime>
   </Call>
   <Call>
     <id>9</id>
     <detail>Complaint report</detail>
-    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
-    <latitude>31.7681613</latitude>
-    <longitude>35.2127055</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2023-04-22T00:00:00</startTime>
-    <maximumTime>2023-04-22T00:42:00</maximumTime>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <callType>dinner</callType>
+    <startTime>2023-12-07T00:00:00</startTime>
+    <maximumTime>2023-12-07T00:18:00</maximumTime>
   </Call>
   <Call>
     <id>10</id>
     <detail>Survey feedback</detail>
-    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
-    <latitude>31.7807877</latitude>
-    <longitude>35.2147251</longitude>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
     <callType>madication</callType>
-    <startTime>2024-04-29T00:00:00</startTime>
-    <maximumTime>2024-04-29T00:41:00</maximumTime>
-  </Call>
-  <Call>
-    <id>11</id>
-    <detail>plkfodjihjy</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-22T12:58:06.8613887+02:00</startTime>
-    <maximumTime>2025-01-24T12:58:06</maximumTime>
+    <startTime>2024-08-21T00:00:00</startTime>
+    <maximumTime>2024-08-21T00:56:00</maximumTime>
   </Call>
 </ArrayOfCall>

@@ -2,42 +2,34 @@
 <ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Assignment>
     <id>1</id>
-    <callId>10</callId>
-    <volunteerId>986123875</volunteerId>
-    <startTime>2024-04-29T00:21:00</startTime>
-    <finishTime>2024-04-29T18:21:00</finishTime>
-    <assignKind>handeled</assignKind>
+    <callId>2</callId>
+    <volunteerId>917150507</volunteerId>
+    <startTime>2024-08-08T23:41:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>2</id>
-    <callId>11</callId>
-    <volunteerId>952259714</volunteerId>
-    <startTime>2025-01-22T13:00:31.6659798+02:00</startTime>
-    <finishTime xsi:nil="true" />
+    <callId>5</callId>
+    <volunteerId>389653485</volunteerId>
+    <startTime>2024-11-29T00:32:00</startTime>
+    <finishTime>2024-11-29T12:32:00</finishTime>
     <assignKind>handeled</assignKind>
   </Assignment>
   <Assignment>
-    <id>7</id>
-    <callId>12</callId>
-    <volunteerId>0</volunteerId>
-    <startTime>2025-01-22T11:49:09.4876342+02:00</startTime>
+    <id>3</id>
+    <callId>7</callId>
+    <volunteerId>163566693</volunteerId>
+    <startTime>2024-06-27T00:17:00</startTime>
     <finishTime xsi:nil="true" />
-    <assignKind>handeled</assignKind>
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
-    <Assignment>
+  <Assignment>
     <id>4</id>
-    <callId>11</callId>
-    <volunteerId>455707906</volunteerId>
-    <startTime>2025-01-22T11:36:22.292652+02:00</startTime>
+    <callId>10</callId>
+    <volunteerId>917150507</volunteerId>
+    <startTime>2024-08-21T00:36:00</startTime>
     <finishTime xsi:nil="true" />
-    <assignKind>handeled</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>5</id>
-    <callId>1</callId>
-    <volunteerId>173979562</volunteerId>
-    <startTime>2025-01-22T12:25:15.82322+02:00</startTime>
-    <finishTime xsi:nil="true" />
-    <assignKind>handeled</assignKind>
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
 </ArrayOfAssignment>
