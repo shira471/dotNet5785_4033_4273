@@ -136,10 +136,6 @@ namespace PL.Volunteer
             }
         }
 
-<<<<<<< HEAD
-  
-=======
-   
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
@@ -152,7 +148,6 @@ namespace PL.Volunteer
             myHistoryWindow.ShowDialog();
             LoadCallDetails();
         }
->>>>>>> 5a55c24a522e27eae870fc98980ccd408df9ccc7
 
         private void CancellationCall_Click(object sender, RoutedEventArgs e)
         {

@@ -72,30 +72,6 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="End call" 
-                    Width="100" 
-                    Height="30" 
-                    Background="LightSkyBlue" 
-                    Foreground="DarkBlue" 
-                    FontWeight="Bold" 
-                    Margin="5" 
-                    Click="FinishCall_Click" />
-            <!--<Button Content="Select call" 
-                    Width="100" 
-                    Height="30" 
-                    Background="LightSkyBlue" 
-                    Foreground="DarkBlue" 
-                    FontWeight="Bold" 
-                    Margin="5" 
-                    Click="SelectCall_Click" />-->
-            <Button Content="Cancel call" 
-                    Width="100" 
-                    Height="30" 
-                    Background="LightSkyBlue" 
-                    Foreground="DarkBlue" 
-                    FontWeight="Bold" 
-                    Margin="5" 
-                    Click="btnCanceled_Click" />
             <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
         </StackPanel>
     </Grid>

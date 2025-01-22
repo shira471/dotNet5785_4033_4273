@@ -32,6 +32,10 @@
                 <TextBox Width="200" Text="{Binding CurrentVolunteer.Email}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Address:" Width="150" />
+                <TextBox Width="200" Text="{Binding CurrentVolunteer.Address}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
                 <Label Content="Active:" Width="150" />
                 <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" VerticalAlignment="Center"
                           Checked="ActiveCheckBox_Checked" Unchecked="ActiveCheckBox_Unchecked" />

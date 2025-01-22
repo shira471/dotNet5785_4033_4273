@@ -40,6 +40,7 @@ public enum SortField
 /// </summary>
 public enum CallType
 {
+    none,
     Breakfast,            // חמל לארוחת בוקר
     lunch,                // חמל לארוחת צהריים
     dinner,               // חמל לארוחת ערב
@@ -84,6 +85,7 @@ public enum Status
 /// </summary>
 public enum TheKindOfCall
 {
+    none,
     Breakfast,            // חמל לארוחת בוקר
     lunch,                // חמל לארוחת צהריים
     dinner,               // חמל לארוחת ערב

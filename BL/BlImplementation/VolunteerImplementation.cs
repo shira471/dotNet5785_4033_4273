@@ -158,7 +158,6 @@ public class VolunteerImplementation : IVolunteer
                 CurrentCallId = _dal.assignment.ReadAll()
                 .Count(a =>
                     a.volunteerId == v.idVol &&
-                    a.finishTime == null &&
                     a.assignKind != DO.Hamal.cancelByManager && // לא בוטל על ידי מנהל
                     a.assignKind != DO.Hamal.cancelByVolunteer // לא בוטל על ידי מתנדב
                 )
