@@ -245,6 +245,21 @@ public class CallImplementation : ICall
                 // אם יש זמן התחלה אך עדיין לא הסתיימה
                 status = Status.inProgres;
             }
+            else if (call.startTime.HasValue)
+            {
+                // אם יש זמן התחלה אך עדיין לא הסתיימה
+                status = Status.expired;
+            }
+            else if (call.startTime.HasValue)
+            {
+                // אם יש זמן התחלה אך עדיין לא הסתיימה
+                status = Status.openInRisk;
+            }
+            else if (call.startTime.HasValue)
+            {
+                // אם יש זמן התחלה אך עדיין לא הסתיימה
+                status = Status.closeInRisk;
+            }
             else
             {
                 // אחרת, הקריאה ממתינה לטיפול
@@ -508,7 +523,7 @@ public class CallImplementation : ICall
             .GroupBy(a => a.callId)
             .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
         AdminImplementation admin = new();
-        
+
         // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
                               join assign in latestAssignments on call.id equals assign?.callId into callGroup
@@ -559,6 +574,86 @@ public class CallImplementation : ICall
 
         return callAssignments;
     }
+    //public IEnumerable<CallInList> GetCallsList(CallField? filterField=0, object? filterValue=null, CallField? sortField=0)
+    //{
+    //    // טוען את כל הקריאות וההקצאות משכבת ה-DAL
+    //    var calls = _dal.call.ReadAll();
+    //    var assignments = _dal.assignment.ReadAll();
+
+    //    // מציאת ההקצאה האחרונה לכל קריאה
+    //    var latestAssignments = assignments
+    //        .GroupBy(a => a.callId)
+    //        .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
+    //    AdminImplementation admin = new();
+
+    //    // מיזוג נתוני הקריאות עם ההקצאות
+    //    var callAssignments = from call in calls
+    //                          join assign in latestAssignments on call.id equals assign?.callId into callGroup
+    //                          from assign in callGroup.DefaultIfEmpty()
+    //                          select new CallInList
+    //                          {
+    //                              CallId = call.id,
+    //                              CallType = (CallType)(call.callType ?? 0),
+    //                              OpenTime = call.startTime ?? DateTime.MinValue,
+    //                              TimeRemaining = call.maximumTime.HasValue
+    //                                  ? call.maximumTime.Value - DateTime.Now
+    //                                  : (TimeSpan?)null,
+    //                              LastVolunteerName = assign?.volunteerId != null
+    //                                  ? _dal.volunteer.Read(assign.volunteerId)?.name
+    //                                  : null,
+    //                              CompletionTime = assign?.finishTime != null
+    //                                  ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
+    //                                  : null,
+    //                              TotalAssignments = assignments.Count(a => a.callId == call.id),
+    //                              Status = UpdateStatus(ConvertToBOCall(call), admin.GetRiskTimeSpan())
+    //                          };
+
+    //    // סינון הקריאות לפי שדה וערך (אם נבחרו)
+    //    if (filterField != null && filterValue != null)
+    //    {
+    //        callAssignments = filterField switch
+    //        {
+    //            CallField.Status when filterValue is Status statusValue =>
+    //                callAssignments.Where(c => c.Status == statusValue),
+    //            CallField.AssignedTo when filterValue is string volunteerName =>
+    //                callAssignments.Where(c => c.LastVolunteerName != null &&
+    //                                           c.LastVolunteerName.Contains(volunteerName, StringComparison.OrdinalIgnoreCase)),
+    //            //CallField.Priority when filterValue is int priorityValue =>
+    //            //    callAssignments.Where(c => c.Priority == priorityValue),
+    //            _ => callAssignments // אם לא נמצא פילטר תואם, החזר את הרשימה כמות שהיא
+    //        };
+    //    }
+    //    if (filterField != null && filterValue != null)
+    //    {
+    //        callAssignments = filterField switch
+    //        {
+    //            CallField.Status => callAssignments.Where(c => c.Status == (Status)filterValue),
+    //            CallField.AssignedTo => callAssignments.Where(c => !string.IsNullOrEmpty(c.LastVolunteerName)), // מציג רק קריאות שהושמו
+    //            _ => callAssignments
+    //        };
+
+    //        // מיון הקריאות לפי שדה שנבחר
+    //        if (sortField != null)
+    //        {
+    //            callAssignments = sortField switch
+    //            {
+    //                CallField.Status => callAssignments.OrderBy(c => c.Status),
+    //                CallField.AssignedTo => callAssignments.OrderBy(c => c.LastVolunteerName),
+    //                //CallField.Priority => callAssignments.OrderBy(c => c.Priority),
+    //                _ => callAssignments.OrderBy(c => c.CallId)
+    //            };
+    //        }
+
+    //        else
+    //        {
+    //            callAssignments = callAssignments.OrderBy(c => c.CallId);
+    //        }
+
+    //        return callAssignments;
+
+    //    }
+    //}
+
     public Status UpdateStatus(Call call, TimeSpan riskTime)
     {
         

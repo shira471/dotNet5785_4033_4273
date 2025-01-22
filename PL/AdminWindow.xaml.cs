@@ -184,10 +184,13 @@ namespace PL.Volunteer
         private void btnCallStatus_Click(object sender, RoutedEventArgs e)
         {
             int[] temp = s_bl.Call.GetCallCountsByStatus();
-            int openCalls = temp[0];
-            int closeCalls = temp[1];
+            int openCalls = temp[4];
+            int closeCalls = temp[3];
             int inProgressCalls = temp[2];
-            string message = $"Open calls: {openCalls}\nClose calls: {closeCalls}\nCalls in progress: {inProgressCalls}";
+            int openInRiskCalls=temp[0];
+            int expiredCalls=temp[1];
+            int closeInRiskCalls=temp[5];
+            string message = $"Open calls: {openCalls}\nClose calls: {closeCalls}\nCalls in progress: {inProgressCalls}\nOpen in risk calls: {openInRiskCalls}\nClose in risk calls: {closeInRiskCalls}\nExpired Calls: {expiredCalls}";
             MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
