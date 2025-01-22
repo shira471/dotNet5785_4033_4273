@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-<<<<<<< HEAD
   <NextAssignmentId>3</NextAssignmentId>
   <NextAssignmentId>4</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
@@ -10,9 +9,7 @@
   <!-- מזהה רץ למתנדב הבא -->
   <Clock>22/01/2025 12:44:48</Clock>
   <NextAssignmentId>5</NextAssignmentId>
-=======
   <NextAssignmentId>6</NextAssignmentId>
->>>>>>> 0f0531e9fd4cf56a7f8f4d7543adb99a0e7d280e
   <NextAssignmentId>4</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
   <NextCallId>12</NextCallId>

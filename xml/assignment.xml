@@ -16,8 +16,6 @@
     <finishTime xsi:nil="true" />
     <assignKind>handeled</assignKind>
   </Assignment>
-<<<<<<< HEAD
-=======
   <Assignment>
     <id>7</id>
     <callId>12</callId>
@@ -26,7 +24,7 @@
     <finishTime xsi:nil="true" />
     <assignKind>handeled</assignKind>
   </Assignment>
-=======
+    <Assignment>
     <id>4</id>
     <callId>11</callId>
     <volunteerId>455707906</volunteerId>
@@ -42,5 +40,4 @@
     <finishTime xsi:nil="true" />
     <assignKind>handeled</assignKind>
   </Assignment>
->>>>>>> 0f0531e9fd4cf56a7f8f4d7543adb99a0e7d280e
 </ArrayOfAssignment>

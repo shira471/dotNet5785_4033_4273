@@ -33,19 +33,16 @@
     <adress>14 Agron St, Jerusalem, Israel</adress>
     <name>Avigail barmi</name>
     <email>avigail.barmi@gmail.com</email>
-<<<<<<< HEAD
     <phoneNumber>0548325024</phoneNumber>
     <password>tDaaInT</password>
     <latitude>31.7760473</latitude>
     <longitude>35.2193304</longitude>
     <limitDestenation>29.79</limitDestenation>
-=======
     <phoneNumber>0587225533</phoneNumber>
     <password>iGHUJYUE2</password>
     <latitude>31.7836688</latitude>
     <longitude>35.2188743</longitude>
     <limitDestenation>14.08</limitDestenation>
-=======
     <idVol>455707906</idVol>
     <adress>7 Zion Sq, Jerusalem, Israel</adress>
     <name>Avigail barmi</name>
@@ -55,16 +52,12 @@
     <latitude>31.77298219999999</latitude>
     <longitude>35.2302499</longitude>
     <limitDestenation>19.5</limitDestenation>
->>>>>>> 0f0531e9fd4cf56a7f8f4d7543adb99a0e7d280e
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-<<<<<<< HEAD
     <idVol>845878980</idVol>
-=======
-<<<<<<< HEAD
     <idVol>954903446</idVol>
     <adress>5 Yaffo Rd, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
@@ -74,7 +67,6 @@
     <latitude>31.7765193</latitude>
     <longitude>35.2266923</longitude>
     <limitDestenation>41.62</limitDestenation>
-=======
     <idVol>376002372</idVol>
     <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
@@ -98,13 +90,11 @@
     <latitude>31.779519</latitude>
     <longitude>35.2144685</longitude>
     <limitDestenation>47.06</limitDestenation>
->>>>>>> c84dcb7de050db0682e47b6f35f66d201e5f2fe7
     <isActive>false</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-<<<<<<< HEAD
     <idVol>150279359</idVol>
     <adress>28 Emek Refaim St, Jerusalem, Israel</adress>
     <name>Soll Atall</name>
@@ -176,7 +166,6 @@
   </Volunteer>
   <Volunteer>
     <idVol>325125873</idVol>
->>>>>>> 0f0531e9fd4cf56a7f8f4d7543adb99a0e7d280e
     <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
     <email>namma.koufman@gmail.com</email>

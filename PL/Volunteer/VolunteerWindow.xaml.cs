@@ -10,95 +10,97 @@ using System.Windows.Controls;
 
 namespace PL.Volunteer
 {
+    /// <summary>
+    /// חלון לניהול פרטי מתנדב הכולל אפשרויות לעריכת פרטי המתנדב,
+    /// הצגת שיחות פעילות, סיום שיחות, ביטול שיחות והיסטוריית השיחות.
+    /// </summary>
     public partial class VolunteerWindow : Window, INotifyPropertyChanged
     {
-        // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
+        // האם המתנדב פעיל? מוגדר לפי המצב הנוכחי של המתנדב (או ברירת מחדל true אם המתנדב לא נטען).
         public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? true;
+
+        // המתנדב הנוכחי המוצג בחלון.
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
             set { SetValue(CurrentVolunteerProperty, value); }
         }
+
+        // פרטי השיחה הפעילה הנוכחית.
         public string? CallDetails { get; set; }
-        // Property to check if a call is active
+
+        // האם יש שיחה פעילה? (נבדק לפי תוכן CallDetails).
         public bool IsCallActive => !string.IsNullOrEmpty(CallDetails) && CallDetails != "No active call.";
 
+        // רישום CurrentVolunteer כ-DependencyProperty כדי לאפשר Binding.
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
-        public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
+        // אפשרויות סוגי מרחק (נטען מתוך enum).
+        public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } =
+            new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
+        // ממשק השירות לניהול לוגיקה עסקית.
         private readonly BlApi.IBl s_bl;
-        //public bool IsEditing
-        //{
-        //    get { return (bool)GetValue(IsEditingProperty); }
-        //    set { SetValue(IsEditingProperty, value); }
-        //}
 
-        //public static readonly DependencyProperty IsEditingProperty =
-        //    DependencyProperty.Register("IsEditing", typeof(bool), typeof(VolunteerWindow), new PropertyMetadata(false));
-
+        /// <summary>
+        /// קונסטרקטור - טוען נתוני מתנדב על פי מזהה (אם סופק).
+        /// </summary>
+        /// <param name="id">מזהה המתנדב.</param>
         public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
             try
             {
-                s_bl = BlApi.Factory.Get(); // Factory pattern for BL
-            DataContext = this;
-            LoadVolunteer(id);
-            LoadCallDetails();
-                LoadCallDetails();
+                s_bl = BlApi.Factory.Get(); // שימוש ב-Factory ליצירת אובייקט ה-BL.
+                DataContext = this;
+                LoadVolunteer(id); // טעינת פרטי המתנדב.
+                LoadCallDetails(); // טעינת פרטי השיחה הפעילה (אם קיימת).
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void LoudVolunteerWindow(string? id=null) 
-        {
-            try
-            {
-                DataContext = this;
-                LoadVolunteer(id);
-                LoadCallDetails();
-            }
-            catch(Exception ex) 
-            {
-                MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+
+        /// <summary>
+        /// טוען את פרטי המתנדב לפי מזהה שסופק.
+        /// </summary>
         private void LoadVolunteer(string volunteerId)
         {
             try
             {
                 CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(int.Parse(volunteerId));
-                OnPropertyChanged(nameof(CurrentVolunteer));
+                OnPropertyChanged(nameof(CurrentVolunteer)); // עדכון נתונים ב-UI.
                 OnPropertyChanged(nameof(IsVolunteerActive));
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading volunteer details: {ex.Message}");
-                Close();
+                Close(); // סוגר את החלון אם יש שגיאה.
             }
         }
-        //private void EnableEditing_Click(object sender, RoutedEventArgs e)
-        //{
-        //    IsEditing = true;
-        //}
+
+        /// <summary>
+        /// פעולה המונעת שינוי למצב "לא פעיל" אם קיימת שיחה פעילה.
+        /// </summary>
         private void ActiveCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            // אם יש קריאה פעילה, לא לאפשר שינוי למצב "לא פעיל"
             if (IsCallActive)
             {
                 MessageBox.Show("Cannot deactivate a volunteer with an active call.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-                // ביטול שינוי המצב ב-CheckBox
+                // אם המשתמש ניסה לבטל את ה-CheckBox, מחזירים אותו למצב פעיל.
                 if (sender is CheckBox checkBox)
                 {
-                    checkBox.IsChecked = true; // להחזיר את ה-CheckBox למצב פעיל
+                    checkBox.IsChecked = true;
                 }
             }
         }
+
+        /// <summary>
+        /// שומר את השינויים שבוצעו בפרטי המתנדב.
+        /// </summary>
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             if (IsCallActive && !CurrentVolunteer.IsActive)
@@ -111,13 +113,9 @@ namespace PL.Volunteer
 
             try
             {
-                // שמירה במערכת ה-BL
-                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
-
+                s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer); // שמירה במערכת.
                 MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
                 OnPropertyChanged(nameof(IsVolunteerActive));
-                string volId = CurrentVolunteer.Id.ToString();
-                LoudVolunteerWindow(volId);
             }
             catch (Exception ex)
             {
@@ -125,6 +123,9 @@ namespace PL.Volunteer
             }
         }
 
+        /// <summary>
+        /// מסמן שיחה פעילה כסגורה.
+        /// </summary>
         private void FinishCall_Click(object sender, RoutedEventArgs e)
         {
             if (IsCallActive)
@@ -132,9 +133,9 @@ namespace PL.Volunteer
                 try
                 {
                     var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, callId);
+                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, callId); // סגירת השיחה.
                     MessageBox.Show("The call was marked as closed.");
-                    LoadCallDetails();
+                    LoadCallDetails(); // עדכון נתוני השיחות.
                 }
                 catch (Exception ex)
                 {
@@ -147,40 +148,9 @@ namespace PL.Volunteer
             }
         }
 
-        private void CancellationCall_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsCallActive)
-            {
-                try
-                {
-                    var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId);
-                    MessageBox.Show("The call was marked as cancelled.");
-                    LoadCallDetails();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error ccancelled the call: {ex.Message}");
-                }
-            }
-            else
-            {
-                MessageBox.Show("No active call to cancelled.");
-            }
-        }
-        private void SelectCall_Click(object sender, RoutedEventArgs e)
-        {
-            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
-            LoadCallDetails();
-        }
-        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
-        {
-            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
-            LoadCallDetails();
-        }
-
+        /// <summary>
+        /// טוען פרטי השיחה הפעילה של המתנדב.
+        /// </summary>
         private void LoadCallDetails()
         {
             try
@@ -204,26 +174,16 @@ namespace PL.Volunteer
                 MessageBox.Show($"Error loading call details: {ex.Message}");
             }
         }
-            public event PropertyChangedEventHandler? PropertyChanged;
 
-             protected void OnPropertyChanged(string propertyName)
-             {
-              PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-             }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void ActiveCheckBox_Checked(object sender, RoutedEventArgs e) { }
-
-        private void ActiveCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// מתריע על שינוי בפרופרטי.
+        /// </summary>
+        /// <param name="propertyName">שם הפרופרטי.</param>
+        protected void OnPropertyChanged(string propertyName)
         {
-            if (IsCallActive)
-            {
-                MessageBox.Show("Cannot deactivate a volunteer with an active call.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                if (sender is CheckBox checkBox)
-                {
-                    checkBox.IsChecked = true;
-                }
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-  }
-
+}

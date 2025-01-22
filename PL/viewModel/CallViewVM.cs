@@ -71,7 +71,7 @@ public class CallViewVM : ViewModelBase
         Calls.Clear();
         try
         {
-            var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterValue, SelectedSortField) ?? Enumerable.Empty<BO.CallInList>();
+            var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterField, SelectedSortField) ?? Enumerable.Empty<BO.CallInList>();
             foreach (var call in calls)
             {
                 Calls.Add(call);
