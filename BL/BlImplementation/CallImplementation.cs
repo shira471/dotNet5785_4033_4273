@@ -70,13 +70,20 @@ public class CallImplementation : ICall
         // שליפת המתנדב ממאגר הנתונים
         var volunteer = _dal.volunteer.Read(volunteerId) ??
             throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+        // בדיקה אם המתנדב כבר ביטל את הקריאה בעבר
+        var volunteerCancelledAssignment = _dal.assignment.ReadAll()
+            .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
 
-        // בדיקה אם הקריאה כבר מוקצית למתנדב אחר במצב "בטיפול" או "הושלם"
+        if (volunteerCancelledAssignment != null)
+        {
+            throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
+        }
+
+
         var existingAssignment = _dal.assignment.ReadAll()
-            .FirstOrDefault(a => a.callId == callId &&
-                                 a.assignKind != DO.Hamal.cancelByManager && // התעלם משיוך שבוטל ע"י מנהל
-                                 !(a.assignKind == DO.Hamal.cancelByVolunteer && a.volunteerId != volunteerId) && // התעלם משיוך שבוטל ע"י מתנדב אחר
-                                 (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+       .FirstOrDefault(a => a.callId == callId &&
+                            a.assignKind != DO.Hamal.cancelByManager &&
+                            (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
 
         if (existingAssignment != null)
         {
@@ -379,7 +386,7 @@ public class CallImplementation : ICall
             {
                 CallField.Status => closedCalls.OrderBy(c => c.OpenTime), // מיון לפי זמן פתיחה
                 CallField.AssignedTo => closedCalls.OrderBy(c => c.AssignmentStartTime), // מיון לפי זמן התחלה
-                //CallField.Priority => closedCalls.OrderBy(c => c.ActualEndTime), // מיון לפי זמן סיום
+              //  CallField.Priority => closedCalls.OrderBy(c => c.ActualEndTime), // מיון לפי זמן סיום
                 _ => closedCalls // ללא מיון אם השדה אינו נתמך
             };
         }
@@ -404,22 +411,22 @@ public class CallImplementation : ICall
         }
         // יצירת רשימת קריאות פתוחות
         var openCalls = from call in calls
-                        let assignments = _dal.assignment.ReadAll().Where(assign => assign.callId == call.id)
-                        let activeAssignment = assignments.FirstOrDefault(assign => assign.finishTime == null) // שיוך פעיל
+                        let assignments = _dal.assignment.ReadAll().Where(a => a.callId == call.id)
                         where
-                            activeAssignment == null || // קריאה ללא שיוך פעיל
-                            assignments.Any(a => a.assignKind == DO.Hamal.cancelByManager || a.assignKind == DO.Hamal.cancelByVolunteer) // קריאות שבוטלו
+                            !assignments.Any() || // אין שיוכים כלל
+                            assignments.All(a =>
+                                a.assignKind == DO.Hamal.cancelByManager ||
+                                a.assignKind == DO.Hamal.cancelByVolunteer) // כל השיוכים מבוטלים
                         select new OpenCallInList
                         {
                             Id = call.id,
-                            Tkoc = (TheKindOfCall)(call.callType ?? 0), // המרת Enum
+                            Tkoc = (TheKindOfCall)(call.callType ?? 0),
                             Description = call.detail,
                             Address = call.adress,
                             OpenTime = call.startTime ?? DateTime.MinValue,
                             MaxEndTime = call.maximumTime,
                             DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude)
                         };
-
 
         // סינון לפי סוג הקריאה אם צוין
         if (callType != null)

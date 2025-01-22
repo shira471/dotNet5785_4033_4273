@@ -136,7 +136,23 @@ namespace PL.Volunteer
             }
         }
 
+<<<<<<< HEAD
   
+=======
+   
+        private void SelectCall_Click(object sender, RoutedEventArgs e)
+        {
+            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+            selectCallWindow.ShowDialog();
+            LoadCallDetails();
+        }
+        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
+            myHistoryWindow.ShowDialog();
+            LoadCallDetails();
+        }
+>>>>>>> 5a55c24a522e27eae870fc98980ccd408df9ccc7
 
         private void CancellationCall_Click(object sender, RoutedEventArgs e)
         {
@@ -159,18 +175,7 @@ namespace PL.Volunteer
                 MessageBox.Show("No active call to cancelled.");
             }
         }
-        private void SelectCall_Click(object sender, RoutedEventArgs e)
-        {
-            var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
-            LoadCallDetails();
-        }
-        private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
-        {
-            var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
-            LoadCallDetails();
-        }
+       
 
         /// <summary>
         /// טוען פרטי השיחה הפעילה של המתנדב.
