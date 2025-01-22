@@ -4,19 +4,24 @@ using System.Windows;
 using BO;
 using BlApi;
 using PL.Calls;
+using System.ComponentModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Windows.Controls;
 
 namespace PL.Volunteer
 {
-    public partial class VolunteerWindow : Window
+    public partial class VolunteerWindow : Window, INotifyPropertyChanged
     {
         // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
-
+        public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? false;
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
             set { SetValue(CurrentVolunteerProperty, value); }
         }
         public string? CallDetails { get; set; }
+        // Property to check if a call is active
+        public bool IsCallActive => !string.IsNullOrEmpty(CallDetails) && CallDetails != "No active call.";
 
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
@@ -36,18 +41,38 @@ namespace PL.Volunteer
         public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
-
-            s_bl = BlApi.Factory.Get(); // Factory pattern for BL
+            try
+            {
+                s_bl = BlApi.Factory.Get(); // Factory pattern for BL
             DataContext = this;
             LoadVolunteer(id);
             LoadCallDetails();
+                LoadCallDetails();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
+        private void LoudVolunteerWindow(string? id=null) 
+        {
+            try
+            {
+                DataContext = this;
+                LoadVolunteer(id);
+                LoadCallDetails();
+            }
+            catch(Exception ex) 
+            {
+                MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void LoadVolunteer(string volunteerId)
         {
             try
             {
                 CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(int.Parse(volunteerId));
+                OnPropertyChanged(nameof(IsVolunteerActive));
             }
             catch (Exception ex)
             {
@@ -59,7 +84,20 @@ namespace PL.Volunteer
         //{
         //    IsEditing = true;
         //}
+        private void ActiveCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            // אם יש קריאה פעילה, לא לאפשר שינוי למצב "לא פעיל"
+            if (IsCallActive)
+            {
+                MessageBox.Show("Cannot deactivate a volunteer with an active call.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
 
+                // ביטול שינוי המצב ב-CheckBox
+                if (sender is CheckBox checkBox)
+                {
+                    checkBox.IsChecked = true; // להחזיר את ה-CheckBox למצב פעיל
+                }
+            }
+        }
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -68,15 +106,9 @@ namespace PL.Volunteer
                 s_bl.Volunteer.UpdateVolunteer(CurrentVolunteer.Id, CurrentVolunteer);
 
                 MessageBox.Show("Volunteer details updated successfully.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                //// Disable editing after saving
-                //IsEditing = true;
-
-                // ביטול עריכה לאחר שמירה
-                //IsEditing = false;
-
-                // ביטול עריכה לאחר שמירה
-                // IsEditing = false;
+                OnPropertyChanged(nameof(IsVolunteerActive));
+                string volId = CurrentVolunteer.Id.ToString();
+                LoudVolunteerWindow(volId);
             }
             catch (Exception ex)
             {
@@ -86,26 +118,47 @@ namespace PL.Volunteer
 
         private void FinishCall_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentVolunteer?.Id != null)
+            if (IsCallActive)
             {
                 try
                 {
-                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, int.Parse(CallDetails));
+                    var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
+                    s_bl.Call.CloseCallAssignment(CurrentVolunteer.Id, callId);
                     MessageBox.Show("The call was marked as closed.");
                     LoadCallDetails();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Error closing the call. Please try again.");
+                    MessageBox.Show($"Error closing the call: {ex.Message}");
                 }
             }
             else
             {
-                MessageBox.Show("No ongoing call to finish.");
+                MessageBox.Show("No active call to finish.");
             }
         }
 
-
+        private void CancellationCall_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsCallActive)
+            {
+                try
+                {
+                    var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
+                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId);
+                    MessageBox.Show("The call was marked as cancelled.");
+                    LoadCallDetails();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error ccancelled the call: {ex.Message}");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No active call to cancelled.");
+            }
+        }
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
@@ -121,7 +174,33 @@ namespace PL.Volunteer
 
         private void LoadCallDetails()
         {
-            var VolunteerCalls = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
+            try
+            {
+                var call = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
+                if (call != null)
+                {
+                    CallDetails = $"ID: {call.Id}\nDescription: {call.Description}\nAddrees: {call.Address}";
+                }
+                else
+                {
+                    CallDetails = "No active call.";
+                }
+
+                OnPropertyChanged(nameof(CallDetails));
+                OnPropertyChanged(nameof(IsCallActive));
+            }
+            catch (Exception ex)
+            {
+                CallDetails = "Error loading call details.";
+                MessageBox.Show($"Error loading call details: {ex.Message}");
+            }
         }
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+             protected void OnPropertyChanged(string propertyName)
+             {
+              PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+             }
     }
-}
+  }
+
