@@ -784,7 +784,7 @@ CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
         // שליפת השיוך הפעיל של המתנדב
         var activeAssignment = _dal.assignment.ReadAll()
-            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
+            .FirstOrDefault(a => a.volunteerId == volunteerId && a.finishTime==null&&a.assignKind==DO.Hamal.inTreatment);
 
         if (activeAssignment == null)
         {

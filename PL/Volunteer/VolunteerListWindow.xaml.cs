@@ -195,15 +195,22 @@ public partial class VolunteerListWindow : Window
                     var volunteerDetails = s_bl.Call.GetActiveAssignmentForVolunteer(selectedVolunteer.Id); // Get volunteer details from BL
 
                     // Construct a string with the volunteer's details
-                    string details = $"Assingment ID: {volunteerDetails.Id}\n" +
-                                 $"Call ID:{volunteerDetails.CallId}\n" +
-                                 $"Description: {volunteerDetails.Description}\n" +
-                                 $"Address: {volunteerDetails.FullAddress}\n" +
-                                 $"Entery time: {volunteerDetails.EntryTime}\n" +
-                                 $"Distance from volunteer: {volunteerDetails.DistanceFromVolunteer};";
+                    if (volunteerDetails != null)
+                    {
+                        string details = $"Assingment ID: {volunteerDetails.Id}\n" +
+                                     $"Call ID:{volunteerDetails.CallId}\n" +
+                                     $"Description: {volunteerDetails.Description}\n" +
+                                     $"Address: {volunteerDetails.FullAddress}\n" +
+                                     $"Entery time: {volunteerDetails.EntryTime}\n" +
+                                     $"Distance from volunteer: {volunteerDetails.DistanceFromVolunteer};";
 
-                    // Display the details in a message box
-                    MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Display the details in a message box
+                        MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"no ongoing call: ", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 catch (Exception ex)
                 {
