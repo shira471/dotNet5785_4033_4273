@@ -263,34 +263,22 @@ public class CallImplementation : ICall
     }
     public int[] GetCallCountsByStatus()
     {
-        // רשימת כל הקריאות
-        var calls = _dal.call.ReadAll(); // קריאה לשכבת ה-DAL לקבלת הקריאות
+        // טוען את כל הקריאות וההקצאות משכבת ה-DAL
+        var calls = _dal.call.ReadAll();
+        var assignments = _dal.assignment.ReadAll();
 
-        // שליפת כל ההקצאות מראש ומציאת ההקצאה האחרונה לפי ה-Id
-        var assignments = _dal.assignment.ReadAll()
-            .GroupBy(a => a.callId) // קיבוץ ההקצאות לפי מזהה הקריאה
-            .ToDictionary(
-                g => g.Key,
-                g => g.OrderByDescending(a => a.id).FirstOrDefault() // בחירת ההקצאה עם ה-Id הגבוה ביותר
-            );
+        // שליפת סטטוסים לכל קריאה
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
 
-        // מעבר על כל הקריאות וספירה לפי סטטוס
-        foreach (var call in calls)
+        foreach (var status in statuses.Values)
         {
-            // מציאת ההקצאה האחרונה לקריאה הנוכחית לפי ה-Id
-            var assignment = assignments.TryGetValue(call.id, out var assign) ? assign : null;
-
-            // שימוש במתודה DetermineStatus כדי לקבוע את הסטטוס
-            Status status = DetermineStatus(call, assignment, TimeSpan.FromHours(1));
-
-            // הגדלת הספירה עבור הסטטוס המתאים
             statusCounts[(int)status]++;
         }
 
-        return statusCounts; // החזרת המערך
+        return statusCounts;
     }
 
     public Call GetCallDetails(string calld)
@@ -524,17 +512,22 @@ public class CallImplementation : ICall
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
 
+        // שליפת סטטוסים לכל קריאה
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+
         // מציאת ההקצאה האחרונה לכל קריאה לפי ה-Id של ההקצאה
         var latestAssignments = assignments
             .GroupBy(a => a.callId) // קיבוץ ההקצאות לפי מזהה הקריאה
-            .Select(g => g.OrderByDescending(a => a.id).FirstOrDefault()); // בחירת ההקצאה עם ה-Id הגבוה ביותר
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(a => a.id).FirstOrDefault()
+            );
 
         AdminImplementation admin = new();
 
         // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
-                              join assign in latestAssignments on call.id equals assign?.callId into callGroup
-                              from assign in callGroup.DefaultIfEmpty()
+                              let assign = latestAssignments.TryGetValue(call.id, out var latestAssign) ? latestAssign : null
                               select new CallInList
                               {
                                   CallId = call.id,
@@ -551,30 +544,28 @@ public class CallImplementation : ICall
                                       ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
                                       : null,
                                   TotalAssignments = assignments.Count(a => a.callId == call.id),
-                                  Status = DetermineStatus(call, assign, admin.GetRiskTimeSpan())
+                                  Status = statuses[call.id]
                               };
 
-
-
         // סינון הקריאות לפי שדה וערך (אם נבחרו)
-        if (filterField != null )
+        if (filterField != null)
         {
             switch (filterField)
             {
                 case CallField.Status:
-                    if (filterValue is object Status)
+                    if (filterValue is BO.Status statusFilter)
                     {
-                        callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
+                        callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                     }
                     break;
 
                 case CallField.AssignedTo:
-                    if (filterValue is object AssignedTo)
+                    if (filterValue is string assignedToFilter)
                     {
-                        callAssignments = callAssignments.Where(c => c.LastVolunteerName != null );
+                        callAssignments = callAssignments.Where(c => c.LastVolunteerName == assignedToFilter);
                     }
                     break;
-               
+
                 // הוסף סינונים נוספים אם יש צורך
                 default:
                     break;
@@ -593,6 +584,7 @@ public class CallImplementation : ICall
                 case CallField.AssignedTo:
                     callAssignments = callAssignments.OrderBy(c => c.LastVolunteerName);
                     break;
+
                 default:
                     callAssignments = callAssignments.OrderBy(c => c.CallId);
                     break;
@@ -727,6 +719,25 @@ CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
         // ברירת מחדל (לא אמור לקרות)
         throw new InvalidOperationException("Unable to determine status for the given input.");
+    }
+    private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
+    {
+        var latestAssignments = assignments
+            .GroupBy(a => a.callId)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(a => a.id).FirstOrDefault()
+            );
+
+
+        return calls.ToDictionary(
+                call => call.id,
+                call =>
+                {
+                    var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
+                    return DetermineStatus(call, assignment, riskTimeSpan);
+                }
+            );
     }
 
 }
