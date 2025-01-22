@@ -160,32 +160,27 @@ public class CallImplementation : ICall
         // בדיקת הקריאה
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
-        // יצירת שיוך חדש
 
         // קביעת סוג הביטול בהתאם לתפקיד
-        Hamal newAssignKind;
-        if (role == BO.Role.Manager)
+        Hamal newAssignKind = role switch
         {
-            newAssignKind = Hamal.cancelByManager;
-        }
-        else if (role == BO.Role.Volunteer)
+            BO.Role.Manager => Hamal.cancelByManager,
+            BO.Role.Volunteer => Hamal.cancelByVolunteer,
+            _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
+        };
+
+        // עדכון האובייקט הקיים
+        var updatedAssignment = assign with
         {
-            newAssignKind = Hamal.cancelByVolunteer;
-        }
-        else
-        {
-            throw new Exception($"Role {role} is not authorized to cancel assignments.");
-        }
-        _dal.assignment.Update(new DO.Assignment
-        {
-            id = assign.id, // הוספת מזהה ה-assignment
-            callId = assign.callId,
-            volunteerId = assign.volunteerId,
-            startTime = assign.startTime,
             assignKind = (DO.Hamal)newAssignKind
-    });
+        };
+
+        _dal.assignment.Update(updatedAssignment);
+
+        // עדכון סטטוס הקריאה
         var x = ConvertToBOCall(call);
         x.Status = Status.open;
+
         // עדכון צופים
         CallManager.Observers.NotifyListUpdated(); // Stage 5
     }
@@ -235,23 +230,18 @@ public class CallImplementation : ICall
 
     public void DeleteCall(int callId)
     {
+
         // בדיקת קיום הקריאה
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
 
-        // בדיקת אם הקריאה הסתיימה
-        var currentTime = DateTime.Now;
+        // שליפת כל ההקצאות הקשורות לקריאה
         var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
 
-        if (assignments.Any(a => a.finishTime != null) || (call.maximumTime != null && currentTime > call.maximumTime))
-        {
-            throw new Exception($"Cannot delete a completed call with ID={callId}.");
-        }
-
-        // בדיקת שיוכים פעילים לקריאה
+        // בדיקה אם יש הקצאות כלשהן לקריאה
         if (assignments.Any())
         {
-            throw new Exception($"Cannot delete a call with active assignments (Call ID={callId}).");
+            throw new Exception($"Cannot delete a call with assignments (Call ID={callId}).");
         }
 
         try
@@ -263,59 +253,28 @@ public class CallImplementation : ICall
         {
             throw new Exception("Failed to delete call.", ex);
         }
+
+        // עדכון צופים (אם קיים מנגנון צופים)
         CallManager.Observers.NotifyListUpdated(); //stage 5
     }
     public int[] GetCallCountsByStatus()
     {
+        // טוען את כל הקריאות וההקצאות משכבת ה-DAL
+        var calls = _dal.call.ReadAll();
+        var assignments = _dal.assignment.ReadAll();
 
-        // רשימת כל הקריאות
-        var calls = _dal.call.ReadAll(); // קריאה לשכבת ה-DAL לקבלת הקריאות
+        // שליפת סטטוסים לכל קריאה
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
 
-        // מעבר על כל הקריאות וספירה לפי סטטוס
-        foreach (var call in calls)
+        foreach (var status in statuses.Values)
         {
-            Status status;
-
-            // הגדרת סטטוס מבוסס על הנתונים הקיימים
-            if (call.maximumTime.HasValue && call.maximumTime <= DateTime.Now)
-            {
-                // אם זמן המקסימום חלף, הקריאה נסגרת
-                status = Status.closed;
-            }
-            else if (call.startTime.HasValue)
-            {
-                // אם יש זמן התחלה אך עדיין לא הסתיימה
-                status = Status.inProgres;
-            }
-            else if (call.startTime.HasValue)
-            {
-                // אם יש זמן התחלה אך עדיין לא הסתיימה
-                status = Status.expired;
-            }
-            else if (call.startTime.HasValue)
-            {
-                // אם יש זמן התחלה אך עדיין לא הסתיימה
-                status = Status.openInRisk;
-            }
-            else if (call.startTime.HasValue)
-            {
-                // אם יש זמן התחלה אך עדיין לא הסתיימה
-                status = Status.closeInRisk;
-            }
-            else
-            {
-                // אחרת, הקריאה ממתינה לטיפול
-                status = Status.open;
-            }
-
-            // הגדלת הספירה עבור הסטטוס המתאים
             statusCounts[(int)status]++;
         }
 
-        return statusCounts; // החזרת המערך
+        return statusCounts;
     }
 
     public Call GetCallDetails(string calld)
@@ -543,85 +502,28 @@ public class CallImplementation : ICall
             call.Status = Status.closed;
     }
 
-
-    //public IEnumerable<CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField)
-    //{
-    //    // טוען את כל הקריאות וההקצאות משכבת ה-DAL
-    //    var calls = _dal.call.ReadAll();
-    //    var assignments = _dal.assignment.ReadAll();
-
-    //    // מציאת ההקצאה האחרונה לכל קריאה
-    //    var latestAssignments = assignments
-    //        .GroupBy(a => a.callId)
-    //        .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
-    //    AdminImplementation admin = new();
-
-    //    // מיזוג נתוני הקריאות עם ההקצאות
-    //    var callAssignments = from call in calls
-    //                          join assign in latestAssignments on call.id equals assign?.callId into callGroup
-    //                          from assign in callGroup.DefaultIfEmpty()
-    //                          select new CallInList
-    //                          {
-    //                              CallId = call.id,
-    //                              CallType = (CallType)(call.callType ?? 0),
-    //                              OpenTime = call.startTime ?? DateTime.MinValue,
-    //                              TimeRemaining = call.maximumTime.HasValue
-    //                                  ? call.maximumTime.Value - DateTime.Now
-    //                                  : (TimeSpan?)null,
-    //                              LastVolunteerName = assign?.volunteerId != null
-    //                                  ? _dal.volunteer.Read(assign.volunteerId)?.name
-    //                                  : null,
-    //                              CompletionTime = assign?.finishTime != null
-    //                                  ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
-    //                                  : null,
-    //                              TotalAssignments = assignments.Count(a => a.callId == call.id),
-    //                              Status = UpdateStatus(ConvertToBOCall(call), admin.GetRiskTimeSpan())
-    //                          };
-
-    //    // סינון הקריאות לפי שדה וערך (אם נבחרו)
-    //    if (filterField != null && filterValue != null)
-    //    {
-    //        callAssignments = filterField switch
-    //        {
-    //            CallField.Status => callAssignments.Where(c => c.Status == (Status)filterValue),
-    //            CallField.AssignedTo => callAssignments.Where(c => c.LastVolunteerName == (string)filterValue),
-    //            _ => callAssignments
-    //        };
-    //    }
-
-    //    // מיון הקריאות לפי שדה שנבחר
-    //    if (sortField != null)
-    //    {
-    //        callAssignments = sortField switch
-    //        {
-    //            CallField.Status => callAssignments.OrderBy(c => c.Status),
-    //            CallField.AssignedTo => callAssignments.OrderBy(c => c.LastVolunteerName),
-    //            _ => callAssignments.OrderBy(c => c.CallId)
-    //        };
-    //    }
-    //    else
-    //    {
-    //        callAssignments = callAssignments.OrderBy(c => c.CallId);
-    //    }
-
-    //    return callAssignments;
-    //}
     public IEnumerable<CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField)
     {
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
 
-        // מציאת ההקצאה האחרונה לכל קריאה
+        // שליפת סטטוסים לכל קריאה
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+
+        // מציאת ההקצאה האחרונה לכל קריאה לפי ה-Id של ההקצאה
         var latestAssignments = assignments
-            .GroupBy(a => a.callId)
-            .Select(g => g.OrderByDescending(a => a.finishTime).FirstOrDefault());
+            .GroupBy(a => a.callId) // קיבוץ ההקצאות לפי מזהה הקריאה
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(a => a.id).FirstOrDefault()
+            );
+
         AdminImplementation admin = new();
 
         // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
-                              join assign in latestAssignments on call.id equals assign?.callId into callGroup
-                              from assign in callGroup.DefaultIfEmpty()
+                              let assign = latestAssignments.TryGetValue(call.id, out var latestAssign) ? latestAssign : null
                               select new CallInList
                               {
                                   CallId = call.id,
@@ -638,29 +540,28 @@ public class CallImplementation : ICall
                                       ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
                                       : null,
                                   TotalAssignments = assignments.Count(a => a.callId == call.id),
-                                  Status = DetermineStatus(call, assign, admin.GetRiskTimeSpan())
+                                  Status = statuses[call.id]
                               };
 
-
         // סינון הקריאות לפי שדה וערך (אם נבחרו)
-        if (filterField != null )
+        if (filterField != null)
         {
             switch (filterField)
             {
                 case CallField.Status:
-                    if (filterValue is object Status)
+                    if (filterValue is BO.Status statusFilter)
                     {
-                        callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
+                        callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                     }
                     break;
 
                 case CallField.AssignedTo:
-                    if (filterValue is object AssignedTo)
+                    if (filterValue is string assignedToFilter)
                     {
-                        callAssignments = callAssignments.Where(c => c.LastVolunteerName != null );
+                        callAssignments = callAssignments.Where(c => c.LastVolunteerName == assignedToFilter);
                     }
                     break;
-               
+
                 // הוסף סינונים נוספים אם יש צורך
                 default:
                     break;
@@ -679,6 +580,7 @@ public class CallImplementation : ICall
                 case CallField.AssignedTo:
                     callAssignments = callAssignments.OrderBy(c => c.LastVolunteerName);
                     break;
+
                 default:
                     callAssignments = callAssignments.OrderBy(c => c.CallId);
                     break;
@@ -771,28 +673,138 @@ CallManager.Observers.RemoveListObserver(listObserver); //stage 5
 CallManager.Observers.RemoveObserver(id, observer); //stage 5
     private Status DetermineStatus(DO.Call call, DO.Assignment? assign, TimeSpan riskTimeSpan)
     {
-        if (assign == null)
+        // אם הזמן עבר ואין הקצאה
+        if (assign == null && call.maximumTime < DateTime.Now)
         {
-            // קריאה פתוחה ללא הקצאה
-            return call.maximumTime < DateTime.Now ? Status.expired : Status.open;
+            return Status.expired;
         }
 
-        // קריאה עם הקצאה פעילה
-        if (assign.finishTime == null)
+        // אם הזמן עבר ויש הקצאה פעילה
+        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime == null)
         {
-            return call.maximumTime < DateTime.Now ? Status.expired : Status.inProgres;
+            return Status.expired;
         }
 
-        // קריאה שהסתיימה
-        if (assign.finishTime != null)
+        // אם הזמן עבר ויש הקצאה שהסתיימה
+        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime.HasValue)
         {
             return call.maximumTime.HasValue && assign.finishTime.Value > call.maximumTime - riskTimeSpan
                 ? Status.closeInRisk
                 : Status.closed;
         }
 
-        // ברירת מחדל
-        return Status.open;
-    }
+        // קריאה ללא הקצאה והזמן לא עבר
+        if (assign == null || assign.assignKind == DO.Hamal.cancelByManager || assign.assignKind == DO.Hamal.cancelByVolunteer)
+        {
+            return call.maximumTime < DateTime.Now + riskTimeSpan ? Status.openInRisk : Status.open;
+        }
 
+        // קריאה עם הקצאה פעילה והזמן לא עבר
+        if (assign.finishTime == null)
+        {
+            return call.maximumTime < DateTime.Now + riskTimeSpan ? Status.openInRisk : Status.inProgres;
+        }
+
+        // קריאה שהסתיימה והזמן לא עבר
+        if (assign.finishTime.HasValue)
+        {
+            return call.maximumTime.HasValue && assign.finishTime.Value > call.maximumTime - riskTimeSpan
+                ? Status.closeInRisk
+                : Status.closed;
+        }
+
+        // ברירת מחדל (לא אמור לקרות)
+        throw new InvalidOperationException("Unable to determine status for the given input.");
+    }
+    private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
+    {
+        var latestAssignments = assignments
+            .GroupBy(a => a.callId)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(a => a.id).FirstOrDefault()
+            );
+
+
+        return calls.ToDictionary(
+                call => call.id,
+                call =>
+                {
+                    var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
+                    return DetermineStatus(call, assignment, riskTimeSpan);
+                }
+            );
+    }
+    public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
+    {
+        // שליפת הקריאה
+        var call = _dal.call.Read(callId) ??
+            throw new Exception($"Call with ID={callId} does not exist.");
+
+        // שליפת כל ההשמות הקשורות לקריאה
+        var assignments = _dal.assignment.ReadAll()
+            .Where(a => a.callId == callId)
+            .ToList();
+
+        if (!assignments.Any())
+        {
+            throw new Exception($"No assignments found for Call ID={callId}.");
+        }
+
+        // מיפוי ההשמות למודל BO
+        var assignmentList = assignments.Select(assign =>
+        {
+            var volunteer = _dal.volunteer.Read(assign.volunteerId);
+
+            return new CallAssignInList
+            {
+                VolunteerId = assign.volunteerId,
+                VolunteerName = volunteer?.name,
+                EntryTime = assign.startTime ?? DateTime.MinValue,
+                EndTime = assign.finishTime,
+                EndType = (BO.Hamal)assign.assignKind
+            };
+        });
+
+        return assignmentList;
+    }
+    public CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId)
+    {
+        // שליפת מתנדב
+        var volunteer = _dal.volunteer.Read(volunteerId) ??
+            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+        if (volunteer.latitude == null || volunteer.longitude == null)
+        {
+            throw new Exception($"Location data for Volunteer ID={volunteerId} is not provided.");
+        }
+
+        // שליפת השיוך הפעיל של המתנדב
+        var activeAssignment = _dal.assignment.ReadAll()
+            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
+
+        if (activeAssignment == null)
+        {
+            return null; // אין שיוך פעיל
+        }
+
+        // שליפת הקריאה הקשורה לשיוך הפעיל
+        var call = _dal.call.Read(activeAssignment.callId) ??
+            throw new Exception($"Call with ID={activeAssignment.callId} does not exist.");
+
+        // יצירת האובייקט CallInProgress
+        return new CallInProgress
+        {
+            Id = activeAssignment.id,
+            CallId = call.id,
+            CallType = (CallType)(call.callType ?? 0),
+            Description = call.detail,
+            FullAddress = call.adress,
+            OpenTime = call.startTime ?? DateTime.MinValue,
+            MaxCloseTime = call.maximumTime,
+            EntryTime = activeAssignment.startTime ?? DateTime.MinValue,
+            DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude),
+            Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
+        };
+    }
 }

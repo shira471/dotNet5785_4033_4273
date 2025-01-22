@@ -41,6 +41,7 @@
 
     public enum CallType
     {
+        none,
         Breakfast,            // חמל לארוחת בוקר
         lunch,                // חמל לארוחת צהריים
         dinner,               // חמל לארוחת ערב

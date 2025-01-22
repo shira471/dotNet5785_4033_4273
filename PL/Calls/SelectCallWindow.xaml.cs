@@ -99,48 +99,6 @@ public partial class SelectCallWindow : Window
             }
         }
     }
-
-    private void FinishCall_Click(object sender, RoutedEventArgs e)
-    {
-        var call = Vm.Selected;
-        if (call == null || call.Id == 0)
-        {
-            MessageBox.Show("No ongoing call to finish.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
-
-        try
-        {
-            s_bl.Call.CloseCallAssignment(Vm.VolunteerId, call.Id);
-            MessageBox.Show("The call was marked as closed.");
-            queryCallList();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error closing the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-    private void btnCanceled_Click(object sender, RoutedEventArgs e)
-    {
-        var call = Vm.Selected;
-        if (call == null || call.Id == 0)
-        {
-            MessageBox.Show("No ongoing call to cancel.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
-
-        try
-        {
-            s_bl.Call.CancelCallAssignment(Vm.VolunteerId, call.Id,BO.Role.Volunteer);
-            MessageBox.Show("The call was marked as canceled.");
-            queryCallList(); // Reload the call list after the operation
-        }
-        catch (Exception ex)
-        {
-            // Display an error message if canceling the call fails
-            MessageBox.Show($"Error canceling the call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
         this.Close();

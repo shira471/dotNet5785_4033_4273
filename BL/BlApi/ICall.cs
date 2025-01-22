@@ -13,7 +13,8 @@ namespace BlApi;
 public interface ICall : IObservable //stage 5 הרחבת ממשק
 
 {
-
+    CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId);
+    IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId);
     Call? GetAssignedCallByVolunteer(int volunteerId);
     // 1. בקשת כמויות קריאות
     // מחזירה מערך של מספר הקריאות לפי סטטוס הקריאה. 
