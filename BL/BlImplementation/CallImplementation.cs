@@ -30,7 +30,10 @@ public class CallImplementation : ICall
         {
             throw new ArgumentNullException("Call cannot be null.");
         }
-
+        if(call.CallType==CallType.none)
+        {
+            throw new ArgumentNullException("Call type cannot be non.");
+        }
         if (call.MaxEndTime < call.OpenTime)
         {
             throw new ArgumentException("End time cannot be earlier than start time.");
