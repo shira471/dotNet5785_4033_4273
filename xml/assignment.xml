@@ -3,13 +3,20 @@
   <Assignment>
     <id>1</id>
     <callId>2</callId>
+<<<<<<< HEAD
     <volunteerId>795106921</volunteerId>
     <startTime>2024-12-31T23:39:59</startTime>
     <finishTime>2025-01-01T00:39:59</finishTime>
+=======
+    <volunteerId>455707906</volunteerId>
+    <startTime>2025-01-07T23:51:00</startTime>
+    <finishTime xsi:nil="true" />
+>>>>>>> c84dcb7de050db0682e47b6f35f66d201e5f2fe7
     <assignKind>handeled</assignKind>
   </Assignment>
   <Assignment>
     <id>2</id>
+<<<<<<< HEAD
     <callId>6</callId>
     <volunteerId>157721204</volunteerId>
     <startTime>2024-10-31T23:44:00</startTime>
@@ -29,10 +36,24 @@
     <callId>9</callId>
     <volunteerId>325004273</volunteerId>
     <startTime>2023-01-06T00:35:00</startTime>
+=======
+    <callId>8</callId>
+    <volunteerId>680938563</volunteerId>
+    <startTime>2025-01-03T23:52:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>3</id>
+    <callId>9</callId>
+    <volunteerId>495417145</volunteerId>
+    <startTime>2024-09-01T23:43:00</startTime>
+>>>>>>> c84dcb7de050db0682e47b6f35f66d201e5f2fe7
     <finishTime xsi:nil="true" />
     <assignKind>cancelByVolunteer</assignKind>
   </Assignment>
   <Assignment>
+<<<<<<< HEAD
     <id>5</id>
     <callId>10</callId>
     <volunteerId>749506846</volunteerId>
@@ -56,4 +77,13 @@
     <finishTime xsi:nil="true" />
     <assignKind>handeled</assignKind>
   </Assignment>
+=======
+    <id>4</id>
+    <callId>11</callId>
+    <volunteerId>455707906</volunteerId>
+    <startTime>2025-01-22T11:36:22.292652+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>handeled</assignKind>
+  </Assignment>
+>>>>>>> c84dcb7de050db0682e47b6f35f66d201e5f2fe7
 </ArrayOfAssignment>
