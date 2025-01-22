@@ -394,7 +394,7 @@ public class CallImplementation : ICall
         return closedCalls;
     }
 
-    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, Enum? callType = null, Enum? sortField = null)
+    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, CallType? callType = null, Enum? sortField = null)
     {
         // קבלת כל הקריאות הפתוחות (ללא finishTime)
         var calls = _dal.call.ReadAll(c => c.maximumTime > DateTime.Now); // קריאות פתוחות בלבד
@@ -429,7 +429,7 @@ public class CallImplementation : ICall
                         };
 
         // סינון לפי סוג הקריאה אם צוין
-        if (callType != null)
+        if (callType != null && callType !=  BO.CallType.None)
         {
             openCalls = openCalls.Where(c => c.Tkoc == (TheKindOfCall)callType);
         }

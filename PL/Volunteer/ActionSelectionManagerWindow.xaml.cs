@@ -25,15 +25,7 @@ public partial class ActionSelectionManagerWindow : Window
     // Singleton instance of the business logic interface
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-    // ViewModel instance for data binding
-    public ActionManagerVM Vm
-    {
-        get { return (ActionManagerVM)GetValue(vMProperty); }
-        set { SetValue(vMProperty, value); }
-    }
-    // Using a DependencyProperty as the backing store for Vm.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty vMProperty =
-        DependencyProperty.Register("Vm", typeof(ActionManagerVM), typeof(ActionSelectionManagerWindow));
+  
     public bool IsUpdate { get; private set; }
     public bool IsDelete { get; private set; }
     public bool IsCancel { get; private set; }
@@ -45,6 +37,10 @@ public partial class ActionSelectionManagerWindow : Window
         InitializeComponent();
         ActionMessage = $"Select an action for the {entityName}:";
         DataContext = this; // מגדיר את ה-DataContext כדי שה-Binding יעבוד
+        
+  
+        
+
     }
 
     private void Update_Click(object sender, RoutedEventArgs e)
@@ -73,4 +69,5 @@ public partial class ActionSelectionManagerWindow : Window
         DialogResult = true;
         Close();
     }
+
 }

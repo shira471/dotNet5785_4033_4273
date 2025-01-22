@@ -40,5 +40,6 @@
             <Button Content="View Call" Width="100" Margin="10" Click="btnView_Click" 
                     Background="LightGreen" Foreground="White" FontWeight="Bold" />
         </StackPanel>
+       
     </Grid>
 </Window>
