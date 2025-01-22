@@ -18,14 +18,15 @@ namespace PL.Calls;
 
 /// <summary>
 /// Interaction logic for VolunteerCallsHistoryWindow.xaml
-/// This window displays the history of calls for a specific volunteer.
 /// </summary>
 public partial class VolunteerCallsHistoryWindow : Window
 {
-    // Singleton reference to the business logic layer (BL)
+
+
+    // Reference to the business logic layer
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
-    // ViewModel instance for data binding to the UI
+    // ViewModel for binding data to the UI
     public VolunteerCallsHistoryVM Vm { get; set; }
 
     // ID of the volunteer whose call history is displayed
@@ -33,30 +34,23 @@ public partial class VolunteerCallsHistoryWindow : Window
 
     /// <summary>
     /// Constructor for the VolunteerCallsHistoryWindow.
-    /// Initializes the window, the ViewModel, and loads the closed call history for the volunteer.
+    /// Initializes the ViewModel and loads the closed calls.
     /// </summary>
     /// <param name="volunteerId">ID of the volunteer</param>
     public VolunteerCallsHistoryWindow(int volunteerId)
     {
-        VolunteerId = volunteerId; // Store the volunteer ID
+        VolunteerId = volunteerId;
 
-        // Initialize the ViewModel with the volunteer's ID
-        Vm = new VolunteerCallsHistoryVM(volunteerId);
-
-        // Set the DataContext for data binding to the ViewModel
-        DataContext = Vm;
-
-        // Initialize the window's components (UI elements)
+        Vm = new VolunteerCallsHistoryVM(volunteerId); // Initialize the ViewModel
+        DataContext = Vm; // Set the data context for data binding
         InitializeComponent();
 
         try
         {
-            // Load the list of closed calls for the volunteer
-            queryClosedCallList();
+            queryClosedCallList(); // Load the list of closed calls
         }
         catch (Exception ex)
         {
-            // Display an error message if loading the closed calls fails
             MessageBox.Show($"Error loading closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -66,33 +60,29 @@ public partial class VolunteerCallsHistoryWindow : Window
     /// </summary>
     private void queryClosedCallList()
     {
-        // Clear the existing call data in the ViewModel
-        Vm.ClosedCalls.Clear();
-
+        Vm.ClosedCalls.Clear(); // Clear existing call data in the ViewModel
         try
         {
-            // Retrieve closed calls for the volunteer from the BL
-            var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null);
-
-            // Add each retrieved call to the ViewModel's ClosedCalls collection
+            var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null); // Get closed calls from the BL
             foreach (var call in calls)
             {
-                Vm.ClosedCalls.Add(call);
+                Vm.ClosedCalls.Add(call); // Add each call to the ViewModel's collection
             }
         }
         catch (Exception ex)
         {
-            // Display an error message if retrieving the call list fails
             MessageBox.Show($"Error loading the list of closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
     /// <summary>
-    /// Event handler for the Back button.
-    /// Closes the current window and returns to the previous window.
+    /// Event handler for when the ComboBox selection changes.
+    /// Applies filtering logic to the displayed call list.
     /// </summary>
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
-        this.Close(); // Close the window
+        this.Close();
     }
+
 }
+
