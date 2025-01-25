@@ -22,6 +22,8 @@ public class VolunteerImplementation : IVolunteer
 
     public void AddVolunteer(BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         if (volunteer == null)
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");
@@ -78,6 +80,8 @@ public class VolunteerImplementation : IVolunteer
 
     public void DeleteVolunteer(int volunteerId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         try
         {
             _dal.volunteer.Delete(volunteerId);
@@ -193,6 +197,8 @@ public class VolunteerImplementation : IVolunteer
 
     public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         if (volunteer == null)
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");

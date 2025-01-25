@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using DalApi;
 using DO;
 internal class AssignmentImplementation : Iassignment
 {
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Assignment item)
     {
      
@@ -22,7 +24,7 @@ internal class AssignmentImplementation : Iassignment
         }
        
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         var assignmentToDelete = DataSource.assignments.FirstOrDefault(a => a.id == id);
@@ -35,7 +37,7 @@ internal class AssignmentImplementation : Iassignment
             throw new DalDoesNotExistException($"assignment with this ID={id} does not exists");
         }
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.assignments.RemoveAll(v => v is DO.Assignment);
@@ -54,13 +56,13 @@ internal class AssignmentImplementation : Iassignment
         // Return the found assignment.
         return assignment;
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Assignment? Read(Func<Assignment, bool> filter)
     {
         // Use LINQ's FirstOrDefault method to find the first matching volunteer.
         return DataSource.assignments.FirstOrDefault(filter);
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         // If no filter is provided, return all volunteers as an enumerable.
@@ -69,7 +71,7 @@ internal class AssignmentImplementation : Iassignment
             ? DataSource.assignments.AsEnumerable() // Return all volunteers as an IEnumerable.
             : DataSource.assignments.Where(filter); // Apply the filter and return the matching volunteers.
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Assignment item)
     {
         var existingAssignment = DataSource.assignments.FirstOrDefault(a => a.id == item.id);

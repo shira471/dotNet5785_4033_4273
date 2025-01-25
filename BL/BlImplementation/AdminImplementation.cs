@@ -39,19 +39,24 @@ public class AdminImplementation : IAdmin
         return AdminManager.Now;
     }
     //אתחול בסיס הנתונים
-    public void InitializeDatabase()
+    public void InitializeDB() //stage 4
     {
-        ResetDatabase();
-        DalTest.Initialization.Do();
-        AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.MaxRange = AdminManager.MaxRange;
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.InitializeDB(); //stage 7
     }
+
     //איפוס בסיס הנתונים
-    public void ResetDatabase()
+    //public void ResetDatabase()
+    //{
+    //    _dal.ResetDB();
+    //    AdminManager.UpdateClock(AdminManager.Now);
+    //}
+    public void ResetDB() //stage 4
     {
-        _dal.ResetDB();
-        AdminManager.UpdateClock(AdminManager.Now);
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ResetDB(); //stage 7
     }
+
     //הגדרת טווח זמן סיכון
     public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
     {
@@ -67,5 +72,13 @@ public class AdminImplementation : IAdmin
     public void RemoveConfigObserver(Action configObserver) =>
     AdminManager.ConfigUpdatedObservers -= configObserver;
     #endregion Stage 5
+    public void StartSimulator(int interval)  //stage 7
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.Start(interval); //stage 7
+    }
+    public void StopSimulator()
+        => AdminManager.Stop(); //stage 7
+
 
 }

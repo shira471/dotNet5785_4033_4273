@@ -1,4 +1,6 @@
-﻿namespace DO;
+﻿using System.Runtime.CompilerServices;
+
+namespace DO;
 
 public static class Config
 {
@@ -6,6 +8,8 @@ public static class Config
     private static int nextAssinmentId = 0;
     internal static int GetNextAssignId { get { return nextAssinmentId++; } }
     public static DateTime clock { set; get; } = DateTime.Now;
+    [MethodImpl(MethodImplOptions.Synchronized)]
+
     internal static void Reset()
     {
         nextAssinmentId = 0;

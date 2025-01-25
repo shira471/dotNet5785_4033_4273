@@ -18,6 +18,8 @@ public class CallImplementation : ICall
 
     public void AddCall(Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         var calls = _dal.call.ReadAll();
         foreach (var call2 in calls)
         {
@@ -30,7 +32,7 @@ public class CallImplementation : ICall
         {
             throw new ArgumentNullException("Call cannot be null.");
         }
-        if(call.CallType==CallType.None)
+        if (call.CallType == CallType.None)
         {
             throw new ArgumentNullException("Call type cannot be non.");
         }
@@ -66,6 +68,8 @@ public class CallImplementation : ICall
 
     public void AssignCallToVolunteer(int volunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         // שליפת הקריאה ממאגר הנתונים
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
@@ -141,8 +145,10 @@ public class CallImplementation : ICall
 
     private double DegreesToRadians(double degrees) => degrees * (Math.PI / 180);
 
-    public void CancelCallAssignment(int volunteerId, int callId,BO.Role role)
+    public void CancelCallAssignment(int volunteerId, int callId, BO.Role role)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         // בדיקת השיוך
         var assignments = _dal.assignment.ReadAll()
             .Where(a => a.volunteerId == volunteerId && a.callId == callId)
@@ -190,6 +196,8 @@ public class CallImplementation : ICall
 
     public void CloseCallAssignment(int volunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         // חיפוש השיוך לפי מתנדב וקריאה
         var assignments = _dal.assignment.ReadAll()
             .Where(a => a.volunteerId == volunteerId && a.callId == callId)
@@ -218,7 +226,7 @@ public class CallImplementation : ICall
         var updatedAssignment = assign with
         {
             finishTime = DateTime.Now,
-            assignKind=DO.Hamal.handeled
+            assignKind = DO.Hamal.handeled
         };
         _dal.assignment.Update(updatedAssignment);
 
@@ -233,6 +241,7 @@ public class CallImplementation : ICall
 
     public void DeleteCall(int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
         // בדיקת קיום הקריאה
         var call = _dal.call.Read(callId) ??
@@ -331,8 +340,8 @@ public class CallImplementation : ICall
                               address: call.adress,
                               openTime: call.startTime ?? DateTime.MinValue,
                               assignmentStartTime: assign.startTime ?? DateTime.MinValue,
-                              actualEndTime: assign.finishTime??null,
-                              endType: (Hamal?)assign.assignKind ??null// המרת Enum
+                              actualEndTime: assign.finishTime ?? null,
+                              endType: (Hamal?)assign.assignKind ?? null// המרת Enum
                           );
 
         // סינון לפי סוג הקריאה אם צוין
@@ -348,7 +357,7 @@ public class CallImplementation : ICall
             {
                 CallField.Status => closedCalls.OrderBy(c => c.OpenTime), // מיון לפי זמן פתיחה
                 CallField.AssignedTo => closedCalls.OrderBy(c => c.AssignmentStartTime), // מיון לפי זמן התחלה
-              //  CallField.Priority => closedCalls.OrderBy(c => c.ActualEndTime), // מיון לפי זמן סיום
+                                                                                         //  CallField.Priority => closedCalls.OrderBy(c => c.ActualEndTime), // מיון לפי זמן סיום
                 _ => closedCalls // ללא מיון אם השדה אינו נתמך
             };
         }
@@ -391,7 +400,7 @@ public class CallImplementation : ICall
                         };
 
         // סינון לפי סוג הקריאה אם צוין
-        if (callType != null && callType !=  BO.CallType.None)
+        if (callType != null && callType != BO.CallType.None)
         {
             openCalls = openCalls.Where(c => c.Tkoc == (TheKindOfCall)callType);
         }
@@ -453,6 +462,8 @@ public class CallImplementation : ICall
 
     public void UpdateCallDetails(Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         // וודא שהקריאה אינה null
         if (call == null)
         {
@@ -600,7 +611,8 @@ public class CallImplementation : ICall
 
     public Status UpdateStatus(Call call, TimeSpan riskTime)
     {
-        
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         if (call.MaxEndTime.HasValue)
         {
             var timeRemaining = call.MaxEndTime.Value - DateTime.Now;
@@ -665,15 +677,6 @@ public class CallImplementation : ICall
     }
 
 
-
-    public void AddObserver(Action listObserver) =>
-CallManager.Observers.AddListObserver(listObserver); //stage 5
-    public void AddObserver(int id, Action observer) =>
-CallManager.Observers.AddObserver(id, observer); //stage 5
-    public void RemoveObserver(Action listObserver) =>
-CallManager.Observers.RemoveListObserver(listObserver); //stage 5
-    public void RemoveObserver(int id, Action observer) =>
-CallManager.Observers.RemoveObserver(id, observer); //stage 5
     private Status DetermineStatus(DO.Call call, DO.Assignment? assign, TimeSpan riskTimeSpan)
     {
         // אם הזמן עבר ואין הקצאה
@@ -784,7 +787,7 @@ CallManager.Observers.RemoveObserver(id, observer); //stage 5
 
         // שליפת השיוך הפעיל של המתנדב
         var activeAssignment = _dal.assignment.ReadAll()
-            .FirstOrDefault(a => a.volunteerId == volunteerId && a.finishTime==null&&a.assignKind==DO.Hamal.inTreatment);
+            .FirstOrDefault(a => a.volunteerId == volunteerId && a.finishTime == null && a.assignKind == DO.Hamal.inTreatment);
 
         if (activeAssignment == null)
         {
@@ -810,4 +813,13 @@ CallManager.Observers.RemoveObserver(id, observer); //stage 5
             Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
         };
     }
+
+    public void AddObserver(Action listObserver) =>
+    CallManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+CallManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+CallManager.Observers.RemoveObserver(id, observer); //stage 5
 }

@@ -36,4 +36,9 @@ internal static class CallManager
             }
         }
     }
+
+    internal static void PeriodicCallUpdates()
+    {
+        throw new NotImplementedException();
+    }
 }
