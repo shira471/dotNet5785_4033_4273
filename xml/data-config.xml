@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>11</NextAssignmentId>
+  <NextAssignmentId>14</NextAssignmentId>
   <NextAssignmentId>16</NextAssignmentId>
   <NextAssignmentId>4</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>21</NextCallId>
+  <NextCallId>22</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
-  <Clock>24/01/2025 12:29:19</Clock>
+  <Clock>26/01/2025 14:16:53</Clock>
   <Clock>22/01/2025 18:02:22</Clock>
   <NextAssignmentId>9</NextAssignmentId>
   <NextAssignmentId>4</NextAssignmentId>

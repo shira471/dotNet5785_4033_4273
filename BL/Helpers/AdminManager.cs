@@ -124,6 +124,7 @@ namespace Helpers;
 //}
 
 using System.Runtime.CompilerServices;
+using System.Threading;
 using BL.Helpers;
 
 /// <summary>
@@ -134,6 +135,7 @@ internal static class AdminManager //stage 4
     #region Stage 4
     private static readonly DalApi.Idal s_dal = DalApi.Factory.Get; //stage 4
     #endregion Stage 4
+    private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     #region Stage 5
     internal static event Action? ConfigUpdatedObservers; //prepared for stage 5 - for config update observers
@@ -185,26 +187,52 @@ internal static class AdminManager //stage 4
     /// Method to perform application's clock from any BL class as may be required
     /// </summary>
     /// <param name="newClock">updated clock value</param>
-    internal static void UpdateClock(DateTime newClock) //stage 4-7
+    //internal static void UpdateClock(DateTime newClock) //stage 4-7
+    //{
+    //    var oldClock = s_dal.config.clock; //stage 4
+    //    s_dal.config.clock = newClock; //stage 4
+
+    //    //TO_DO:
+    //    //Add calls here to any logic method that should be called periodically,
+    //    //after each clock update
+    //    //for example, Periodic students' updates:
+    //    //Go through all students to update properties that are affected by the clock update
+    //    //(students becomes not active after 5 years etc.)
+
+    //    //StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
+    //    if (_periodicTask is null || _periodicTask.IsCompleted) //stage 7
+    //        _periodicTask = Task.Run(() => VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock));
+    //    //etc ...
+
+    //    //Calling all the observers of clock update
+    //    ClockUpdatedObservers?.Invoke(); //prepared for stage 5
+    //}
+    internal static void UpdateClock(DateTime newClock)
     {
-        var oldClock = s_dal.config.clock; //stage 4
-        s_dal.config.clock = newClock; //stage 4
+        var oldClock = s_dal.config.clock;
+        s_dal.config.clock = newClock;
 
-        //TO_DO:
-        //Add calls here to any logic method that should be called periodically,
-        //after each clock update
-        //for example, Periodic students' updates:
-        //Go through all students to update properties that are affected by the clock update
-        //(students becomes not active after 5 years etc.)
+        // קריאה ללוגיקה מחזורית של ישויות
+        if (_periodicTask is null || _periodicTask.IsCompleted)
+        {
+            _periodicTask = Task.Run(() =>
+            {
+                try
+                {
+                    VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock);
+                }
+                catch (Exception ex)
+                {
+                    // טיפול בשגיאות
+                    Console.WriteLine($"Error in periodic updates: {ex.Message}");
+                }
+            });
+        }
 
-        //StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
-        if (_periodicTask is null || _periodicTask.IsCompleted) //stage 7
-            _periodicTask = Task.Run(() => VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock));
-        //etc ...
-
-        //Calling all the observers of clock update
-        ClockUpdatedObservers?.Invoke(); //prepared for stage 5
+        // קריאה לכל המאזינים לעדכון שעון
+        ClockUpdatedObservers?.Invoke();
     }
+
     #endregion Stage 4
 
     #region Stage 7 base
@@ -282,5 +310,43 @@ internal static class AdminManager //stage 4
             catch (ThreadInterruptedException) { }
         }
     }
+    private static async Task clockRunnerAsync()
+    {
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            UpdateClock(Now.AddMinutes(s_interval));
+
+            // קריאה ללוגיקה מחזורית
+            await PerformPeriodicTasksAsync();
+
+            // השהיה של שנייה
+            try
+            {
+                await Task.Delay(1000, cancellationToken);
+            }
+            catch (TaskCanceledException) { }
+        }
+    }
+
+    private static async Task PerformPeriodicTasksAsync()
+    {
+        if (_simulateTask is null || _simulateTask.IsCompleted)
+        {
+            _simulateTask = Task.Run(() =>
+            {
+                try
+                {
+                    CallManager.PeriodicCallUpdates();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error in periodic task: {ex.Message}");
+                }
+            });
+        }
+    }
+
     #endregion Stage 7 base
 }

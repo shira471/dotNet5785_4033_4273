@@ -5,16 +5,15 @@ using BlApi;
 using BO;
 using Helpers;
 
-// <summary>
-// מימוש ממשק לניהול מערכת
-// </summary>
+/// <summary>
+/// Implementation of the admin system interface
+/// </summary>
 public class AdminImplementation : IAdmin
 {
-    private static TimeSpan _riskTimeSpan = TimeSpan.FromMinutes(30); // ערך ברירת מחדל
-
-
+    private static TimeSpan _riskTimeSpan = TimeSpan.FromMinutes(30); // Default value
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
-    // קידום שעון המערכת
+
+    // Advance the system clock
     public void AdvanceSystemClock(TimeUnit timeUnit)
     {
         DateTime newTime = timeUnit switch
@@ -26,59 +25,114 @@ public class AdminImplementation : IAdmin
             TimeUnit.Year => AdminManager.Now.AddYears(1),
             _ => throw new ArgumentException("Invalid time unit", nameof(timeUnit))
         };
-        AdminManager.UpdateClock(newTime);
+
+        // Update the system clock with lock protection
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.UpdateClock(newTime);
+        }
     }
-    //בקשת טווח זמן סיכון
+
+    // Request risk time span
     public TimeSpan GetRiskTimeSpan()
     {
-        return _riskTimeSpan;
+        // Lock to ensure thread-safe access to _riskTimeSpan
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            return _riskTimeSpan;
+        }
     }
-    //  בקשת שעון המערכת
+
+    // Request the system clock
     public DateTime GetSystemClock()
     {
-        return AdminManager.Now;
-    }
-    //אתחול בסיס הנתונים
-    public void InitializeDB() //stage 4
-    {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        AdminManager.InitializeDB(); //stage 7
+        // Lock to ensure thread-safe access to AdminManager.Now
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            return AdminManager.Now;
+        }
     }
 
-    //איפוס בסיס הנתונים
-    //public void ResetDatabase()
-    //{
-    //    _dal.ResetDB();
-    //    AdminManager.UpdateClock(AdminManager.Now);
-    //}
-    public void ResetDB() //stage 4
+    // Initialize the database
+    public void InitializeDB() // Stage 4
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        AdminManager.ResetDB(); //stage 7
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+            AdminManager.InitializeDB(); // Stage 7
+        }
     }
 
-    //הגדרת טווח זמן סיכון
+    // Reset the database
+    public void ResetDB() // Stage 4
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+            AdminManager.ResetDB(); // Stage 7
+        }
+    }
+
+    // Set the risk time span
     public void SetRiskTimeSpan(TimeSpan riskTimeSpan)
     {
-        _riskTimeSpan = riskTimeSpan;
+        // Lock to ensure thread-safe update to _riskTimeSpan
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            _riskTimeSpan = riskTimeSpan;
+        }
     }
-    #region Stage 5
-    public void AddClockObserver(Action clockObserver) =>
-    AdminManager.ClockUpdatedObservers += clockObserver;
-    public void RemoveClockObserver(Action clockObserver) =>
-    AdminManager.ClockUpdatedObservers -= clockObserver;
-    public void AddConfigObserver(Action configObserver) =>
-   AdminManager.ConfigUpdatedObservers += configObserver;
-    public void RemoveConfigObserver(Action configObserver) =>
-    AdminManager.ConfigUpdatedObservers -= configObserver;
-    #endregion Stage 5
-    public void StartSimulator(int interval)  //stage 7
+
+    #region Stage 5: Observer Management
+    public void AddClockObserver(Action clockObserver)
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        AdminManager.Start(interval); //stage 7
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ClockUpdatedObservers += clockObserver;
+        }
     }
+
+    public void RemoveClockObserver(Action clockObserver)
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ClockUpdatedObservers -= clockObserver;
+        }
+    }
+
+    public void AddConfigObserver(Action configObserver)
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ConfigUpdatedObservers += configObserver;
+        }
+    }
+
+    public void RemoveConfigObserver(Action configObserver)
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ConfigUpdatedObservers -= configObserver;
+        }
+    }
+    #endregion Stage 5
+
+    // Start the simulator
+    public void StartSimulator(int interval) // Stage 7
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+            AdminManager.Start(interval); // Stage 7
+        }
+    }
+
+    // Stop the simulator
     public void StopSimulator()
-        => AdminManager.Stop(); //stage 7
-
-
+    {
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            AdminManager.Stop(); // Stage 7
+        }
+    }
 }

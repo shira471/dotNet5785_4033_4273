@@ -1,81 +1,173 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 using DalApi;
 using DO;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using DalTest;
-
 using BL.Helpers;
 using Helpers;
 
-
 internal static class VolunteerManager
 {
-    internal static ObserverManager Observers = new(); //stage 5 
-    // גישה לשכבת ה-DAL
-    private static Idal s_dal = Factory.Get; //stage 4
+    private static int s_periodicCounter = 0;
+    internal static ObserverManager Observers = new(); // Stage 5
+    // Access to DAL
+    private static Idal s_dal = Factory.Get; // Stage 4
 
     /// <summary>
-    /// עדכון מצב מתנדבים על פי לוגיקה בהתאם לשעון המערכת.
+    /// Updates volunteer statuses according to logic based on the system clock.
     /// </summary>
-    /// <param name="oldClock">השעון הקודם</param>
-    /// <param name="newClock">השעון החדש</param>
+    /// <param name="oldClock">The previous clock.</param>
+    /// <param name="newClock">The new clock.</param>
     internal static void PeriodicVolunteersUpdates(DateTime oldClock, DateTime newClock)
     {
-        var volunteers = s_dal.volunteer.ReadAll().ToList();
+        Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
+
+        List<Volunteer> volunteers;
+
+        // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            volunteers = s_dal.volunteer.ReadAll().ToList(); // ToList() makes it a concrete list
+        }
+
+        List<int> updatedVolunteersIds = new List<int>(); // Collect IDs for notification
 
         foreach (var volunteer in volunteers)
         {
-            // דוגמה: בדיקה אם מתנדב לא פעיל במשך זמן מסוים
+            // Example: Check if a volunteer has been inactive for a certain period
             if (!volunteer.isActive && (newClock - oldClock).Days > 30)
             {
-                // יצירת עותק חדש של המתנדב עם עדכון isActive
+                // Create a new copy of the volunteer with updated isActive property
                 var updatedVolunteer = volunteer with { isActive = false };
-                s_dal.volunteer.Update(updatedVolunteer); // עדכון ב-DAL
-                Observers.NotifyItemUpdated(updatedVolunteer.idVol); //stage 5
+
+                // Lock for updating the volunteer in DAL
+                lock (AdminManager.BlMutex) // Stage 7
+                {
+                    s_dal.volunteer.Update(updatedVolunteer);
+                }
+
+                // Collect updated volunteer's ID for notification
+                updatedVolunteersIds.Add(updatedVolunteer.idVol); // Stage 5
             }
+        }
+
+        // Send notifications outside the lock for all updated volunteers
+        foreach (var volunteerId in updatedVolunteersIds)
+        {
+            Observers.NotifyItemUpdated(volunteerId); // Stage 5
+        }
+
+        // Optionally, notify list updated if there were changes
+        if (updatedVolunteersIds.Any())
+        {
+            Observers.NotifyListUpdated(); // Stage 5
+        }
+    }
+    internal static void SimulateVolunteerActivity(DateTime startClock, DateTime endClock)
+    {
+        Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; //stage 7 (optional)
+
+        List<Volunteer> volunteers;
+
+        // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
+        lock (AdminManager.BlMutex) // Stage 7
+        {
+            volunteers = s_dal.volunteer.ReadAll().ToList(); // ToList() makes it a concrete list
+        }
+
+        List<int> updatedVolunteersIds = new List<int>(); // Collect IDs for notification
+
+        // Perform simulation over time period
+        for (DateTime currentTime = startClock; currentTime <= endClock; currentTime = currentTime.AddDays(1))
+        {
+            foreach (var volunteer in volunteers)
+            {
+                // Example: Deactivate volunteers based on custom criteria (e.g., time period or manual deactivation)
+                if (volunteer.isActive && ShouldDeactivate(volunteer))
+                {
+                    // Create a new copy of the volunteer with updated isActive property
+                    var updatedVolunteer = volunteer with { isActive = false };
+
+                    // Lock for updating the volunteer in DAL
+                    lock (AdminManager.BlMutex) // Stage 7
+                    {
+                        s_dal.volunteer.Update(updatedVolunteer);
+                    }
+
+                    // Collect updated volunteer's ID for notification
+                    updatedVolunteersIds.Add(updatedVolunteer.idVol); // Stage 5
+                }
+            }
+        }
+
+        // Send notifications outside the lock for all updated volunteers
+        foreach (var volunteerId in updatedVolunteersIds)
+        {
+            Observers.NotifyItemUpdated(volunteerId); // Stage 5
+        }
+
+        // Optionally, notify list updated if there were changes
+        if (updatedVolunteersIds.Any())
+        {
+            Observers.NotifyListUpdated(); // Stage 5
         }
     }
 
+    // Custom logic for deciding whether to deactivate a volunteer
+    private static bool ShouldDeactivate(Volunteer volunteer)
+    {
+        // Example: Add your custom logic here. For now, we deactivate based on `isActive`.
+        return true; // Placeholder: Change this to match your criteria
+    }
+
+
+
+    /// <summary>
+    /// Gets the coordinates for a given address using Google Maps API.
+    /// </summary>
+    /// <param name="address">The address to geocode.</param>
+    /// <returns>An array containing latitude and longitude if found, null otherwise.</returns>
     public static double[]? GetCoordinatesFromGoogle(string address)
     {
-        // Step 1: Validate the input
         if (string.IsNullOrWhiteSpace(address))
             throw new ArgumentException("Address cannot be null or empty.", nameof(address));
 
-        // Step 2: Define the API key and base URL
-        // TODO: Replace "YOUR_API_KEY" with your actual Google Maps API key.
-        string apiKey = "AIzaSyDnyS5QMBa_4uwPOdbFH9T8_zNOXe3DzGw"; // Enter your Google Maps API key here.
+        string apiKey = "AIzaSyDnyS5QMBa_4uwPOdbFH9T8_zNOXe3DzGw"; // Replace with your Google Maps API key.
         string apiUrl = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
 
-        // Step 3: Create an HttpClient to perform the request
         using (HttpClient client = new HttpClient())
         {
             try
             {
-                // Step 4: Send the HTTP request synchronously
-                HttpResponseMessage response = client.GetAsync(apiUrl).Result;
+                HttpResponseMessage response;
 
-                // Step 5: Ensure the response is successful
+                // Lock for sending HTTP requests
+                lock (AdminManager.BlMutex) // Stage 7
+                {
+                    response = client.GetAsync(apiUrl).Result;
+                }
+
                 response.EnsureSuccessStatusCode();
 
-                // Step 6: Read the response content synchronously
-                string responseBody = response.Content.ReadAsStringAsync().Result;
-                // Step 7: Parse the JSON response to extract latitude and longitude
+                string responseBody;
+
+                // Lock for reading the response content
+                lock (AdminManager.BlMutex) // Stage 7
+                {
+                    responseBody = response.Content.ReadAsStringAsync().Result;
+                }
+
+                // Parse the response outside of lock
                 return ParseCoordinatesFromGoogle(responseBody);
             }
             catch (HttpRequestException)
             {
-                // Handle cases like no internet or server unreachable
                 throw new Exception("Unable to connect to the internet or server is unreachable.");
             }
             catch (Exception ex)
             {
-                // Handle general exceptions
                 throw new Exception("An error occurred while fetching coordinates.", ex);
             }
         }
@@ -85,27 +177,22 @@ internal static class VolunteerManager
     /// Parses the JSON response from Google Maps API and extracts the latitude and longitude.
     /// </summary>
     /// <param name="responseBody">The JSON response from Google Maps API.</param>
-    /// <returns>
-    /// An array containing the latitude and longitude if found, null otherwise.
-    /// </returns>
+    /// <returns>An array containing the latitude and longitude if found, null otherwise.</returns>
     private static double[]? ParseCoordinatesFromGoogle(string responseBody)
     {
-        // Parse the JSON response into a JObject
         JObject json = JObject.Parse(responseBody);
 
-        // Check if the response contains a valid result
         JToken results = json["results"];
         if (results != null && results.HasValues)
         {
             JToken location = results[0]["geometry"]["location"];
             return new double[]
             {
-            (double)location["lat"],
-            (double)location["lng"]
+                (double)location["lat"],
+                (double)location["lng"]
             };
         }
 
-        // If no results were found, return null
         return null;
     }
 }
