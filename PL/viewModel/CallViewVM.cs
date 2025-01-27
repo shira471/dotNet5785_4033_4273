@@ -64,6 +64,7 @@ public class CallViewVM : ViewModelBase
     public CallViewVM()
     {
         LoadCalls();
+        s_bl.Call.AddObserver(() => LoadCalls()); // הוספת משקיף ישירות ב-ViewModel
     }
 
     public void LoadCalls()

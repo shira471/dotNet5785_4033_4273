@@ -16,6 +16,7 @@ public class AdminImplementation : IAdmin
     // Advance the system clock
     public void AdvanceSystemClock(TimeUnit timeUnit)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DateTime newTime = timeUnit switch
         {
             TimeUnit.Minute => AdminManager.Now.AddMinutes(1),

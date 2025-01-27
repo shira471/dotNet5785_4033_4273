@@ -1,42 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>14</NextAssignmentId>
-  <NextAssignmentId>16</NextAssignmentId>
-  <NextAssignmentId>4</NextAssignmentId>
+  <NextAssignmentId>23</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>22</NextCallId>
+  <NextCallId>29</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
   <Clock>23/01/2025 11:42:42</Clock>
-  <Clock>22/01/2025 18:02:22</Clock>
-  <NextAssignmentId>9</NextAssignmentId>
-  <NextAssignmentId>4</NextAssignmentId>
-  <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>22</NextCallId>
-  <!-- מזהה רץ לקריאה הבאה -->
-  <NextVolunteerId>1</NextVolunteerId>
-  <!-- מזהה רץ למתנדב הבא -->
-  <Clock>22/01/2025 21:41:28</Clock>
-  <NextAssignmentId>5</NextAssignmentId>
-  <NextAssignmentId>6</NextAssignmentId>
-  <NextAssignmentId>4</NextAssignmentId>
-  <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>12</NextCallId>
-  <!-- מזהה רץ לקריאה הבאה -->
-  <NextVolunteerId>1</NextVolunteerId>
-  <!-- מזהה רץ למתנדב הבא -->
-  <Clock>22/01/2025 10:43:14</Clock>
-  <NextAssignmentId>19</NextAssignmentId>
-  <NextAssignmentId>15</NextAssignmentId>
-  <NextAssignmentId>4</NextAssignmentId>
-  <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>21</NextCallId>
-  <!-- מזהה רץ לקריאה הבאה -->
-  <NextVolunteerId>1</NextVolunteerId>
-  <!-- מזהה רץ למתנדב הבא -->
-  <Clock>22/01/2025 17:29:24</Clock>
-  <Clock>21/01/2025 16:00:41</Clock>
   <!-- שעון המערכת, תאריך ושעה התחלתיים -->
   <RiskRange>00:00:00</RiskRange>
   <!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס -->

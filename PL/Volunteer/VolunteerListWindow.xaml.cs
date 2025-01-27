@@ -85,7 +85,7 @@ public partial class VolunteerListWindow : Window
         try
         {
             var window = new AddVolunteerWindow(); // Open the add volunteer window
-            window.ShowDialog();
+            window.Show();
 
             vm.LoadVolunteerList(); // Refresh the list after adding a volunteer
         }
@@ -148,7 +148,7 @@ public partial class VolunteerListWindow : Window
                 try
                 {
                     var updateWindow = new AddVolunteerWindow(selectedVolunteer.Id); // פתח חלון לעדכון
-                    updateWindow.ShowDialog();
+                    updateWindow.Show();
                     vm.LoadVolunteerList(); // רענון הרשימה לאחר העדכון
                 }
                 catch (Exception ex)

@@ -19,15 +19,16 @@ public class CallImplementation : ICall
     public void AddCall(Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
-
         if (call == null)
         {
-            throw new ArgumentNullException("Call cannot be null.");
+            throw new ArgumentNullException(nameof(call), "Call cannot be null.");
         }
+
         if (call.CallType == CallType.None)
         {
             throw new ArgumentException("Call type cannot be None.");
         }
+
         if (call.MaxEndTime < call.OpenTime)
         {
             throw new ArgumentException("End time cannot be earlier than start time.");
@@ -268,6 +269,7 @@ public class CallImplementation : ICall
         // עדכון סטטוס הקריאה
         var x = ConvertToBOCall(call);
         x.Status = Status.closed;
+        CallManager.Observers.NotifyListUpdated(); // שלב 5
     }
 
 
@@ -696,7 +698,7 @@ public class CallImplementation : ICall
                 return Status.closed;
             }
         }
-
+        CallManager.Observers.NotifyListUpdated(); // שלב 5
         // אם לא נמצא סטטוס מתאים, נשאיר את הסטטוס הקיים
         return call.Status;
     }

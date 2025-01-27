@@ -53,17 +53,18 @@ internal static class VolunteerManager
             }
         }
 
-        // Send notifications outside the lock for all updated volunteers
-        foreach (var volunteerId in updatedVolunteersIds)
-        {
-            Observers.NotifyItemUpdated(volunteerId); // Stage 5
-        }
+        //// Send notifications outside the lock for all updated volunteers
+        //foreach (var volunteerId in updatedVolunteersIds)
+        //{
+        //    Observers.NotifyItemUpdated(volunteerId); // Stage 5
+        //}
 
-        // Optionally, notify list updated if there were changes
-        if (updatedVolunteersIds.Any())
-        {
-            Observers.NotifyListUpdated(); // Stage 5
-        }
+        //// Optionally, notify list updated if there were changes
+        //if (updatedVolunteersIds.Any())
+        //{
+        //    Observers.NotifyListUpdated(); // Stage 5
+        //}
+        NotifyObservers(updatedVolunteersIds);
     }
     internal static void SimulateVolunteerActivity(DateTime startClock, DateTime endClock)
     {
@@ -102,17 +103,18 @@ internal static class VolunteerManager
             }
         }
 
-        // Send notifications outside the lock for all updated volunteers
-        foreach (var volunteerId in updatedVolunteersIds)
-        {
-            Observers.NotifyItemUpdated(volunteerId); // Stage 5
-        }
+        //// Send notifications outside the lock for all updated volunteers
+        //foreach (var volunteerId in updatedVolunteersIds)
+        //{
+        //    Observers.NotifyItemUpdated(volunteerId); // Stage 5
+        //}
 
-        // Optionally, notify list updated if there were changes
-        if (updatedVolunteersIds.Any())
-        {
-            Observers.NotifyListUpdated(); // Stage 5
-        }
+        //// Optionally, notify list updated if there were changes
+        //if (updatedVolunteersIds.Any())
+        //{
+        //    Observers.NotifyListUpdated(); // Stage 5
+        //}
+        NotifyObservers(updatedVolunteersIds);
     }
 
     // Custom logic for deciding whether to deactivate a volunteer
@@ -195,4 +197,35 @@ internal static class VolunteerManager
 
         return null;
     }
+
+    /// <summary>
+    /// עדכון המשקיפים.
+    /// </summary>
+    private static void NotifyObservers(List<int> updatedVolunteersIds)
+    {
+        foreach (var volunteerId in updatedVolunteersIds)
+        {
+            try
+            {
+                Observers.NotifyItemUpdated(volunteerId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error notifying observer for Volunteer ID {volunteerId}: {ex.Message}");
+            }
+        }
+
+        if (updatedVolunteersIds.Any())
+        {
+            try
+            {
+                Observers.NotifyListUpdated();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error notifying list observers: {ex.Message}");
+            }
+        }
+    }
 }
+

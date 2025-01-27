@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI">
+        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI" Closed="Window_Closed">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

@@ -55,12 +55,24 @@ public partial class SelectCallWindow : Window
 
     private void callListObserver()
     {
-        queryCallList();
+
+        Dispatcher.Invoke(() =>
+        {
+            queryCallList(); // עדכן את הרשימה
+        });
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        queryCallList();
+        try
+        {
+            s_bl.Call.AddObserver(callListObserver); // הוסף את המשקיף
+            queryCallList(); // טען את הרשימה הראשונית
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void Window_Closed(object sender, EventArgs e)

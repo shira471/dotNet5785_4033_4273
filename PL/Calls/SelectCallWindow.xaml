@@ -9,7 +9,7 @@
         Height="640"
         Width="800"
         Background="Lavender"
-        FontFamily="Segoe UI">
+        FontFamily="Segoe UI" Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

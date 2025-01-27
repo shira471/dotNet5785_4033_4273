@@ -53,6 +53,7 @@ namespace PL.Volunteer
             Roles = new ObservableCollection<Role>(Enum.GetValues(typeof(Role)).Cast<Role>());
 
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
+            s_bl.Volunteer.AddObserver(VolunteerListUpdated);
 
             if (id == 0)
             {
@@ -144,7 +145,19 @@ namespace PL.Volunteer
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // הסרת המשקיף כאשר החלון נסגר
+            s_bl.Volunteer.RemoveObserver(VolunteerListUpdated);
+        }
 
+        private void VolunteerListUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+               // MessageBox.Show("Volunteer list has been updated.");
+            });
+        }
 
     }
 }

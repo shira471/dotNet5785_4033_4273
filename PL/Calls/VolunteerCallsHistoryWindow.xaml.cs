@@ -40,13 +40,12 @@ public partial class VolunteerCallsHistoryWindow : Window
     public VolunteerCallsHistoryWindow(int volunteerId)
     {
         VolunteerId = volunteerId;
-
+        try { 
         Vm = new VolunteerCallsHistoryVM(volunteerId); // Initialize the ViewModel
         DataContext = Vm; // Set the data context for data binding
         InitializeComponent();
 
-        try
-        {
+        
             queryClosedCallList(); // Load the list of closed calls
         }
         catch (Exception ex)
@@ -74,7 +73,10 @@ public partial class VolunteerCallsHistoryWindow : Window
             MessageBox.Show($"Error loading the list of closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.Call.RemoveObserver(Vm.UpdateClosedCallsObserver);
+    }
     /// <summary>
     /// Event handler for when the ComboBox selection changes.
     /// Applies filtering logic to the displayed call list.

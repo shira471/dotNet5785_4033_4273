@@ -208,13 +208,13 @@ namespace PL.Volunteer
         private void btnCallManage_Click(object sender, RoutedEventArgs e)
         {
             CallsViewWindow cvw = new CallsViewWindow();
-            cvw.ShowDialog();
+            cvw.Show();
         }
 
         private void btnVolManage_Click(object sender, RoutedEventArgs e)
         {
             VolunteerListWindow vlw = new VolunteerListWindow();
-            vlw.ShowDialog();
+            vlw.Show();
         }
 
         private bool _isSimulationRunning = false; // Manage simulation state
@@ -271,7 +271,7 @@ namespace PL.Volunteer
             try
             {
                 var window = new VolunteerListWindow();
-                window.ShowDialog();
+                window.Show();
                 queryVolunteerList(); // Refresh list
             }
             catch (Exception ex)

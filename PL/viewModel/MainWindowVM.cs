@@ -64,12 +64,10 @@ namespace PL.Volunteer
                 if (userType == "Manager")
                 {
                     new AdminWindow().Show();
-                    Application.Current.MainWindow.Close();
                 }
                 else if (userType == "Volunteer")
                 {
-                    new VolunteerWindow(UserId).Show();
-                    Application.Current.MainWindow.Close();
+                    new VolunteerWindow(UserId).Show(); 
                 }
             }
             catch(Exception ex) 

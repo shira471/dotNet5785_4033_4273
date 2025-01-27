@@ -210,4 +210,74 @@
     <startTime>2025-01-26T15:27:40.9368505+02:00</startTime>
     <maximumTime>2025-01-31T00:00:00</maximumTime>
   </Call>
+  <Call>
+    <id>22</id>
+    <detail>סופר</detail>
+    <adress>hazerim</adress>
+    <latitude>31.240603</latitude>
+    <longitude>34.717427</longitude>
+    <callType>dinner</callType>
+    <startTime>2025-01-27T13:27:10.329227+02:00</startTime>
+    <maximumTime>2025-02-27T13:27:10.329227+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>23</id>
+    <detail>קכק</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2025-01-27T17:04:32.4076396+02:00</startTime>
+    <maximumTime>2025-01-30T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>25</id>
+    <detail>dd</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-27T17:13:36.570303+02:00</startTime>
+    <maximumTime>2025-01-31T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>26</id>
+    <detail>fdnj</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2025-01-27T17:14:52.7123553+02:00</startTime>
+    <maximumTime>2025-02-27T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>27</id>
+    <detail>rfndj</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-27T17:15:48.9606749+02:00</startTime>
+    <maximumTime>2025-01-31T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>24</id>
+    <detail>go ro </detail>
+    <adress>tel Aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
+    <callType>OriginLocation</callType>
+    <startTime>2025-01-27T17:12:49.3497895+02:00</startTime>
+    <maximumTime>2025-01-29T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>28</id>
+    <detail>gvb</detail>
+    <adress>haifa</adress>
+    <latitude>32.7940463</latitude>
+    <longitude>34.989571</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2025-01-27T17:22:51.1364732+02:00</startTime>
+    <maximumTime>2025-01-31T00:00:00</maximumTime>
+  </Call>
 </ArrayOfCall>

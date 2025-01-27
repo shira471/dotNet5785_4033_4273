@@ -51,9 +51,15 @@ public class VolunteerCallsHistoryVM : ViewModelBase
     public VolunteerCallsHistoryVM(int volunteerId)
     {
         this.volunteerId = volunteerId;
+        // הוספת משקיף לעדכון הרשימה
+        s_bl.Call.AddObserver(UpdateClosedCallsObserver);
         LoadClosedCalls();
     }
-
+    // משקיף לעדכון רשימת הקריאות הסגורות
+    public void UpdateClosedCallsObserver()
+    {
+        LoadClosedCalls();
+    }
     public void LoadClosedCalls()
     {
         ClosedCalls.Clear();

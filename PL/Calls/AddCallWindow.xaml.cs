@@ -52,7 +52,9 @@ namespace PL.Call
             CallTypes = new ObservableCollection<CallType>(Enum.GetValues(typeof(CallType)).Cast<CallType>());
 
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
-
+                                        // רישום משקיף לעדכון רשימת הקריאות
+                                        // רישום משקיף לעדכון רשימת הקריאות
+            s_bl.Call.AddObserver(UpdateCallList);
             if (id == 0)
             {
                 // Add mode: Initialize with default values
@@ -95,7 +97,7 @@ namespace PL.Call
                     s_bl.Call.UpdateCallDetails(CurrentCall);
                     MessageBox.Show("Call updated successfully.");
                 }
-
+              
                 // סגור את החלון לאחר הצלחה
                 Close();
             }
@@ -103,6 +105,7 @@ namespace PL.Call
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
+           
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -114,6 +117,21 @@ namespace PL.Call
         private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // הסרת המשקיף כאשר החלון נסגר
+            s_bl.Call.RemoveObserver(UpdateCallList);
+        }
+
+        private void UpdateCallList()
+        {
+            Dispatcher.Invoke(() =>
+            {
+               
+               // MessageBox.Show("The call list has been updated!");
+            });
         }
     }
 

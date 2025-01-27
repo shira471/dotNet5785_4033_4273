@@ -28,7 +28,7 @@ internal static class CallManager
         {
             calls = s_dal.call.ReadAll().ToList();
         }
-
+        List<int> updatedCallIds = new();
         foreach (var call in calls)
         {
             // Check if a call's maximum time has passed
@@ -42,10 +42,20 @@ internal static class CallManager
                 {
                     s_dal.call.Update(updatedCall);
                 }
-
+                updatedCallIds.Add(updatedCall.id);
                 // Notify observers outside the lock
-                Observers.NotifyItemUpdated(updatedCall.id); // Stage 5
+               // Observers.NotifyItemUpdated(updatedCall.id); // Stage 5
             }
+        }
+        // עדכון כל המשקיפים (מחוץ לנעילה)
+        foreach (var callId in updatedCallIds)
+        {
+            Observers.NotifyItemUpdated(callId);
+        }
+
+        if (updatedCallIds.Any())
+        {
+            Observers.NotifyListUpdated(); // עדכון כללי אם הרשימה השתנתה
         }
     }
     internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
@@ -82,6 +92,7 @@ internal static class CallManager
                     updatedCallIds.Add(updatedCall.id);
                 }
             }
+
         }
 
         // Notify observers outside the lock

@@ -29,7 +29,7 @@ namespace PL.Volunteer
         public ObservableCollection<DistanceType> DistanceTypeOptions { get; set; } = new ObservableCollection<DistanceType>(Enum.GetValues(typeof(DistanceType)) as DistanceType[] ?? Array.Empty<DistanceType>());
 
         private readonly BlApi.IBl s_bl;
-        
+
         public VolunteerWindow(string? id = null)
         {
             InitializeComponent();
@@ -73,7 +73,7 @@ namespace PL.Volunteer
                 Close();
             }
         }
-       
+
         private void ActiveCheckBox_Click(object sender, RoutedEventArgs e)
         {
             // אם יש קריאה פעילה, לא לאפשר שינוי למצב "לא פעיל"
@@ -156,7 +156,7 @@ namespace PL.Volunteer
                 try
                 {
                     var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId,Role.Volunteer);
+                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId, Role.Volunteer);
                     MessageBox.Show("The call was marked as cancelled.");
                     LoadCallDetails();
                 }
@@ -170,7 +170,7 @@ namespace PL.Volunteer
                 MessageBox.Show("No active call to cancelled.");
             }
         }
-       
+
 
         /// <summary>
         /// טוען פרטי השיחה הפעילה של המתנדב.
