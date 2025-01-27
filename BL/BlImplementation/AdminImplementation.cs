@@ -1,6 +1,7 @@
 ﻿namespace BlImplementation;
 
 using System;
+using BL.Helpers;
 using BlApi;
 using BO;
 using Helpers;
@@ -14,6 +15,27 @@ public class AdminImplementation : IAdmin
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
     // Advance the system clock
+    //public void AdvanceSystemClock(TimeUnit timeUnit)
+    //{
+    //    DateTime newTime = timeUnit switch
+    //    {
+    //        TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
+    //        TimeUnit.Hour => AdminManager.Now.AddHours(1),
+    //        TimeUnit.Day => AdminManager.Now.AddDays(1),
+    //        TimeUnit.Month => AdminManager.Now.AddMonths(1),
+    //        TimeUnit.Year => AdminManager.Now.AddYears(1),
+    //        _ => throw new ArgumentException("Invalid time unit", nameof(timeUnit))
+    //    };
+
+    //    // Update the system clock with lock protection
+    //    lock (AdminManager.BlMutex) // Stage 7
+    //    {
+    //        AdminManager.UpdateClock(newTime);
+
+    //    }
+    //    // התראה למאזינים
+    //    CallManager.Observers.NotifyListUpdated();
+    //}
     public void AdvanceSystemClock(TimeUnit timeUnit)
     {
         DateTime newTime = timeUnit switch
@@ -26,12 +48,14 @@ public class AdminImplementation : IAdmin
             _ => throw new ArgumentException("Invalid time unit", nameof(timeUnit))
         };
 
-        // Update the system clock with lock protection
-        lock (AdminManager.BlMutex) // Stage 7
+        lock (AdminManager.BlMutex)
         {
             AdminManager.UpdateClock(newTime);
         }
+        CallManager.Observers.NotifyListUpdated();
+        Console.WriteLine($"System clock advanced to {newTime}");
     }
+
 
     // Request risk time span
     public TimeSpan GetRiskTimeSpan()

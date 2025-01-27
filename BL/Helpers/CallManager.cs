@@ -48,6 +48,7 @@ internal static class CallManager
             }
         }
     }
+
     internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
     {
         Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; // Optional for debugging

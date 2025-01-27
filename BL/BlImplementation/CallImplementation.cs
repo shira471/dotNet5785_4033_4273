@@ -313,7 +313,7 @@ public class CallImplementation : ICall
         var assignments = _dal.assignment.ReadAll();
 
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(3));
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
