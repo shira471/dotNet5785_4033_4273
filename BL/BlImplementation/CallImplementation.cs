@@ -29,11 +29,14 @@ public class CallImplementation : ICall
             throw new ArgumentException("Call type cannot be None.");
         }
 
-        if (call.MaxEndTime < call.OpenTime)
+        if (call.MaxEndTime <= call.OpenTime)
         {
             throw new ArgumentException("End time cannot be earlier than start time.");
         }
-
+        if (call.MaxEndTime == null)
+        {
+            throw new ArgumentException("End time cannot be null.");
+        }
         try
         {
             lock (AdminManager.BlMutex) // Stage 7
@@ -722,22 +725,22 @@ public class CallImplementation : ICall
     }
 
 
-    private Status DetermineStatus(DO.Call call, DO.Assignment? assign, TimeSpan riskTimeSpan)
+    private Status DetermineStatus(DO.Call call, DO.Assignment? assign, TimeSpan riskTimeSpan, DateTime systemTime)
     {
         // אם הזמן עבר ואין הקצאה
-        if (assign == null && call.maximumTime < DateTime.Now)
+        if (assign == null && call.maximumTime < systemTime)
         {
             return Status.expired;
         }
 
         // אם הזמן עבר ויש הקצאה פעילה
-        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime == null)
+        if (assign != null && call.maximumTime < systemTime && assign.finishTime == null)
         {
             return Status.expired;
         }
 
         // אם הזמן עבר ויש הקצאה שהסתיימה
-        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime.HasValue)
+        if (assign != null && call.maximumTime < systemTime && assign.finishTime.HasValue)
         {
             return call.maximumTime.HasValue && assign.finishTime.Value > call.maximumTime - riskTimeSpan
                 ? Status.closeInRisk
@@ -766,7 +769,8 @@ public class CallImplementation : ICall
 
         // ברירת מחדל (לא אמור לקרות)
         throw new InvalidOperationException("Unable to determine status for the given input.");
-    }
+    
+}
     private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
     {
         var latestAssignments = assignments
@@ -782,7 +786,8 @@ public class CallImplementation : ICall
                 call =>
                 {
                     var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-                    return DetermineStatus(call, assignment, riskTimeSpan);
+                    var currentSystemTime = DateTime.Now;
+                    return DetermineStatus(call, assign, riskTimeSpan, currentSystemTime);
                 }
             );
     }

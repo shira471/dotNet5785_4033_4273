@@ -53,6 +53,7 @@ public partial class CallsViewWindow : Window
     {
         s_bl.Call.RemoveObserver(UpdateCallsObserver); // הסרת משקיף
     }
+    
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
         var window = new AddCallWindow();
