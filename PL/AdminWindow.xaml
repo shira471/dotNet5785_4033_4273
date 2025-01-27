@@ -44,7 +44,7 @@
                 <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
                 <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
                 <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Stop Simulator" Width="200" Margin="5" Click="btnStpSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />
+                <!--<Button Content="Stop Simulator" Width="200" Margin="5" Click="btnStpSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />-->
                 <Button Content="Show Call by Status" Width="200" Margin="5" Click="btnCallStatus_Click" Background="LightBlue" Foreground="DarkBlue" />
             </StackPanel>
 

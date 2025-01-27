@@ -95,6 +95,8 @@ internal static class AdminManager //stage 4
                 try
                 {
                     VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock);
+                    CallManager.PeriodicCallUpdates(oldClock, newClock);
+
                 }
                 catch (Exception ex)
                 {

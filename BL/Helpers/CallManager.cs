@@ -58,6 +58,7 @@ internal static class CallManager
             Observers.NotifyListUpdated(); // עדכון כללי אם הרשימה השתנתה
         }
     }
+
     internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
     {
         Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; // Optional for debugging

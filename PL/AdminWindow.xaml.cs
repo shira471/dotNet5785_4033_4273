@@ -221,13 +221,20 @@ namespace PL.Volunteer
 
         private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
         {
+            Button btn = sender as Button;  // המרת ה-sender לכפתור
+
+            if (btn == null) return; // אם לא הצלחנו להמיר, לא נמשיך
+
             if (_isSimulationRunning)
             {
-                MessageBox.Show("The simulator is already running!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _isSimulationRunning = false;
+                btn.Content = "Start Simulator"; // שינוי הטקסט ל-Start
+                MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _isSimulationRunning = true;
+            btn.Content = "Stop Simulator"; // שינוי הטקסט ל-Stop
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             try
@@ -248,23 +255,12 @@ namespace PL.Volunteer
             }
         }
 
-        private void btnStpSimulat_Click(object sender, RoutedEventArgs e)
-        {
-            if (!_isSimulationRunning)
-            {
-                MessageBox.Show("The simulator is already stopped!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            _isSimulationRunning = false;
-            MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
         private void PerformSimulationLogic()
         {
             var clock = s_bl.Admin.GetSystemClock();
             Console.WriteLine($"Current system clock: {clock}");
         }
+
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
