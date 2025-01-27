@@ -315,7 +315,7 @@ public class CallImplementation : ICall
         var assignments = _dal.assignment.ReadAll();
 
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(3));
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
@@ -724,20 +724,23 @@ public class CallImplementation : ICall
 
     private Status DetermineStatus(DO.Call call, DO.Assignment? assign, TimeSpan riskTimeSpan)
     {
+        var adminImplementation = new AdminImplementation();
+        var systemClock = adminImplementation.GetSystemClock();
+
         // אם הזמן עבר ואין הקצאה
-        if (assign == null && call.maximumTime < DateTime.Now)
+        if (assign == null && call.maximumTime < systemClock)
         {
             return Status.expired;
         }
 
         // אם הזמן עבר ויש הקצאה פעילה
-        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime == null)
+        if (assign != null && call.maximumTime < systemClock && assign.finishTime == null)
         {
             return Status.expired;
         }
 
         // אם הזמן עבר ויש הקצאה שהסתיימה
-        if (assign != null && call.maximumTime < DateTime.Now && assign.finishTime.HasValue)
+        if (assign != null && call.maximumTime < systemClock && assign.finishTime.HasValue)
         {
             return call.maximumTime.HasValue && assign.finishTime.Value > call.maximumTime - riskTimeSpan
                 ? Status.closeInRisk
@@ -747,13 +750,13 @@ public class CallImplementation : ICall
         // קריאה ללא הקצאה והזמן לא עבר
         if (assign == null || assign.assignKind == DO.Hamal.cancelByManager || assign.assignKind == DO.Hamal.cancelByVolunteer)
         {
-            return call.maximumTime < DateTime.Now + riskTimeSpan ? Status.openInRisk : Status.open;
+            return call.maximumTime < systemClock + riskTimeSpan ? Status.openInRisk : Status.open;
         }
 
         // קריאה עם הקצאה פעילה והזמן לא עבר
         if (assign.finishTime == null)
         {
-            return call.maximumTime < DateTime.Now + riskTimeSpan ? Status.openInRisk : Status.inProgres;
+            return call.maximumTime < systemClock + riskTimeSpan ? Status.openInRisk : Status.inProgres;
         }
 
         // קריאה שהסתיימה והזמן לא עבר
@@ -763,6 +766,7 @@ public class CallImplementation : ICall
                 ? Status.closeInRisk
                 : Status.closed;
         }
+        CallManager.Observers.NotifyListUpdated();
 
         // ברירת מחדל (לא אמור לקרות)
         throw new InvalidOperationException("Unable to determine status for the given input.");
