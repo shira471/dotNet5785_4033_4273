@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PL.ActionSelectionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Select Action" Height="400" Width="600" WindowStartupLocation="CenterScreen"
+        Title="Select Action" Height="400" Width="800" WindowStartupLocation="CenterScreen"
         Background="AliceBlue" FontFamily="Segoe UI">
 
     <Grid Margin="10">

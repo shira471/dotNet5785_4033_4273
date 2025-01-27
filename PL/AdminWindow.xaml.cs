@@ -310,7 +310,7 @@ namespace PL.Volunteer
                             window.Close();
                     }
 
-                    s_bl.Admin.InitializeDatabase();
+                    s_bl.Admin.InitializeDB();
                 }
                 finally
                 {
@@ -336,7 +336,7 @@ namespace PL.Volunteer
                             window.Close();
                     }
 
-                    s_bl.Admin.ResetDatabase();
+                    s_bl.Admin.ResetDB();
                 }
                 finally
                 {

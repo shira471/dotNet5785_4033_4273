@@ -22,6 +22,8 @@ public class VolunteerImplementation : IVolunteer
 
     public void AddVolunteer(BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         if (volunteer == null)
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");
@@ -47,27 +49,30 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
-            var temp = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
-            IsValidEmail(volunteer.Email);
-            IsValidPhoneNumber(volunteer.Phone);
-            IsValidId(volunteer.Id);
-
-            var dalVolunteer = new DO.Volunteer
+            lock (AdminManager.BlMutex) // Stage 7
             {
-                idVol = volunteer.Id,
-                adress = volunteer.Address,
-                name = volunteer.FullName,
-                email = volunteer.Email,
-                phoneNumber = volunteer.Phone,
-                password = volunteer.Password,
-                latitude = temp[0],
-                longitude = temp[1],
-                limitDestenation = volunteer.MaxDistance ?? 0,
-                isActive = volunteer.IsActive,
-                role = (DO.Role)volunteer.Role,
-                distanceType = (DO.TypeDistance)volunteer.DistanceType
-            };
-            _dal.volunteer.Create(dalVolunteer);
+                var temp = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
+                IsValidEmail(volunteer.Email);
+                IsValidPhoneNumber(volunteer.Phone);
+                IsValidId(volunteer.Id);
+
+                var dalVolunteer = new DO.Volunteer
+                {
+                    idVol = volunteer.Id,
+                    adress = volunteer.Address,
+                    name = volunteer.FullName,
+                    email = volunteer.Email,
+                    phoneNumber = volunteer.Phone,
+                    password = volunteer.Password,
+                    latitude = temp[0],
+                    longitude = temp[1],
+                    limitDestenation = volunteer.MaxDistance ?? 0,
+                    isActive = volunteer.IsActive,
+                    role = (DO.Role)volunteer.Role,
+                    distanceType = (DO.TypeDistance)volunteer.DistanceType
+                };
+                _dal.volunteer.Create(dalVolunteer);
+            }
             VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (Exception ex)
@@ -78,9 +83,14 @@ public class VolunteerImplementation : IVolunteer
 
     public void DeleteVolunteer(int volunteerId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         try
         {
-            _dal.volunteer.Delete(volunteerId);
+            lock (AdminManager.BlMutex) // נעילה סביב גישה ל-DAL
+            {
+                _dal.volunteer.Delete(volunteerId);
+            }
             VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (Exception ex)
@@ -193,16 +203,67 @@ public class VolunteerImplementation : IVolunteer
 
     public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+
         if (volunteer == null)
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");
         }
 
-        //if (requesterId != volunteer.Id && !_dal.volunteer.Read(requesterId).role.Equals(DO.Role.Manager))
-        //{
-        //    throw new UnauthorizedAccessException("Only managers or the volunteer themselves can update details.");
-        //}
+        // וידוא פורמט תקין של המייל, הטלפון וה-ID
+        ValidateVolunteer(volunteer);
 
+        // בדיקה אם המתנדב קיים במערכת
+        var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
+            ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+
+        // אם כתובת שונתה, עדכון קואורדינטות
+        if (existingVolunteer.adress != volunteer.Address)
+        {
+            var coordinates = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
+            if (coordinates == null)
+            {
+                throw new BlInvalidValueException("Invalid address provided.");
+            }
+        }
+
+        try
+        {
+            lock (AdminManager.BlMutex)  // נעילה סביב גישה ל-DAL
+            {
+                // יצירת המתנדב המעודכן
+                var updatedVolunteer = new DO.Volunteer(
+                    idVol: volunteer.Id,
+                    adress: volunteer.Address,
+                    name: volunteer.FullName,
+                    email: volunteer.Email,
+                    phoneNumber: volunteer.Phone,
+                    password: volunteer.Password ?? existingVolunteer.password,  // אם אין סיסמה חדשה, שמירה על הישנה
+                    latitude: volunteer.Latitude ?? existingVolunteer.latitude,
+                    longitude: volunteer.Longitude ?? existingVolunteer.longitude,
+                    limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
+                    isActive: volunteer.IsActive,
+                    role: (DO.Role?)volunteer.Role,
+                    distanceType: (DO.TypeDistance?)volunteer.DistanceType
+                );
+
+                // עדכון המתנדב בשכבת ה-DAL
+                _dal.volunteer.Update(updatedVolunteer);
+
+                // עדכון צופים
+                VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol);
+                VolunteerManager.Observers.NotifyListUpdated();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
+        }
+    }
+
+    // פונקציה לבדיקות תקינות
+    private void ValidateVolunteer(BO.Volunteer volunteer)
+    {
         if (!IsValidEmail(volunteer.Email))
         {
             throw new BlInvalidValueException("Invalid email format.");
@@ -217,51 +278,8 @@ public class VolunteerImplementation : IVolunteer
         {
             throw new BlInvalidValueException("Invalid ID number.");
         }
-
-        var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
-            ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
-
-        //if (!object.Equals(existingVolunteer.role, volunteer.Role) &&
-        //    !object.Equals(_dal.volunteer.Read(requesterId).role, DO.Role.Manager))
-        //{
-        //    throw new UnauthorizedAccessException("Only a manager can update the volunteer's role.");
-        //}
-
-        if (existingVolunteer.adress != volunteer.Address)
-        {
-            var coordinates = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
-            if (coordinates == null)
-            {
-                throw new BlInvalidValueException("Invalid address provided.");
-            }
-        }
-
-        var updatedVolunteer = new DO.Volunteer(
-            idVol: volunteer.Id,
-            adress: volunteer.Address,
-            name: volunteer.FullName,
-            email: volunteer.Email,
-            phoneNumber: volunteer.Phone,
-            password: volunteer.Password ?? existingVolunteer.password,
-            latitude: volunteer.Latitude ?? existingVolunteer.latitude,
-            longitude: volunteer.Longitude ?? existingVolunteer.longitude,
-            limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
-            isActive: volunteer.IsActive,
-            role: (DO.Role?)volunteer.Role,
-            distanceType: (DO.TypeDistance?)volunteer.DistanceType
-        );
-
-        try
-        {
-            _dal.volunteer.Update(updatedVolunteer);
-            VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol);
-            VolunteerManager.Observers.NotifyListUpdated();
-        }
-        catch (Exception ex)
-        {
-            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
-        }
     }
+
 
     private bool IsValidEmail(string email)
     {

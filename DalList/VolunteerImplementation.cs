@@ -2,6 +2,7 @@
 namespace Dal;
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using DalApi;
 using DO;
@@ -11,6 +12,7 @@ internal class VolunteerImplementation : Ivolunteer
     /// <summary>
     /// Create a new volunteer and add it to the data source.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Create(Volunteer item)
     {
         if (Read(item.idVol) != null)
@@ -26,6 +28,7 @@ internal class VolunteerImplementation : Ivolunteer
     /// <summary>
     /// Delete a volunteer by ID.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Delete(int id)
     {
         var isExist = DataSource.volunteers.FirstOrDefault(volunteers => volunteers.idVol == id);
@@ -42,12 +45,13 @@ internal class VolunteerImplementation : Ivolunteer
     /// <summary>
     /// Delete all volunteers from the data source.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void DeleteAll()
     {
         DataSource.volunteers.RemoveAll(v => v is DO.Volunteer);
     }
     //Read a volunteer
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Volunteer? Read(int id)
     {
         // Use LINQ's FirstOrDefault method to find a volunteer by ID.
@@ -66,7 +70,7 @@ internal class VolunteerImplementation : Ivolunteer
         // Return the found volunteer or null if not found.
         return volunteer;
     }
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public Volunteer? Read(Func<Volunteer, bool> filter)
     {
 
@@ -75,7 +79,7 @@ internal class VolunteerImplementation : Ivolunteer
 
     }
 
-
+    [MethodImpl(MethodImplOptions.Synchronized)]
 
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
     {
@@ -89,6 +93,7 @@ internal class VolunteerImplementation : Ivolunteer
     /// <summary>
     /// Update an existing volunteer.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void Update(Volunteer item)
     {
         // Validate phone number format
