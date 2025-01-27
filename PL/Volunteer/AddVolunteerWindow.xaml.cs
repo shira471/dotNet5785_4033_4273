@@ -30,7 +30,7 @@ namespace PL.Volunteer
         }
 
         public static readonly DependencyProperty CurrentVolunteerProperty =
-            DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(AddVolunteerWindow), new PropertyMetadata(null));
 
         public string ButtonText
         {
