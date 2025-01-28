@@ -14,31 +14,9 @@ public class AdminImplementation : IAdmin
     private static TimeSpan _riskTimeSpan = TimeSpan.FromMinutes(30); // Default value
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-    // Advance the system clock
-    //public void AdvanceSystemClock(TimeUnit timeUnit)
-    //{
-    //    DateTime newTime = timeUnit switch
-    //    {
-    //        TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
-    //        TimeUnit.Hour => AdminManager.Now.AddHours(1),
-    //        TimeUnit.Day => AdminManager.Now.AddDays(1),
-    //        TimeUnit.Month => AdminManager.Now.AddMonths(1),
-    //        TimeUnit.Year => AdminManager.Now.AddYears(1),
-    //        _ => throw new ArgumentException("Invalid time unit", nameof(timeUnit))
-    //    };
-
-    //    // Update the system clock with lock protection
-    //    lock (AdminManager.BlMutex) // Stage 7
-    //    {
-    //        AdminManager.UpdateClock(newTime);
-
-    //    }
-    //    // התראה למאזינים
-    //    CallManager.Observers.NotifyListUpdated();
-    //}
+     //Advance the system clock
     public void AdvanceSystemClock(TimeUnit timeUnit)
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DateTime newTime = timeUnit switch
         {
             TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
@@ -49,15 +27,16 @@ public class AdminImplementation : IAdmin
             _ => throw new ArgumentException("Invalid time unit", nameof(timeUnit))
         };
 
-        lock (AdminManager.BlMutex)
+        // Update the system clock with lock protection
+        lock (AdminManager.BlMutex) // Stage 7
         {
             AdminManager.UpdateClock(newTime);
+
         }
+        // התראה למאזינים
         CallManager.Observers.NotifyListUpdated();
-        Console.WriteLine($"System clock advanced to {newTime}");
     }
-
-
+   
     // Request risk time span
     public TimeSpan GetRiskTimeSpan()
     {

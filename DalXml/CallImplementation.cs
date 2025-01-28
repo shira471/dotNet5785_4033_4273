@@ -40,11 +40,27 @@ internal class CallImplementation : Icall
     }
     [MethodImpl(MethodImplOptions.Synchronized)]
     // קריאת כל הקריאות לפי תנאי (או ללא תנאי)
+    //public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
+    //{
+    //    List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+    //    return filter == null ? calls : calls.Where(filter);
+    //}
     public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
     {
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
+
+        // בדיקה אם יש קריאות עם שדה maximumTime null
+        foreach (var call in calls)
+        {
+            if (call.maximumTime == null)
+            {
+                Console.WriteLine($"Call ID {call} has null maximumTime.");
+            }
+        }
+
         return filter == null ? calls : calls.Where(filter);
     }
+
     [MethodImpl(MethodImplOptions.Synchronized)]
     // עדכון קריאה קיימת
     public void Update(Call item)

@@ -35,7 +35,7 @@ internal static class CallManager
             if (call.maximumTime != null && call.maximumTime < newClock)
             {
                 // Update the call's maximum time to null (inactive state)
-                var updatedCall = call with { maximumTime = null };
+                var updatedCall = call;
 
                 // Lock for updating the call in DAL
                 lock (AdminManager.BlMutex) // Stage 7
