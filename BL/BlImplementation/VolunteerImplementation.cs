@@ -221,10 +221,13 @@ public class VolunteerImplementation : IVolunteer
         if (existingVolunteer.adress != volunteer.Address)
         {
             var coordinates = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
+
             if (coordinates == null)
             {
                 throw new BlInvalidValueException("Invalid address provided.");
             }
+            volunteer.Latitude = coordinates[0];
+            volunteer.Longitude = coordinates[1];
         }
 
         try

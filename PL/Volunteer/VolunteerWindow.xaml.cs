@@ -11,7 +11,11 @@ using System.Windows.Controls;
 namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window, INotifyPropertyChanged
+
     {
+        public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
+        public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
+
         // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
         public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? true;
         public BO.Volunteer? CurrentVolunteer
@@ -45,6 +49,79 @@ namespace PL.Volunteer
             {
                 MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        private void Window_Louded(object sender, RoutedEventArgs e)
+        {
+            if (CurrentVolunteer != null)
+            {
+                s_bl.Volunteer.AddObserver(CurrentVolunteer.Id, VolunteerUpdated);
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // Remove observers when the window is closed
+            if (CurrentVolunteer != null)
+            {
+                s_bl.Volunteer.RemoveObserver(CurrentVolunteer.Id, VolunteerUpdated);
+            }
+            s_bl.Volunteer.RemoveObserver(VolunteerListUpdated);
+        }
+        private void VolunteerListUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    // רענון רשימת המתנדבים
+                    var volunteers = s_bl.Volunteer.GetVolunteersList();
+                    if (volunteers != null)
+                    {
+                        Volunteers.Clear();
+                        foreach (var volunteer in volunteers)
+                        {
+                            Volunteers.Add(volunteer);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                    CurrentVolunteer = updatedVolunteer;
+                }
+                //try
+                //{
+                //    // רענון רשימת הקריאות
+                //    var calls = s_bl.Call.;
+                //    if (volunteers != null)
+                //    {
+                //        Volunteers.Clear();
+                //        foreach (var volunteer in volunteers)
+                //        {
+                //            Volunteers.Add(volunteer);
+                //        }
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                //    CurrentVolunteer = updatedVolunteer;
+                //}
+            });
+        }
+        private void VolunteerUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (CurrentVolunteer != null)
+                {
+                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                    CurrentVolunteer = updatedVolunteer;
+
+                }
+            });
         }
         private void LoudVolunteerWindow(string? id = null)
         {
@@ -139,7 +216,7 @@ namespace PL.Volunteer
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
+            selectCallWindow.Show();
             LoadCallDetails();
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)

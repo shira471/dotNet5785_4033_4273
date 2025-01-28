@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PL.Volunteer.VolunteerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Volunteer Window" Height="600" Width="800" Background="AliceBlue" FontFamily="Segoe UI">
+        Title="Volunteer Window" Height="600" Width="800" Background="AliceBlue" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Louded">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

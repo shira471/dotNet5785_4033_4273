@@ -74,7 +74,7 @@ namespace PL.Volunteer
                     Close();
                 }
             }
-
+            
             DataContext = this;
         }
 
@@ -115,10 +115,21 @@ namespace PL.Volunteer
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
+        private void Window_Louded(object sender, RoutedEventArgs e)
+        {
+            if (CurrentVolunteer != null)
+            {
+                s_bl.Volunteer.AddObserver(CurrentVolunteer.Id, VolunteerUpdated);
+            }
+        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            // הסרת המשקיף כאשר החלון נסגר
+            // Remove observers when the window is closed
+            if (CurrentVolunteer != null )
+            {
+                s_bl.Volunteer.RemoveObserver(CurrentVolunteer.Id, VolunteerUpdated);
+            }
             s_bl.Volunteer.RemoveObserver(VolunteerListUpdated);
         }
 
@@ -142,6 +153,20 @@ namespace PL.Volunteer
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                    CurrentVolunteer = updatedVolunteer;
+                }
+            });
+        }
+        private void VolunteerUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (CurrentVolunteer != null)
+                {
+                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                    CurrentVolunteer = updatedVolunteer;
+
                 }
             });
         }

@@ -84,15 +84,24 @@ public partial class CallsViewWindow : Window
         {
             if (actionWindow.IsUpdate) // Update
             {
-                try
+                // בדיקה אם הקריאה בסטטוס InProgress
+                if (selectedCall.Status == Status.inProgres)
                 {
-                    var updateWindow = new AddCallWindow(selectedCall.CallId); // חלון לעדכון
-                    updateWindow.Show();
-                    vm.LoadCalls(); // רענון הרשימה
+                    MessageBox.Show("Cannot update a call that is currently In Progress.", "Update Not Allowed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Error updating call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    try
+                    {
+                        var updateWindow = new AddCallWindow(selectedCall.CallId); // חלון לעדכון
+                        updateWindow.Show();
+                        vm.LoadCalls(); // רענון הרשימה
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error updating call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else if (actionWindow.IsDelete) // Delete

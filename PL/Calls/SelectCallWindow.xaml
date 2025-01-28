@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        DataContext="{Binding Vm,Mode=TwoWay, RelativeSource={RelativeSource Mode= Self}}"
+        DataContext="{Binding Vm, RelativeSource={RelativeSource Mode= Self}}"
         Title="Select Call Window"
         Height="640"
         Width="800"
@@ -33,22 +33,22 @@
             <!-- Filter -->
             <TextBlock Text="Filter by Type:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
             <ComboBox Width="200"
-                      ItemsSource="{Binding CallTypes,Mode=TwoWay}"
-                      SelectedItem="{Binding FilterCallType,Mode=TwoWay}"
+                      ItemsSource="{Binding CallTypes}"
+                      SelectedItem="{Binding FilterCallType}"
                       Margin="0,0,10,0" />
 
             <!-- Sort -->
             <TextBlock Text="Sort By:" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0" />
             <ComboBox Width="200"
-                      ItemsSource="{Binding OpenCallSortField,Mode=TwoWay}"
-                      SelectedItem="{Binding SortField,Mode=TwoWay}"
+                      ItemsSource="{Binding OpenCallSortField}"
+                      SelectedItem="{Binding SortField}"
                       Margin="0,0,10,0" />
         </StackPanel>
 
         <!-- DataGrid -->
         <DataGrid Grid.Row="2" 
-                  ItemsSource="{Binding Calls,Mode=TwoWay}" 
-                  SelectedItem="{Binding Selected, Mode=TwoWay}" 
+                  ItemsSource="{Binding Calls}" 
+                  SelectedItem="{Binding Selected}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
