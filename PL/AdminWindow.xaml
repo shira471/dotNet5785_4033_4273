@@ -26,7 +26,7 @@
             <!-- אזור משתני תצורה -->
             <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,100,10,10">
                 <Label Content="Risk time span" VerticalAlignment="Center" Margin="5" />
-                <TextBox Text="{Binding MaxYearRange, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                <TextBox Text="{Binding MaxYearRange,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
                 <Button Content="Update risk time span" Click="UpdateMaxRange_Click" Width="200" Margin="5" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
             </StackPanel>
 
@@ -55,7 +55,7 @@
             </StackPanel>
 
             <!-- תצוגת שעון המערכת -->
-            <Label Grid.Column="1" Content="{Binding CurrentTime}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="16" FontWeight="Bold" Foreground="DarkBlue" />
+            <Label Grid.Column="1" Content="{Binding CurrentTime,Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="16" FontWeight="Bold" Foreground="DarkBlue" />
         </Grid>
     </Grid>
 </Window>

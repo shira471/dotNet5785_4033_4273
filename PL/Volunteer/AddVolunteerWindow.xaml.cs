@@ -15,13 +15,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BO;
 
-
-
 namespace PL.Volunteer
 {
     public partial class AddVolunteerWindow : Window
     {
         public ObservableCollection<Role> Roles { get; set; }
+        public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
 
         public BO.Volunteer? CurrentVolunteer
         {
@@ -85,36 +84,6 @@ namespace PL.Volunteer
             Close();
         }
 
-        //public AddVolunteerWindow(int id = 0)
-        //{
-        //    InitializeComponent();
-
-        //    s_bl = BlApi.Factory.Get(); // Factory pattern for BL
-
-        //    if (id == 0)
-        //    {
-        //        // Add mode: Initialize with default values
-        //        CurrentVolunteer = new BO.Volunteer();
-        //        ButtonText = "Add";
-        //    }
-        //    else
-        //    {
-        //        // Update mode: Load data from BL
-        //        try
-        //        {
-        //            CurrentVolunteer = s_bl.Volunteer.GetVolunteerDetails(id);
-        //            ButtonText = "Update";
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show($"Error loading volunteer: {ex.Message}");
-        //            Close();
-        //        }
-        //    }
-
-        //    DataContext = this;
-        //}
-
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -130,21 +99,23 @@ namespace PL.Volunteer
                     MessageBox.Show("Volunteer updated successfully.");
                 }
 
+                // רענון רשימת המתנדבים
+                VolunteerListUpdated();
+
                 // סגור את החלון לאחר הצלחה
                 Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}");
-
             }
-
         }
 
         private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             // הסרת המשקיף כאשר החלון נסגר
@@ -155,14 +126,24 @@ namespace PL.Volunteer
         {
             Dispatcher.Invoke(() =>
             {
-               // MessageBox.Show("Volunteer list has been updated.");
+                try
+                {
+                    // רענון רשימת המתנדבים
+                    var volunteers = s_bl.Volunteer.GetVolunteersList();
+                    if (volunteers != null)
+                    {
+                        Volunteers.Clear();
+                        foreach (var volunteer in volunteers)
+                        {
+                            Volunteers.Add(volunteer);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             });
         }
-
     }
 }
-
-
-
-
-

@@ -29,7 +29,7 @@
         </StackPanel>
 
         <!-- DataGrid -->
-        <DataGrid ItemsSource="{Binding Volunteers}" 
+        <DataGrid ItemsSource="{Binding Volunteers,Mode=TwoWay}" 
                   SelectedValue="{Binding SelectedVolunteer, Mode=TwoWay}" 
                   AutoGenerateColumns="False" 
                   Grid.Row="1" 
@@ -39,12 +39,12 @@
                   Foreground="Black"
                   MouseDoubleClick="DataGrid_MouseDoubleClick" Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="150" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding mail}" Width="200" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Calls" Binding="{Binding CurrentCallId}" Width="100" IsReadOnly="True"/>
-                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="100"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id,Mode=TwoWay}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName,Mode=TwoWay}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Phone" Binding="{Binding Phone,Mode=TwoWay}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding mail,Mode=TwoWay}" Width="200" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Calls" Binding="{Binding CurrentCallId,Mode=TwoWay}" Width="100" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive,Mode=TwoWay}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
 

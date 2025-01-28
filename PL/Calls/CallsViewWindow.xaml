@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        DataContext="{Binding vm, RelativeSource={RelativeSource Mode=Self}}"
+        DataContext="{Binding vm, Mode=TwoWay,RelativeSource={RelativeSource Mode=Self}}"
         Title="Calls Management" Height="450" Width="800"
         Background="LightGray" FontFamily="Segoe UI" FontSize="14">
 
@@ -19,12 +19,12 @@
         <!-- Filter and Sort Section -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10" VerticalAlignment="Top">
             <TextBlock Text="Filter by:" Margin="5" VerticalAlignment="Center" />
-            <ComboBox Width="150" ItemsSource="{Binding FilterFields}" SelectedItem="{Binding SelectedFilterField}" Margin="5" />
+            <ComboBox Width="150" ItemsSource="{Binding FilterFields,Mode=TwoWay}" SelectedItem="{Binding SelectedFilterField,Mode=TwoWay}" Margin="5" />
             <!--<TextBox Width="200" Text="{Binding SelectedFilterValue, UpdateSourceTrigger=PropertyChanged}" Margin="5" />-->
             
 
             <TextBlock Text="Sort by:" Margin="5" VerticalAlignment="Center" />
-            <ComboBox Width="150" ItemsSource="{Binding SortFields}" SelectedItem="{Binding SelectedSortField}" Margin="5" />
+            <ComboBox Width="150" ItemsSource="{Binding SortFields,Mode=TwoWay}" SelectedItem="{Binding SelectedSortField,Mode=TwoWay}" Margin="5" />
         </StackPanel>
 
         <!-- DataGrid -->
@@ -42,11 +42,11 @@
                   BorderThickness="1"
                   MouseDoubleClick="CallDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Call ID" Binding="{Binding CallId}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-                <DataGridTextColumn Header="Call Type" Binding="{Binding CallType}" />
-                <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName}" />
-                <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments}" />
+                <DataGridTextColumn Header="Call ID" Binding="{Binding CallId,Mode=TwoWay}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status,Mode=TwoWay}" />
+                <DataGridTextColumn Header="Call Type" Binding="{Binding CallType,Mode=TwoWay}" />
+                <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName,Mode=TwoWay}" />
+                <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments,Mode=TwoWay}" />
             </DataGrid.Columns>
         </DataGrid>
 

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        DataContext="{Binding Vm, RelativeSource={RelativeSource Mode= Self}}"
+        DataContext="{Binding Vm,Mode=TwoWay, RelativeSource={RelativeSource Mode= Self}}"
         Title="Select Call Window"
         Height="640"
         Width="800"
@@ -33,21 +33,21 @@
             <!-- Filter -->
             <TextBlock Text="Filter by Type:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
             <ComboBox Width="200"
-                      ItemsSource="{Binding CallTypes}"
-                      SelectedItem="{Binding FilterCallType}"
+                      ItemsSource="{Binding CallTypes,Mode=TwoWay}"
+                      SelectedItem="{Binding FilterCallType,Mode=TwoWay}"
                       Margin="0,0,10,0" />
 
             <!-- Sort -->
             <TextBlock Text="Sort By:" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0" />
             <ComboBox Width="200"
-                      ItemsSource="{Binding OpenCallSortField}"
-                      SelectedItem="{Binding SortField}"
+                      ItemsSource="{Binding OpenCallSortField,Mode=TwoWay}"
+                      SelectedItem="{Binding SortField,Mode=TwoWay}"
                       Margin="0,0,10,0" />
         </StackPanel>
 
         <!-- DataGrid -->
         <DataGrid Grid.Row="2" 
-                  ItemsSource="{Binding Calls}" 
+                  ItemsSource="{Binding Calls,Mode=TwoWay}" 
                   SelectedItem="{Binding Selected, Mode=TwoWay}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
@@ -60,13 +60,13 @@
                   IsReadOnly="True"
                    MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="Call Type" Binding="{Binding Tkoc}" Width="*" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
-                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime}" Width="2*" />
-                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id,Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="Call Type" Binding="{Binding Tkoc,Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description,Mode=TwoWay}" Width="3*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer,Mode=TwoWay}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

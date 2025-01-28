@@ -29,20 +29,6 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>784838310</idVol>
-    <adress>2 Jaffa St, Jerusalem, Israel</adress>
-    <name>Avigail barmi</name>
-    <email>avigail.barmi@gmail.com</email>
-    <phoneNumber>0529532404</phoneNumber>
-    <password>hglNvcWY</password>
-    <latitude>31.7836688</latitude>
-    <longitude>35.2188743</longitude>
-    <limitDestenation>6.56</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
     <idVol>991825434</idVol>
     <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
@@ -235,6 +221,34 @@
     <longitude>35.2283058</longitude>
     <limitDestenation>21.33</limitDestenation>
     <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>784838310</idVol>
+    <adress>jerusalem</adress>
+    <name>Avigail barmi</name>
+    <email>avigail.barmi@gmail.com</email>
+    <phoneNumber>0529532404</phoneNumber>
+    <password>hglNvcWY</password>
+    <latitude>31.7836688</latitude>
+    <longitude>35.2188743</longitude>
+    <limitDestenation>6.56</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>212314333</idVol>
+    <adress>tel aviv</adress>
+    <name>devoraaaaa</name>
+    <email>doooooooooo@gmail.com</email>
+    <phoneNumber>0584084178</phoneNumber>
+    <password>123456</password>
+    <latitude>32.7940463</latitude>
+    <longitude>34.989571</longitude>
+    <limitDestenation>2</limitDestenation>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
