@@ -48,7 +48,7 @@
         <!-- DataGrid -->
         <DataGrid Grid.Row="2" 
                   ItemsSource="{Binding Calls}" 
-                  SelectedItem="{Binding Selected, Mode=TwoWay}" 
+                  SelectedItem="{Binding Selected}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
@@ -60,13 +60,13 @@
                   IsReadOnly="True"
                    MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="Call Type" Binding="{Binding Tkoc}" Width="*" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="2*" />
-                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime}" Width="2*" />
-                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime}" Width="2*" />
-                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer}" Width="*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id,Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="Call Type" Binding="{Binding Tkoc,Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description,Mode=TwoWay}" Width="3*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding MaxEndTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Distance" Binding="{Binding DistanceFromVolunteer,Mode=TwoWay}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

@@ -43,7 +43,7 @@
 
         <!-- Address -->
         <Label Content="Address:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <TextBox Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
 
         <!-- Email -->
         <Label Content="Email:" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />

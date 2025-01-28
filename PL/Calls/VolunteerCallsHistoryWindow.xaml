@@ -24,21 +24,21 @@
             <!-- Filter -->
             <TextBlock Text="Filter by Type:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
             <ComboBox Width="200" 
-                      ItemsSource="{Binding CallTypes}" 
-                      SelectedItem="{Binding SelectedFilterOption}" 
+                      ItemsSource="{Binding CallTypes,Mode=TwoWay}" 
+                      SelectedItem="{Binding SelectedFilterOption,Mode=TwoWay}" 
                       Margin="0,0,10,0" />
 
             <!-- Sort -->
             <TextBlock Text="Sort By:" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0" />
             <ComboBox Width="200" 
-                      ItemsSource="{Binding SortOptions}" 
-                      SelectedItem="{Binding SelectedSortOption}" 
+                      ItemsSource="{Binding SortOptions,Mode=TwoWay}" 
+                      SelectedItem="{Binding SelectedSortOption,Mode=TwoWay}" 
                       Margin="0,0,10,0" />
         </StackPanel>
 
         <!-- DataGrid -->
         <DataGrid Grid.Row="1" 
-                  ItemsSource="{Binding ClosedCalls}" 
+                  ItemsSource="{Binding ClosedCalls,Mode=TwoWay}" 
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
@@ -49,13 +49,13 @@
                   RowHeaderWidth="0"
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding CallType}" Width="2*" />
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="3*" />
-                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime}" Width="2*" />
-                <DataGridTextColumn Header="Assignment Start" Binding="{Binding AssignmentStartTime}" Width="2*" />
-                <DataGridTextColumn Header="End Time" Binding="{Binding ActualEndTime}" Width="2*" />
-                <DataGridTextColumn Header="End Type" Binding="{Binding EndType}" Width="2*" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id,Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding CallType,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Address" Binding="{Binding Address,Mode=TwoWay}" Width="3*" />
+                <DataGridTextColumn Header="Open Time" Binding="{Binding OpenTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="Assignment Start" Binding="{Binding AssignmentStartTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding ActualEndTime,Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="End Type" Binding="{Binding EndType,Mode=TwoWay}" Width="2*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
-        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI" Closed="Window_Closed">
+        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Louded">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -57,7 +57,7 @@
 
         <!-- Call Type -->
         <Label Content="Call Type:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
-        <ComboBox ItemsSource="{Binding CallTypes}"
+        <ComboBox ItemsSource="{Binding CallTypes,Mode=TwoWay}"
                   SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" 
                   Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
 
@@ -68,7 +68,7 @@
                     Height="40" Width="150" 
                     Margin="10" Background="LightCoral" 
                     Foreground="White" FontWeight="Bold" />
-            <Button Content="{Binding ButtonText}" 
+            <Button Content="{Binding ButtonText,Mode=TwoWay}" 
                     Click="btnAddUpdate_Click" 
                     Height="40" Width="150" 
                     Margin="10" Background="DodgerBlue" 

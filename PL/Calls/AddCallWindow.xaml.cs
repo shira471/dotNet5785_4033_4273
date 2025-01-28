@@ -23,7 +23,7 @@ namespace PL.Call
     /// </summary>
     public partial class AddCallWindow : Window
     {
-
+        public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
         public ObservableCollection<CallType> CallTypes { get; set; }
 
         public BO.Call? CurrentCall
@@ -95,6 +95,7 @@ namespace PL.Call
                 else
                 {
                     s_bl.Call.UpdateCallDetails(CurrentCall);
+                  
                     MessageBox.Show("Call updated successfully.");
                 }
               
@@ -113,7 +114,25 @@ namespace PL.Call
             // סגור את החלון וחזור לחלון הקודם
             Close();
         }
+        private void Window_Louded(object sender, RoutedEventArgs e)
+        {
+            if (CurrentCall != null)
+            {
+                s_bl.Call.AddObserver(CurrentCall.Id, CallUpdated);
+            }
+        }
+        private void CallUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (CurrentCall != null)
+                {
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
 
+                }
+            });
+        }
         private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
@@ -121,16 +140,38 @@ namespace PL.Call
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            // הסרת המשקיף כאשר החלון נסגר
-            s_bl.Call.RemoveObserver(UpdateCallList);
+            // Remove observers when the window is closed
+            if (CurrentCall != null)
+            {
+                s_bl.Volunteer.RemoveObserver(CurrentCall.Id, CallUpdated);
+            }
+            s_bl.Volunteer.RemoveObserver(UpdateCallList);
         }
 
         private void UpdateCallList()
         {
             Dispatcher.Invoke(() =>
             {
-               
-               // MessageBox.Show("The call list has been updated!");
+                try
+                {
+                    // רענון רשימת המתנדבים
+                    var calls = s_bl.Call.GetCallsList(null,null,null);
+                    if (calls != null)
+                    {
+                        Calls.Clear();
+                        foreach (var call in calls)
+                        {
+                            Calls.Add(call);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
+                }
+                // MessageBox.Show("The call list has been updated!");
             });
         }
     }

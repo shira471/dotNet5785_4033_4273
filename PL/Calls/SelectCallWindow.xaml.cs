@@ -77,6 +77,7 @@ public partial class SelectCallWindow : Window
 
     private void Window_Closed(object sender, EventArgs e)
     {
+
         try
         {
             s_bl?.Call.RemoveObserver(callListObserver);
