@@ -90,25 +90,6 @@ namespace PL.Volunteer
                     var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
                     CurrentVolunteer = updatedVolunteer;
                 }
-                //try
-                //{
-                //    // רענון רשימת הקריאות
-                //    var calls = s_bl.Call.;
-                //    if (volunteers != null)
-                //    {
-                //        Volunteers.Clear();
-                //        foreach (var volunteer in volunteers)
-                //        {
-                //            Volunteers.Add(volunteer);
-                //        }
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
-                //    CurrentVolunteer = updatedVolunteer;
-                //}
             });
         }
         private void VolunteerUpdated()
