@@ -203,7 +203,7 @@ namespace PL.Volunteer
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
             var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
+            myHistoryWindow.Show();
             LoadCallDetails();
         }
 

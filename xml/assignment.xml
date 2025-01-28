@@ -64,4 +64,12 @@
     <finishTime xsi:nil="true" />
     <assignKind>inTreatment</assignKind>
   </Assignment>
+  <Assignment>
+    <id>9</id>
+    <callId>2</callId>
+    <volunteerId>522846511</volunteerId>
+    <startTime>2025-01-28T19:06:15.3181284+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
 </ArrayOfAssignment>

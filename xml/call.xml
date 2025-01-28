@@ -200,4 +200,14 @@
     <startTime>2025-01-14T05:45:30.465506+02:00</startTime>
     <maximumTime>2025-02-03T04:45:30.465506+02:00</maximumTime>
   </Call>
+  <Call>
+    <id>9</id>
+    <detail>Complaint </detail>
+    <adress>Jerusalem, Israel</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2025-01-08T07:18:29.443795+02:00</startTime>
+    <maximumTime>2025-02-18T15:18:29.443795+02:00</maximumTime>
+  </Call>
 </ArrayOfCall>
