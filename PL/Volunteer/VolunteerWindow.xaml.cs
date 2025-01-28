@@ -139,13 +139,13 @@ namespace PL.Volunteer
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.ShowDialog();
+            selectCallWindow.Show();
             LoadCallDetails();
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
             var myHistoryWindow = new VolunteerCallsHistoryWindow(CurrentVolunteer.Id);
-            myHistoryWindow.ShowDialog();
+            myHistoryWindow.Show();
             LoadCallDetails();
         }
 

@@ -11,16 +11,6 @@
     <maximumTime>2025-02-01T02:18:29.443795+02:00</maximumTime>
   </Call>
   <Call>
-    <id>9</id>
-    <detail>Complaint report</detail>
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-08T07:18:29.443795+02:00</startTime>
-    <maximumTime>2025-02-18T15:18:29.443795+02:00</maximumTime>
-  </Call>
-  <Call>
     <id>12</id>
     <detail>Lost child at park</detail>
     <adress>10 HaPalmach St, Jerusalem, Israel</adress>
@@ -199,5 +189,15 @@
     <callType>medicalEquipment</callType>
     <startTime>2025-01-12T18:18:29.443795+02:00</startTime>
     <maximumTime>2025-01-12T19:56:29.443795+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>9</id>
+    <detail>Complaint </detail>
+    <adress>Jerusalem, Israel</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2025-01-08T07:18:29.443795+02:00</startTime>
+    <maximumTime>2025-02-18T15:18:29.443795+02:00</maximumTime>
   </Call>
 </ArrayOfCall>
