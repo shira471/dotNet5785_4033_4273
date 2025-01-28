@@ -619,6 +619,8 @@ public class CallImplementation : ICall
 
                 case CallField.AssignedTo:
                     if (filterValue is string assignedTo)
+
+
                     {
                         callAssignments = callAssignments.Where(c => c.LastVolunteerName != null);
                     }

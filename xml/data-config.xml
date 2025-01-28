@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>10</NextAssignmentId>
+  <NextAssignmentId>9</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
   <NextCallId>21</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
-  <Clock>27/01/2025 20:08:20</Clock>
+  <Clock>27/01/2025 22:18:25</Clock>
   <!-- שעון המערכת, תאריך ושעה התחלתיים -->
   <RiskRange>00:00:00</RiskRange>
   <!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס -->
