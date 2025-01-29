@@ -60,8 +60,16 @@
 
         <!-- כפתורים לגישה למסכים נוספים -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Select call to handle" Width="150" Margin="5" Click="SelectCall_Click"
-                    Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" IsEnabled="{Binding IsVolunteerActive}" />
+            <Button Content="Select call to handle"
+        Width="150"
+        Margin="5"
+        Click="SelectCall_Click"
+        Background="LightBlue"
+        Foreground="DarkBlue"
+        FontWeight="Bold"
+        IsEnabled="{Binding CanSelectCall, RelativeSource={RelativeSource AncestorType=Window}}" />
+
+
             <Button Content="My calls history" Width="150" Margin="5" Click="ShowMyCallsHistory_Click"
                     Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
         </StackPanel>

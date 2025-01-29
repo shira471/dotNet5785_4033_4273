@@ -20,7 +20,7 @@ public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-    public void AddVolunteer(BO.Volunteer volunteer)
+    public async Task AddVolunteer(BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
@@ -49,9 +49,10 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
+            var temp =await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
+
             lock (AdminManager.BlMutex) // Stage 7
             {
-                var temp = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
                 IsValidEmail(volunteer.Email);
                 IsValidPhoneNumber(volunteer.Phone);
                 IsValidId(volunteer.Id);
@@ -72,8 +73,11 @@ public class VolunteerImplementation : IVolunteer
                     distanceType = (DO.TypeDistance)volunteer.DistanceType
                 };
                 _dal.volunteer.Create(dalVolunteer);
+
+                VolunteerManager.Observers.NotifyListUpdated();
+                // חישוב קואורדינטות אסינכרוני (לא ממתינים!)
+                _ = Task.Run(() => updateCoordinatesForVolunteerAsync(dalVolunteer));
             }
-            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (Exception ex)
         {
@@ -129,6 +133,30 @@ public class VolunteerImplementation : IVolunteer
         catch (Exception ex)
         {
             throw new BlDoesNotExistException("Failed to retrieve volunteer details.", ex);
+        }
+    }
+    private static async Task updateCoordinatesForVolunteerAsync(DO.Volunteer doVolunteer)
+    {
+        if (!string.IsNullOrEmpty(doVolunteer.adress))
+        {
+            try
+            {
+                double[]? loc = await VolunteerManager.GetCoordinatesFromGoogleAsync(doVolunteer.adress);
+                if (loc != null)
+                {
+                    doVolunteer = doVolunteer with { latitude = loc[0], longitude = loc[1] };
+
+                    lock (AdminManager.BlMutex)
+                        DalApi.Factory.Get.volunteer.Update(doVolunteer);
+
+                    VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.idVol);
+                    VolunteerManager.Observers.NotifyListUpdated();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Failed to fetch coordinates: {ex.Message}");
+            }
         }
     }
 
@@ -201,7 +229,7 @@ public class VolunteerImplementation : IVolunteer
         };
     }
 
-    public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
+    public async Task UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
@@ -220,7 +248,7 @@ public class VolunteerImplementation : IVolunteer
         // אם כתובת שונתה, עדכון קואורדינטות
         if (existingVolunteer.adress != volunteer.Address)
         {
-            var coordinates = VolunteerManager.GetCoordinatesFromGoogle(volunteer.Address);
+            var coordinates =await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
 
             if (coordinates == null)
             {
@@ -256,6 +284,9 @@ public class VolunteerImplementation : IVolunteer
                 // עדכון צופים
                 VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol);
                 VolunteerManager.Observers.NotifyListUpdated();
+                // אם הכתובת השתנתה, חישוב הקואורדינטות ברקע
+                if (existingVolunteer.adress != volunteer.Address)
+                    _ = Task.Run(() => updateCoordinatesForVolunteerAsync(updatedVolunteer));
             }
         }
         catch (Exception ex)

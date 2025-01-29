@@ -276,10 +276,6 @@ namespace PL.Volunteer
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-
-            selectCallWindow.ShowDialog();
-            LoadCallDetails();
-
             selectCallWindow.Show();
            
 

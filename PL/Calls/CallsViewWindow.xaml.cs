@@ -85,7 +85,7 @@ public partial class CallsViewWindow : Window
             if (actionWindow.IsUpdate) // Update
             {
                 // בדיקה אם הקריאה בסטטוס InProgress
-                if (selectedCall.Status == Status.inProgres)
+                if (selectedCall.Status == Status.inProgres|| selectedCall.Status == Status.openInRisk)
                 {
                     MessageBox.Show("Cannot update a call that is currently In Progress.", "Update Not Allowed", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;

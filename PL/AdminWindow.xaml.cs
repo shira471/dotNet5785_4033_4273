@@ -25,6 +25,9 @@ namespace PL.Volunteer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private static VolunteerListWindow? _volunteerWindow = null;
         private static CallsViewWindow? _callsWindow = null;
+        public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
+
+
 
         public AdminWindow()
         {
@@ -41,6 +44,8 @@ namespace PL.Volunteer
             // Register clock and configuration observers
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
+            LoadCallStatusData();
+            s_bl.Call.AddObserver(LoadCallStatusData);
         }
 
         public ObservableCollection<BO.Volunteer> Volunteers { get; set; }
@@ -57,6 +62,7 @@ namespace PL.Volunteer
 
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
+            Application.Current.Dispatcher.Invoke(() => LoadCallStatusData());
         }
 
         /// <summary>
@@ -66,6 +72,66 @@ namespace PL.Volunteer
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
+            s_bl.Call.RemoveObserver(LoadCallStatusData);
+        }
+        private void LoadCallStatusData()
+        { // מקבל את כמות הקריאות בכל סטטוס
+            int[] statusCounts = s_bl.Call.GetCallCountsByStatus();
+
+            // רשימת הסטטוסים מה-Enum
+            var callStatuses = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
+
+            // יצירת רשימה של אובייקטים להצגה ב-DataGrid
+            var groupedCalls = callStatuses
+                .Select((status, index) => new CallInList
+                {
+                    Status = status,
+                    TotalAssignments = statusCounts[index] // משייך את הכמות הנכונה לכל סטטוס
+                })
+                .Where(c => c.TotalAssignments > 0) // מסנן סטטוסים ללא קריאות
+                .ToList();
+
+            // עדכון ה-ObservableCollection מה-UI Thread
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                CallStatusSummaries.Clear();
+                foreach (var call in groupedCalls)
+                {
+                    CallStatusSummaries.Add(call);
+                }
+            });
+        }
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (dgCallStatus.SelectedItem is CallInList selectedStatus)
+            {
+                // שליפת הקריאות לפי הסטטוס שנבחר
+                var callsInStatus = s_bl.Call.GetCallsList(CallField.Status, selectedStatus.Status, null).ToList();
+
+                if (callsInStatus.Count == 0)
+                {
+                    MessageBox.Show("No calls found for this status.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                // יצירת הודעה עם כל הקריאות
+                StringBuilder messageBuilder = new StringBuilder();
+                messageBuilder.AppendLine($"Calls in {selectedStatus.Status}:");
+                messageBuilder.AppendLine(new string('-', 30)); // קו מפריד
+
+                foreach (var call in callsInStatus)
+                {
+                    messageBuilder.AppendLine($"ID: {call.CallId}");
+                    messageBuilder.AppendLine($"Type: {call.CallType}");
+                    messageBuilder.AppendLine($"Open Time: {call.OpenTime}");
+                    messageBuilder.AppendLine($"Assigned To: {(string.IsNullOrEmpty(call.LastVolunteerName) ? "None" : call.LastVolunteerName)}");
+                    messageBuilder.AppendLine($"Total Assignments: {call.TotalAssignments}");
+                    messageBuilder.AppendLine(new string('-', 30)); // קו מפריד
+                }
+
+                // הצגת כל הקריאות שנמצאו
+                MessageBox.Show(messageBuilder.ToString(), $"Calls in {selectedStatus.Status}", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public DateTime CurrentTime
@@ -183,30 +249,30 @@ namespace PL.Volunteer
             }
         }
 
-        private void btnCallStatus_Click(object sender, RoutedEventArgs e)
-        {
-            // קריאה למתודה שמחזירה את מספר הקריאות לפי סטטוסים
-            int[] temp = s_bl.Call.GetCallCountsByStatus();
-            // שליפת הסטטוסים על פי סדרם ב-Enum Status
-            int openCalls = temp[(int)Status.open];
-            int closeCalls = temp[(int)Status.closed];
-            int inProgressCalls = temp[(int)Status.inProgres];
-            int openInRiskCalls = temp[(int)Status.openInRisk];
-            int expiredCalls = temp[(int)Status.expired];
-            int closeInRiskCalls = temp[(int)Status.closeInRisk];
+        //private void btnCallStatus_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // קריאה למתודה שמחזירה את מספר הקריאות לפי סטטוסים
+        //    int[] temp = s_bl.Call.GetCallCountsByStatus();
+        //    // שליפת הסטטוסים על פי סדרם ב-Enum Status
+        //    int openCalls = temp[(int)Status.open];
+        //    int closeCalls = temp[(int)Status.closed];
+        //    int inProgressCalls = temp[(int)Status.inProgres];
+        //    int openInRiskCalls = temp[(int)Status.openInRisk];
+        //    int expiredCalls = temp[(int)Status.expired];
+        //    int closeInRiskCalls = temp[(int)Status.closeInRisk];
 
-            // בניית ההודעה להצגה
-            string message = $"Open calls: {openCalls}\n" +
-                             $"Close calls: {closeCalls}\n" +
-                             $"Calls in progress: {inProgressCalls}\n" +
-                             $"Open in risk calls: {openInRiskCalls}\n" +
-                             $"Close in risk calls: {closeInRiskCalls}\n" +
-                             $"Expired Calls: {expiredCalls}";
+        //    // בניית ההודעה להצגה
+        //    string message = $"Open calls: {openCalls}\n" +
+        //                     $"Close calls: {closeCalls}\n" +
+        //                     $"Calls in progress: {inProgressCalls}\n" +
+        //                     $"Open in risk calls: {openInRiskCalls}\n" +
+        //                     $"Close in risk calls: {closeInRiskCalls}\n" +
+        //                     $"Expired Calls: {expiredCalls}";
 
-            // הצגת ההודעה
-            MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
+        //    // הצגת ההודעה
+        //    MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
+        //}
+       
         private void btnCallManage_Click(object sender, RoutedEventArgs e)
         {
             if (_callsWindow == null)
