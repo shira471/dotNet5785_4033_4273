@@ -11,10 +11,8 @@
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <!-- תוכן ראשי -->
-            <ColumnDefinition Width="1*" />
-            <!-- DataGrid -->
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -29,30 +27,46 @@
         <!-- תוכן ראשי -->
         <StackPanel Grid.Column="0" Margin="10">
             <!-- כפתורי ניהול זמן -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                <Button Content="Add 1 Min" Margin="5" Click="btnAddOneMinute_Click"/>
-                <Button Content="Add 1 Hour" Margin="5" Click="btnAddOneHour_Click"/>
-                <Button Content="Add 1 Day" Margin="5" Click="btnAddOneDay_Click"/>
-                <Button Content="Add 1 Month" Margin="5" Click="btnAddOneMonth_Click"/>
-                <Button Content="Add 1 Year" Margin="5" Click="btnAddOneYear_Click"/>
-            </StackPanel>
+            <GroupBox Header="Time Management" Margin="5">
+                <StackPanel>
+                    <Label Content="Simulation Interval (minutes)" VerticalAlignment="Center" Margin="5"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="+1 Min" Margin="5" Click="btnAddOneMinute_Click" Width="100"/>
+                        <Button Content="+1 Hour" Margin="5" Click="btnAddOneHour_Click" Width="100"/>
+                        <Button Content="+1 Day" Margin="5" Click="btnAddOneDay_Click" Width="100"/>
+                        <Button Content="+1 Month" Margin="5" Click="btnAddOneMonth_Click" Width="100"/>
+                        <Button Content="+1 Year" Margin="5" Click="btnAddOneYear_Click" Width="100"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
 
             <!-- Risk Time Span -->
-            <StackPanel Orientation="Vertical" Margin="0,0,0,20">
-                <Label Content="Risk Time Span" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                <Button Content="Update Risk Time Span" Click="UpdateMaxRange_Click" Width="200" Margin="5"/>
-            </StackPanel>
+            <GroupBox Header="Risk Time Span" Margin="5">
+                <StackPanel>
+                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <Button Content="Update Risk Time Span" Click="UpdateMaxRange_Click" Width="200" Margin="5"/>
+                </StackPanel>
+            </GroupBox>
 
             <!-- כפתורי ניהול בסיסיים -->
-            <StackPanel Orientation="Vertical" Margin="0,0,0,20">
-                <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click"/>
-                <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click"/>
-                <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click"/>
-            </StackPanel>
+            <GroupBox Header="Database Management" Margin="5">
+                <StackPanel>
+                    <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click"/>
+                    <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click"/>
+                    <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- עדכון זמן הסימולציה -->
+            <GroupBox Header="Simulation Interval Update" Margin="5">
+                <StackPanel>
+                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <Button Content="Update Simulation Interval" Click="SimulationTime_Click" Width="200" Margin="5"/>
+                </StackPanel>
+            </GroupBox>
 
             <!-- כפתורים לניהול מתנדבים וקריאות -->
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
                 <Button Content="Volunteer Management" Width="200" Margin="5" Click="btnVolManage_Click"/>
                 <Button Content="Calls Management" Width="200" Margin="5" Click="btnCallManage_Click"/>
             </StackPanel>

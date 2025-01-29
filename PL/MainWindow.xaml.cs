@@ -36,5 +36,15 @@ namespace PL.Volunteer
                 });
             }
         }
+
+
+        private void AdminWindow_Closed(object sender, EventArgs e)
+        {
+            if (Application.Current.Windows.OfType<AdminWindow>().Any() == false)
+            {
+                MainWindowVM.IsManagerLoggedIn = false;
+            }
+           
+        }
     }
 }

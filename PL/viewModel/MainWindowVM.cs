@@ -131,6 +131,12 @@ namespace PL.Volunteer
     {
         private readonly BlApi.IBl _bl = BlApi.Factory.Get();
         private static bool _isManagerLoggedIn = false;
+        public static bool IsManagerLoggedIn
+        {
+            get => _isManagerLoggedIn;
+            set => _isManagerLoggedIn = value;
+        }
+
         private string _userId;
         private string _password;
         private string _errorMessage;
@@ -216,14 +222,19 @@ namespace PL.Volunteer
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        if (_isManagerLoggedIn)
+                        if (Application.Current.Windows.OfType<AdminWindow>().Any())
                         {
                             MessageBox.Show("A manager is already logged in. Only one manager can be active at a time.",
                                 "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
                         }
-                        _isManagerLoggedIn = true;
+                        //if (_isManagerLoggedIn)
+                        //{
+                        //    MessageBox.Show("A manager is already logged in. Only one manager can be active at a time.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        //    return;
+                        //}
                         var adminWindow = new AdminWindow();
+                        _isManagerLoggedIn = true;
                         adminWindow.Closed += (s, e) => _isManagerLoggedIn = false; // כאשר נסגר – שחרור הדגל
                         adminWindow.Show();
                     }
