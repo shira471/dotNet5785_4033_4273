@@ -535,16 +535,14 @@ public class CallImplementation : ICall
             switch (filterField)
             {
                 case CallField.Status:
-                    if (filterValue is BO.Status statusFilter)
+                    if (filterValue is object Status)
                     {
-                        callAssignments = callAssignments.Where(c => c.Status == statusFilter);
+                        callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
                     }
                     break;
 
                 case CallField.AssignedTo:
                     if (filterValue is string assignedTo)
-
-
                     {
                         callAssignments = callAssignments.Where(c => c.LastVolunteerName != null);
                     }

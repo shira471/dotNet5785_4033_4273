@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" 
-        Height="500" Width="900"
+        Height="700" Width="900"
         Background="AliceBlue" FontFamily="Segoe UI">
 
     <Grid Margin="10">

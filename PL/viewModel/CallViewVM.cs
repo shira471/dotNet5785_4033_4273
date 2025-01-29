@@ -69,13 +69,14 @@ public class CallViewVM : ViewModelBase
 
     public void LoadCalls()
     {
-        Calls.Clear();
         try
         {
-            var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterField, SelectedSortField) ?? Enumerable.Empty<BO.CallInList>();
-            // לוודא שהעדכון נעשה מה-UI Thread
+            var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterField, SelectedSortField)
+                       ?? Enumerable.Empty<BO.CallInList>();
+            // לוודא שכל העדכונים ל-ObservableCollection מתבצעים ב-Dispatcher
             Application.Current.Dispatcher.Invoke(() =>
             {
+                Calls.Clear();
                 foreach (var call in calls)
                 {
                     Calls.Add(call);
@@ -87,4 +88,5 @@ public class CallViewVM : ViewModelBase
             MessageBox.Show($"Error loading calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
 }

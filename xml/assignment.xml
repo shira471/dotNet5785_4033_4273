@@ -96,4 +96,12 @@
     <finishTime>2025-01-29T21:25:11.7539213+02:00</finishTime>
     <assignKind>handeled</assignKind>
   </Assignment>
+  <Assignment>
+    <id>14</id>
+    <callId>18</callId>
+    <volunteerId>212314033</volunteerId>
+    <startTime>2025-01-29T21:54:31.9620491+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
 </ArrayOfAssignment>
