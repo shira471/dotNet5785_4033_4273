@@ -71,16 +71,6 @@
     <maximumTime>2025-02-17T20:44:59.7835627+02:00</maximumTime>
   </Call>
   <Call>
-    <id>13</id>
-    <detail>Car accident report</detail>
-    <adress>9 Yitzhak Rabin Blvd, Jerusalem, Israel</adress>
-    <latitude>31.9607929</latitude>
-    <longitude>34.9400171</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-01T13:44:59.7835627+02:00</startTime>
-    <maximumTime>2025-02-24T21:44:59.7835627+02:00</maximumTime>
-  </Call>
-  <Call>
     <id>16</id>
     <detail>Water pipe burst</detail>
     <adress>34 Ein Karem, Jerusalem, Israel</adress>
@@ -141,16 +131,6 @@
     <maximumTime>2025-01-18T15:42:59.7835627+02:00</maximumTime>
   </Call>
   <Call>
-    <id>8</id>
-    <detail>Appointment reminder</detail>
-    <adress>16 Herzl St, Jerusalem, Israel</adress>
-    <latitude>31.7865094</latitude>
-    <longitude>35.1985783</longitude>
-    <callType>dinner</callType>
-    <startTime>2025-01-28T00:44:59.7835627+02:00</startTime>
-    <maximumTime>2025-01-28T03:30:59.7835627+02:00</maximumTime>
-  </Call>
-  <Call>
     <id>11</id>
     <detail>Medical emergency assistance</detail>
     <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
@@ -199,5 +179,35 @@
     <callType>lunch</callType>
     <startTime>2025-01-10T15:44:59.7835627+02:00</startTime>
     <maximumTime>2025-01-10T17:04:59.7835627+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>21</id>
+    <detail>ckc</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>madication</callType>
+    <startTime>2025-01-29T13:21:27.8481252+02:00</startTime>
+    <maximumTime>2025-01-31T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>13</id>
+    <detail>Car accident report</detail>
+    <adress>9 Yitzhak Rabin Blvd, Jerusalem, Israel</adress>
+    <latitude>31.9607929</latitude>
+    <longitude>34.9400171</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-01T13:44:59.7835627+02:00</startTime>
+    <maximumTime>2025-02-25T00:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>8</id>
+    <detail>Appointment reminder</detail>
+    <adress>16 Herzl St, Jerusalem, Israel</adress>
+    <latitude>31.7865094</latitude>
+    <longitude>35.1985783</longitude>
+    <callType>dinner</callType>
+    <startTime>2025-01-28T00:44:59.7835627+02:00</startTime>
+    <maximumTime>2025-01-31T00:00:00</maximumTime>
   </Call>
 </ArrayOfCall>

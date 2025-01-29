@@ -2,7 +2,7 @@
 <config>
   <NextAssignmentId>19</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>21</NextCallId>
+  <NextCallId>22</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->

@@ -5,57 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" Height="450" Width="800"
+        Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" 
+        Height="500" Width="900"
         Background="AliceBlue" FontFamily="Segoe UI">
 
     <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <!-- תוכן ראשי -->
+            <ColumnDefinition Width="1*" />
+            <!-- DataGrid -->
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- כותרת חלון -->
-        <TextBlock Text="Welcome!" FontSize="24" FontWeight="Bold" Foreground="Green" HorizontalAlignment="Center" Margin="0,10,0,20" />
+        <!-- כותרת -->
+        <TextBlock Text="Welcome!" FontSize="24" FontWeight="Bold" Foreground="Green" 
+                   HorizontalAlignment="Center" Margin="0,10,0,20" Grid.ColumnSpan="2"/>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- אזור משתני תצורה -->
-            <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,100,10,10">
-                <Label Content="Risk time span" VerticalAlignment="Center" Margin="5" />
-                <TextBox Text="{Binding MaxYearRange,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
-                <Button Content="Update risk time span" Click="UpdateMaxRange_Click" Width="200" Margin="5" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+        <!-- תוכן ראשי -->
+        <StackPanel Grid.Column="0" Margin="10">
+            <!-- כפתורי ניהול זמן -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <Button Content="Add 1 Min" Margin="5" Click="btnAddOneMinute_Click"/>
+                <Button Content="Add 1 Hour" Margin="5" Click="btnAddOneHour_Click"/>
+                <Button Content="Add 1 Day" Margin="5" Click="btnAddOneDay_Click"/>
+                <Button Content="Add 1 Month" Margin="5" Click="btnAddOneMonth_Click"/>
+                <Button Content="Add 1 Year" Margin="5" Click="btnAddOneYear_Click"/>
             </StackPanel>
 
-            <!-- כפתורים לקידום שעון המערכת -->
-            <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10,10,10,281">
-                <Button Content="Add one minute" Margin="5" Click="btnAddOneMinute_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Add one hour" Margin="5" Click="btnAddOneHour_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Add one day" Margin="5" Click="btnAddOneDay_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Add one month" Margin="5" Click="btnAddOneMonth_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Add one year" Margin="5" Click="btnAddOneYear_Click" Background="LightBlue" Foreground="DarkBlue" />
+            <!-- Risk Time Span -->
+            <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                <Label Content="Risk Time Span" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <Button Content="Update Risk Time Span" Click="UpdateMaxRange_Click" Width="200" Margin="5"/>
             </StackPanel>
 
-            <!-- אזור כפתורים כלליים -->
-            <StackPanel Grid.Column="0" Margin="10,100,0,0">
-                <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-                <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
-                <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <!--<Button Content="Stop Simulator" Width="200" Margin="5" Click="btnStpSimulat_Click" Background="LightBlue" Foreground="DarkBlue" />-->
-                <Button Content="Show Call by Status" Width="200" Margin="5" Click="btnCallStatus_Click" Background="LightBlue" Foreground="DarkBlue" />
+            <!-- כפתורי ניהול בסיסיים -->
+            <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click"/>
+                <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click"/>
+                <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click"/>
             </StackPanel>
 
-            <!-- אזור ניהול -->
-            <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="10,250,0,0">
-                <Button Content="Volunteer Management" Width="200" Margin="5" Click="btnVolManage_Click" Background="LightBlue" Foreground="DarkBlue" />
-                <Button Content="Calls Management" Width="200" Margin="5" Click="btnCallManage_Click" Background="LightBlue" Foreground="DarkBlue" />
+            <!-- כפתורים לניהול מתנדבים וקריאות -->
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <Button Content="Volunteer Management" Width="200" Margin="5" Click="btnVolManage_Click"/>
+                <Button Content="Calls Management" Width="200" Margin="5" Click="btnCallManage_Click"/>
             </StackPanel>
 
-            <!-- תצוגת שעון המערכת -->
-            <Label Grid.Column="1" Content="{Binding CurrentTime,Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="16" FontWeight="Bold" Foreground="DarkBlue" />
-        </Grid>
+            <!-- הצגת השעון -->
+            <Label Content="{Binding CurrentTime}" HorizontalAlignment="Center"
+                   VerticalAlignment="Top" Margin="10" FontSize="16" FontWeight="Bold"/>
+        </StackPanel>
+
+        <!-- DataGrid בצד ימין -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Call Status Summary" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <DataGrid Name="dgCallStatus" ItemsSource="{Binding CallStatusSummaries}"
+                      AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick"
+                      Margin="5" Width="Auto" Height="300"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="2*" />
+                    <DataGridTextColumn Header="Count" Binding="{Binding TotalAssignments}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </Window>

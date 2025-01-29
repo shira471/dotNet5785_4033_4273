@@ -613,9 +613,9 @@ public class CallImplementation : ICall
             switch (filterField)
             {
                 case CallField.Status:
-                    if (filterValue is object Status)
+                    if (filterValue is BO.Status statusFilter)
                     {
-                        callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
+                        callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                     }
                     break;
 
