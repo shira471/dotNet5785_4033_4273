@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>14</NextAssignmentId>
+  <NextAssignmentId>18</NextAssignmentId>
+  <NextAssignmentId>19</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>21</NextCallId>
+  <NextCallId>24</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
-  <Clock>29/01/2025 14:30:17</Clock>
+  <Clock>29/01/2025 13:16:44</Clock>
+  <Clock>28/01/2025 22:44:55</Clock>
   <!-- שעון המערכת, תאריך ושעה התחלתיים -->
   <RiskRange>00:00:00</RiskRange>
   <!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס -->

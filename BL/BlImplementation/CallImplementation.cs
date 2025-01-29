@@ -16,140 +16,267 @@ using Helpers;
 
 public class CallImplementation : ICall
 {
-    private readonly DalApi.Idal _dal = DalApi.Factory.Get;
+    private static readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-    public void AddCall(Call call)
+
+    //public async Task AddCall(Call call)
+    //{
+    //    AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+    //    if (call == null)
+    //    {
+    //        throw new ArgumentNullException(nameof(call), "Call cannot be null.");
+    //    }
+
+    //    if (call.CallType == CallType.None)
+    //    {
+    //        throw new ArgumentException("Call type cannot be None.");
+    //    }
+
+    //    if (call.MaxEndTime <= call.OpenTime)
+    //    {
+    //        throw new ArgumentException("End time cannot be earlier than start time.");
+    //    }
+    //    if (call.MaxEndTime == null)
+    //    {
+    //        throw new ArgumentException("End time cannot be null.");
+    //    }
+    //    try
+    //    {
+    //        var temp = await VolunteerManager.GetCoordinatesFromGoogleAsync(call.Address);
+
+    //        lock (AdminManager.BlMutex) // Stage 7
+    //        {
+    //            var calls = _dal.call.ReadAll();
+    //            foreach (var call2 in calls)
+    //            {
+    //                if (call2.detail == call.Description)
+    //                {
+    //                    throw new Exception("This call already exists.");
+    //                }
+    //            }
+
+    //            var doCall = new DO.Call(
+    //                id: 0, // ייווצר מזהה חדש ב-DAL
+    //                detail: call.Description,
+    //                adress: call.Address,
+    //                latitude: temp[0],
+    //                longitude: temp[1],
+    //                callType: (DO.CallType?)call.CallType,
+    //                startTime: call.OpenTime,
+    //                maximumTime: call.MaxEndTime
+    //            );
+
+    //            _dal.call.Create(doCall);
+    //            call.Status = Status.open;
+
+    //            AdminImplementation admin = new AdminImplementation();
+    //            UpdateStatus(call, admin.GetRiskTimeSpan());
+    //        }
+
+    //        // Notification to observers (outside lock)
+    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
+    //    }
+    //    catch (DO.DalAlreadyExistsException ex)
+    //    {
+    //        throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.", ex)));
+    //    }
+    //}
+    public async Task AddCall(Call call)
     {
-        AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+        AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
+
         if (call == null)
-        {
             throw new ArgumentNullException(nameof(call), "Call cannot be null.");
-        }
 
         if (call.CallType == CallType.None)
-        {
             throw new ArgumentException("Call type cannot be None.");
-        }
 
         if (call.MaxEndTime <= call.OpenTime)
-        {
             throw new ArgumentException("End time cannot be earlier than start time.");
-        }
+
         if (call.MaxEndTime == null)
-        {
             throw new ArgumentException("End time cannot be null.");
+
+        // ✔ שליחה מיידית ל-DAL *בלי* הקואורדינטות
+        var doCall = new DO.Call(
+            id: 0,
+            detail: call.Description,
+            adress: call.Address,
+            latitude: null,  // ❌ עדיין לא מחשבים קואורדינטות!
+            longitude: null,
+            callType: (DO.CallType?)call.CallType,
+            startTime: call.OpenTime,
+            maximumTime: call.MaxEndTime
+        );
+
+        lock (AdminManager.BlMutex)
+        {
+            _dal.call.Create(doCall);
         }
+
+        call.Status = Status.open;
+
+        // ✔ נשלח את העדכון לאובזרברים (רשימות קריאות מתנדבים וכו')
+        await Task.Run(() => CallManager.Observers.NotifyListUpdated());
+
+        // ✔ חישוב קואורדינטות ברקע בלי לחכות
+        _ = UpdateCallCoordinatesAsync(doCall);
+    }
+
+    // ✔ תת-מתודה אסינכרונית לחישוב הקואורדינטות ולשליחה מחדש ל-DAL
+    private static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
+    {
+        if (string.IsNullOrWhiteSpace(doCall.adress))
+            return;
+
         try
         {
-            lock (AdminManager.BlMutex) // Stage 7
+            var coords = await VolunteerManager.GetCoordinatesFromGoogleAsync(doCall.adress);
+
+            if (coords != null)
             {
-                var calls = _dal.call.ReadAll();
-                foreach (var call2 in calls)
+                // ✔ נעילה רק בזמן העדכון ב-DAL
+                lock (AdminManager.BlMutex)
                 {
-                    if (call2.detail == call.Description)
-                    {
-                        throw new Exception("This call already exists.");
-                    }
+                    doCall = doCall with { latitude = coords[0], longitude = coords[1] };
+                    _dal.call.Update(doCall);
                 }
 
-                var temp = VolunteerManager.GetCoordinatesFromGoogle(call.Address);
-                var doCall = new DO.Call(
-                    id: 0, // ייווצר מזהה חדש ב-DAL
-                    detail: call.Description,
-                    adress: call.Address,
-                    latitude: temp[0],
-                    longitude: temp[1],
-                    callType: (DO.CallType?)call.CallType,
-                    startTime: call.OpenTime,
-                    maximumTime: call.MaxEndTime
-                );
-
-                _dal.call.Create(doCall);
-                call.Status = Status.open;
-
-                AdminImplementation admin = new AdminImplementation();
-                UpdateStatus(call, admin.GetRiskTimeSpan());
+                // ✔ עדכון הצופים שהתהליך הושלם
+                CallManager.Observers.NotifyItemUpdated(doCall.id);
+                CallManager.Observers.NotifyListUpdated();
             }
-
-            // Notification to observers (outside lock)
-            CallManager.Observers.NotifyListUpdated(); // Stage 5
         }
-        catch (DO.DalAlreadyExistsException ex)
+        catch (Exception ex)
         {
-            throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.", ex)));
+            Console.WriteLine($"⚠ שגיאה בחישוב קואורדינטות: {ex.Message}");
         }
     }
 
 
 
-    public void AssignCallToVolunteer(int volunteerId, int callId)
+    //public void AssignCallToVolunteer(int volunteerId, int callId)
+    //{
+    //    AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+
+    //    lock (AdminManager.BlMutex) // Stage 7
+    //    {
+    //        // שליפת הקריאה ממאגר הנתונים
+    //        var call = _dal.call.Read(callId) ??
+    //            throw new Exception($"Call with ID={callId} does not exist.");
+
+    //        // שליפת המתנדב ממאגר הנתונים
+    //        var volunteer = _dal.volunteer.Read(volunteerId) ??
+    //            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+    //        // בדיקה אם המתנדב כבר ביטל את הקריאה בעבר
+    //        var volunteerCancelledAssignment = _dal.assignment.ReadAll()
+    //            .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
+
+    //        if (volunteerCancelledAssignment != null)
+    //        {
+    //            throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
+    //        }
+
+    //        // בדיקה אם הקריאה כבר משויכת למתנדב אחר
+    //        var existingAssignment = _dal.assignment.ReadAll()
+    //            .FirstOrDefault(a => a.callId == callId &&
+    //                                 a.assignKind != DO.Hamal.cancelByManager &&
+    //                                 (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+
+    //        if (existingAssignment != null)
+    //        {
+    //            throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
+    //        }
+
+    //        // בדיקה אם למתנדב יש קריאה אחרת במצב "בטיפול"
+    //        var volunteerActiveAssignment = _dal.assignment.ReadAll()
+    //            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
+
+    //        if (volunteerActiveAssignment != null)
+    //        {
+    //            throw new Exception($"Volunteer with ID={volunteerId} is already working on another call.");
+    //        }
+
+    //        // חישוב המרחק ובדיקת טווח
+    //        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
+    //        if (distance > volunteer.limitDestenation)
+    //        {
+    //            throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
+    //        }
+
+    //        // יצירת שיוך חדש
+    //        var assignment = new DO.Assignment
+    //        {
+    //            callId = callId,
+    //            volunteerId = volunteerId,
+    //            startTime = AdminManager.Now,
+    //            assignKind = DO.Hamal.inTreatment
+    //        };
+    //        _dal.assignment.Create(assignment);
+
+    //        // עדכון סטטוס הקריאה
+    //        var x = ConvertToBOCall(call);
+    //        x.Status = Status.inProgres;
+    //    }
+
+    //    // עדכון התצפיתנים (מחוץ לנעילה)
+    //    CallManager.Observers.NotifyListUpdated();
+
+    //}
+    public async Task AssignCallToVolunteer(int volunteerId, int callId)
     {
-        AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+        AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
 
-        lock (AdminManager.BlMutex) // Stage 7
+        var call = await Task.Run(() => _dal.call.Read(callId))
+            ?? throw new Exception($"Call with ID={callId} does not exist.");
+
+        var volunteer = await Task.Run(() => _dal.volunteer.Read(volunteerId))
+            ?? throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+        var volunteerCancelledAssignment = (await Task.Run(() => _dal.assignment.ReadAll()))
+            .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
+
+        if (volunteerCancelledAssignment != null)
         {
-            // שליפת הקריאה ממאגר הנתונים
-            var call = _dal.call.Read(callId) ??
-                throw new Exception($"Call with ID={callId} does not exist.");
-
-            // שליפת המתנדב ממאגר הנתונים
-            var volunteer = _dal.volunteer.Read(volunteerId) ??
-                throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
-
-            // בדיקה אם המתנדב כבר ביטל את הקריאה בעבר
-            var volunteerCancelledAssignment = _dal.assignment.ReadAll()
-                .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
-
-            if (volunteerCancelledAssignment != null)
-            {
-                throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
-            }
-
-            // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-            var existingAssignment = _dal.assignment.ReadAll()
-                .FirstOrDefault(a => a.callId == callId &&
-                                     a.assignKind != DO.Hamal.cancelByManager &&
-                                     (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
-
-            if (existingAssignment != null)
-            {
-                throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
-            }
-
-            // בדיקה אם למתנדב יש קריאה אחרת במצב "בטיפול"
-            var volunteerActiveAssignment = _dal.assignment.ReadAll()
-                .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
-
-            if (volunteerActiveAssignment != null)
-            {
-                throw new Exception($"Volunteer with ID={volunteerId} is already working on another call.");
-            }
-
-            // חישוב המרחק ובדיקת טווח
-            var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
-            if (distance > volunteer.limitDestenation)
-            {
-                throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
-            }
-
-            // יצירת שיוך חדש
-            var assignment = new DO.Assignment
-            {
-                callId = callId,
-                volunteerId = volunteerId,
-                startTime = AdminManager.Now,
-                assignKind = DO.Hamal.inTreatment
-            };
-            _dal.assignment.Create(assignment);
-
-            // עדכון סטטוס הקריאה
-            var x = ConvertToBOCall(call);
-            x.Status = Status.inProgres;
+            throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
         }
 
-        // עדכון התצפיתנים (מחוץ לנעילה)
-        CallManager.Observers.NotifyListUpdated();
+        // בדיקה אם הקריאה כבר משויכת למתנדב אחר
+        var existingAssignment = (await Task.Run(() => _dal.assignment.ReadAll()))
+            .FirstOrDefault(a => a.callId == callId &&
+                                 a.assignKind != DO.Hamal.cancelByManager &&
+                                 (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+
+        if (existingAssignment != null)
+        {
+            throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
+        }
+
+        // חישוב מרחק אסינכרוני
+        var distance = await Task.Run(() => CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude));
+
+        if (distance > volunteer.limitDestenation)
+        {
+            throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
+        }
+
+        var assignment = new DO.Assignment
+        {
+            callId = callId,
+            volunteerId = volunteerId,
+            startTime = AdminManager.Now,
+            assignKind = DO.Hamal.inTreatment
+        };
+
+        await Task.Run(() => _dal.assignment.Create(assignment));
+
+        var x = ConvertToBOCall(call);
+        x.Status = Status.inProgres;
+
+        await Task.Run(() => CallManager.Observers.NotifyListUpdated());
     }
+
 
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
@@ -504,7 +631,7 @@ public class CallImplementation : ICall
         };
     }
 
-    public void UpdateCallDetails(Call call)
+    public async Task UpdateCallDetails(Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
 
@@ -521,7 +648,7 @@ public class CallImplementation : ICall
         }
 
         // עדכון קווי אורך ורוחב לפי הכתובת
-        var coordinates = VolunteerManager.GetCoordinatesFromGoogle(call.Address);
+        var coordinates = await VolunteerManager.GetCoordinatesFromGoogleAsync(call.Address);
         if (coordinates == null || coordinates.Length < 2)
         {
             throw new InvalidOperationException("Invalid address: could not retrieve coordinates.");
@@ -875,9 +1002,9 @@ public class CallImplementation : ICall
         public void AddObserver(Action listObserver) =>
     CallManager.Observers.AddListObserver(listObserver); //stage 5
     public void AddObserver(int id, Action observer) =>
-CallManager.Observers.AddObserver(id, observer); //stage 5
+    CallManager.Observers.AddObserver(id, observer); //stage 5
     public void RemoveObserver(Action listObserver) =>
-CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    CallManager.Observers.RemoveListObserver(listObserver); //stage 5
     public void RemoveObserver(int id, Action observer) =>
-CallManager.Observers.RemoveObserver(id, observer); //stage 5
+    CallManager.Observers.RemoveObserver(id, observer); //stage 5
 }

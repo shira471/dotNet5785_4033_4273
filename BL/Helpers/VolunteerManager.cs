@@ -131,7 +131,7 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="address">The address to geocode.</param>
     /// <returns>An array containing latitude and longitude if found, null otherwise.</returns>
-    public static double[]? GetCoordinatesFromGoogle(string address)
+    public static async Task<double[]> GetCoordinatesFromGoogleAsync(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
             throw new ArgumentException("Address cannot be null or empty.", nameof(address));

@@ -34,7 +34,7 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // 4. עדכון פרטי קריאה
     // מקבלת אובייקט קריאה מעודכן, מבצעת בדיקות תקינות נתונים (פורמט ולוגיקה) ומעדכנת את הקריאה בשכבת הנתונים.
     // במידה ואין קריאה עם מזהה כזה, נזרקת חריגה.
-    void UpdateCallDetails(BO.Call call);
+    Task UpdateCallDetails(BO.Call call);
 
     // 5. מחיקת קריאה
     // מוחקת קריאה רק אם היא בסטטוס פתוח ולא הוקצתה בעבר.
@@ -44,7 +44,7 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // 6. הוספת קריאה
     // מוסיפה קריאה חדשה לאחר בדיקות תקינות נתונים (פורמט ולוגיקה).
     // אם כבר קיימת קריאה עם מזהה זהה, נזרקת חריגה.
-    void AddCall(BO.Call call);
+    Task AddCall(BO.Call call);
 
     // 7. רשימת קריאות סגורות לפי מתנדב
     // מחזירה את כל הקריאות הסגורות שטופלו על ידי מתנדב מסוים.
@@ -70,5 +70,5 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // 11. בחירת קריאה לטיפול
     // מקצה קריאה למתנדב, מעדכנת את זמן הכניסה לטיפול.
     // אם הקריאה לא מתאימה לטיפול (למשל, כבר טופלה או פג תוקפה), נזרקת חריגה.
-    void AssignCallToVolunteer(int volunteerId, int callId);
+    Task AssignCallToVolunteer(int volunteerId, int callId);
 }

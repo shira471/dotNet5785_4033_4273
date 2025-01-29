@@ -7,7 +7,14 @@ using PL.Calls;
 using System.ComponentModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Windows.Controls;
+using static System.Net.Mime.MediaTypeNames;
+using System.Security.Claims;
+using System.Windows.Media.Media3D;
+using System.Windows.Media;
+using System.Windows.Threading;
+
 using DO;
+
 
 namespace PL.Volunteer
 {
@@ -31,9 +38,10 @@ namespace PL.Volunteer
             set { SetValue(CurrentCallProperty, value); }
         }
 
-
         public static readonly DependencyProperty CurrentCallProperty =
-            DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(VolunteerWindow), new PropertyMetadata(null));
+          DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(VolunteerWindow), new PropertyMetadata(null));
+
+
 
         public string? CallDetails { get; set; }
         // Property to check if a call is active
@@ -55,16 +63,16 @@ namespace PL.Volunteer
                 DataContext = this;
                 LoadVolunteer(id);
                 LoadCallDetails();
+
                 s_bl.Call.AddObserver(LoadCallDetails);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void Window_Louded(object sender, RoutedEventArgs e)
-        {
+        private void Window_Loaded(object sender, RoutedEventArgs e) { 
             if (CurrentVolunteer != null)
             {
                 s_bl.Volunteer.AddObserver(CurrentVolunteer.Id, VolunteerUpdated);
@@ -75,7 +83,9 @@ namespace PL.Volunteer
             {
                 s_bl.Call.AddObserver(CurrentCall.Id, CallUpdated);
             }
+
             LoadCallDetails();
+
 
         }
 
@@ -91,7 +101,34 @@ namespace PL.Volunteer
             {
                 s_bl.Call.RemoveObserver(CurrentCall.Id, CallUpdated);
             }
+            s_bl.Call.RemoveObserver(CallListUpdated);
         }
+        private void CallListUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    // רענון רשימת המתנדבים
+                    var calls = s_bl.Call.GetCallsList(null, null, null);
+                    if (calls != null)
+                    {
+                        Calls.Clear();
+                        foreach (var call in calls)
+                        {
+                            Calls.Add(call);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
+                }
+            });
+        }
+        
         private void VolunteerListUpdated()
         {
             Dispatcher.Invoke(() =>
@@ -115,25 +152,6 @@ namespace PL.Volunteer
                     var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
                     CurrentVolunteer = updatedVolunteer;
                 }
-                //try
-                //{
-                //    // רענון רשימת הקריאות
-                //    var calls = s_bl.Call.;
-                //    if (volunteers != null)
-                //    {
-                //        Volunteers.Clear();
-                //        foreach (var volunteer in volunteers)
-                //        {
-                //            Volunteers.Add(volunteer);
-                //        }
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
-                //    CurrentVolunteer = updatedVolunteer;
-                //}
             });
         }
         private void VolunteerUpdated()
@@ -260,6 +278,7 @@ namespace PL.Volunteer
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
             selectCallWindow.Show();
            
+
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
@@ -343,5 +362,4 @@ namespace PL.Volunteer
     }
 
 }
-
 

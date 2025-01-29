@@ -61,6 +61,16 @@
     <maximumTime>2025-02-15T09:30:24.2402342+02:00</maximumTime>
   </Call>
   <Call>
+    <id>15</id>
+    <detail>Tree blocking road</detail>
+    <adress>15 King David St, Jerusalem, Israel</adress>
+    <latitude>31.7757159</latitude>
+    <longitude>35.2221845</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-25T13:16:54.9903484+02:00</startTime>
+    <maximumTime>2025-02-12T15:16:54.9903484+02:00</maximumTime>
+  </Call>
+  <Call>
     <id>17</id>
     <detail>Animal rescue request</detail>
     <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>

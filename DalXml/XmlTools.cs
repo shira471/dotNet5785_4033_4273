@@ -29,22 +29,43 @@ static class XMLTools
             throw new DalXMLFileLoadCreateException($"fail to create xml file: {s_xmlDir + xmlFilePath}, {ex.Message}");
         }
     }
+    private static readonly object fileLock = new();
+
     public static List<T> LoadListFromXMLSerializer<T>(string xmlFileName) where T : class
     {
-        string xmlFilePath = s_xmlDir + xmlFileName;
+        string xmlFilePath = Path.Combine(s_xmlDir, xmlFileName);
 
-        try
+        lock (fileLock)
         {
-            if (!File.Exists(xmlFilePath)) return new();
-            using FileStream file = new(xmlFilePath, FileMode.Open);
-            XmlSerializer x = new(typeof(List<T>));
-            return x.Deserialize(file) as List<T> ?? new();
-        }
-        catch (Exception ex)
-        {
-            throw new DalXMLFileLoadCreateException($"fail to load xml file: {xmlFilePath}, {ex.Message}");
+            try
+            {
+                if (!File.Exists(xmlFilePath)) return new();
+                if (!IsFileAccessible(xmlFilePath)) throw new IOException("File is in use by another process.");
+
+                using FileStream file = new(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                XmlSerializer x = new(typeof(List<T>));
+                return x.Deserialize(file) as List<T> ?? new();
+            }
+            catch (Exception ex)
+            {
+                throw new DalXMLFileLoadCreateException($"fail to load xml file: {xmlFilePath}, {ex.Message}", ex);
+            }
         }
     }
+
+    private static bool IsFileAccessible(string filePath)
+    {
+        try
+        {
+            using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+            return true;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+    }
+
     #endregion
 
     #region SaveLoadWithXElement
