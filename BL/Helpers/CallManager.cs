@@ -22,46 +22,7 @@ internal static class CallManager
     /// </summary>
     /// <param name="oldClock">The previous clock.</param>
     /// <param name="newClock">The new clock.</param>
-    internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
-    {
-        List<Call> calls;
-
-        // Lock for reading all calls
-        lock (AdminManager.BlMutex) // Stage 7
-        {
-            calls = s_dal.call.ReadAll().ToList();
-        }
-        List<int> updatedCallIds = new();
-        foreach (var call in calls)
-        {
-            // Check if a call's maximum time has passed
-            if (call.maximumTime != null && call.maximumTime < newClock)
-            {
-                // Update the call's maximum time to null (inactive state)
-                var updatedCall = call;
-
-                // Lock for updating the call in DAL
-                lock (AdminManager.BlMutex) // Stage 7
-                {
-                    s_dal.call.Update(updatedCall);
-                }
-                updatedCallIds.Add(updatedCall.id);
-                // Notify observers outside the lock
-               // Observers.NotifyItemUpdated(updatedCall.id); // Stage 5
-            }
-        }
-        // עדכון כל המשקיפים (מחוץ לנעילה)
-        foreach (var callId in updatedCallIds)
-        {
-            Observers.NotifyItemUpdated(callId);
-        }
-
-        if (updatedCallIds.Any())
-        {
-            Observers.NotifyListUpdated(); // עדכון כללי אם הרשימה השתנתה
-        }
-    }
-
+   
     internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
     {
         Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; // Optional for debugging
@@ -112,10 +73,50 @@ internal static class CallManager
         }
     }
 
-    internal static void PeriodicCallUpdates()
+  
+    internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
-        throw new NotImplementedException();
+        // Set thread name for easier debugging
+        // Thread.CurrentThread.Name = $"PeriodicCallUpdates"; ??? to review
+
+        // Local list to store IDs for notifications outside the lock
+        List<int> expiredCallIds = new();
+
+        // Step 1: Retrieve all calls from the data source
+        List<DO.Call> activeCalls;
+        lock (AdminManager.BlMutex) // Lock for data retrieval
+        {
+            activeCalls = s_dal.call.ReadAll()
+                                   .Where(call => call.maximumTime > oldClock && call.maximumTime <= newClock)
+                                   .ToList();
+        }
+
+        // Step 2: Process calls and perform updates
+        foreach (var call in activeCalls)
+        {
+            // Assuming these are expired calls that require updates
+            lock (AdminManager.BlMutex) // Lock for database updates
+            {
+                s_dal.call.Update(call with { maximumTime = null }); // Update the call
+            }
+
+            // Add the call ID to the local list for notifications
+            expiredCallIds.Add(call.id);
+        }
+
+        // Step 3: Send notifications outside the lock
+        foreach (var callId in expiredCallIds)
+        {
+            Observers.NotifyItemUpdated(callId); // Notify about the specific updated item
+        }
+
+        // Step 4: Check if the list requires a global update notification
+        if (oldClock.Year != newClock.Year || expiredCallIds.Any())
+        {
+            Observers.NotifyListUpdated(); // Notify about a global list update
+        }
     }
+
     //internal static async Task SendCancelationMail(DO.Assignment a)
     //{
     //    var fromAddress = new MailAddress("auviwin3@gmail.com");
@@ -186,4 +187,12 @@ internal static class CallManager
     //        }
     //    }
     //}
-   }
+    internal static bool IsVolunteerBusy(int volunteerId)
+    {
+        lock (AdminManager.BlMutex) // stage 7
+        {
+            var v = s_dal.volunteer.Read(volunteerId);
+            var assignments = s_dal.assignment.ReadAll().Where(a => a.volunteerId == volunteerId && a.assignKind == null);
+            return assignments.Any();
+        }
+    }

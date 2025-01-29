@@ -226,6 +226,103 @@ internal static class VolunteerManager
                 Console.WriteLine($"Error notifying list observers: {ex.Message}");
             }
         }
+
+    }
+
+    private static readonly Random s_rand = new();
+    private static int s_simulatorCounter = 0;
+
+    internal static void SimulateVolunteers() // stage 7
+    {
+        Thread.CurrentThread.Name = $"Simulator{++s_simulatorCounter}";
+
+        LinkedList<int> volunteersToUpdate = new(); // stage 7
+        List<DO.Volunteer> doVolunteerList;
+
+        lock (AdminManager.BlMutex) // stage 7
+            doVolunteerList = s_dal.volunteer.ReadAll(st => st.isActive).ToList();
+
+        foreach (var doVolunteer in doVolunteerList)
+        {
+            int volunteerId = 0;
+
+            lock (AdminManager.BlMutex) // stage 7
+            {
+                // אם אין למתנדב קריאה בטיפולו
+                if (!CallManager.IsVolunteerBusy(doVolunteer.idVol))
+                {
+                    // בחירה רנדומלית של קריאה לטיפול בהסתברות של 20%
+                    if (s_rand.NextDouble() < 0.2)
+                    {
+                        var openCalls = CallManager.GetOpenCallForVolunteer(doVolunteer.idVol);
+                        if (openCalls.Any())
+                        {
+                            int randomIndex = s_rand.Next(0, openCalls.Count());
+                            var selectedCall = openCalls.ElementAt(randomIndex);
+
+                            // הקצאת קריאה למתנדב
+                            AssignmentManager.AssignVolunteerToCall(doVolunteer.idVol, selectedCall.idVol);
+                            volunteerId = doVolunteer.idVol;
+                        }
+                    }
+                }
+                else // אם למתנדב יש קריאה בטיפולו
+                {
+                    var activeAssignment = s_dal.assignment
+                        .ReadAll(a => a.volunteerId == doVolunteer.idVol && a.finishTime == null)
+                        .FirstOrDefault();
+
+                    if (activeAssignment != null)
+                    {
+                        var elapsedTime = DateTime.Now - activeAssignment.startTime;
+
+                        // בדיקת אם עבר "מספיק זמן"
+                        var relatedCall = s_dal.call.Read(activeAssignment.callId);
+                        var estimatedTime = CalculateEstimatedTime(doVolunteer, relatedCall);
+
+                        if (elapsedTime >= estimatedTime) // מספיק זמן
+                        {
+                            // סיום הקריאה
+                            AssignmentManager.UpdateCallForVolunteer(doVolunteer.idVol, activeAssignment.CallId);
+
+                            volunteerId = doVolunteer.idVol;
+                        }
+                        else if (s_rand.NextDouble() < 0.1) // הסתברות של 10% לביטול
+                        {
+                            volunteerId = doVolunteer.idVol;
+                            AssignmentManager.CancelAssignment(volunteerId, activeAssignment.CallId, doVolunteer.Role);
+                        }
+                    }
+                }
+            } // lock
+
+            if (volunteerId != 0)
+                volunteersToUpdate.AddLast(volunteerId);
+        }
+
+        foreach (int id in volunteersToUpdate)
+            Observers.NotifyItemUpdated(id);
+    }
+
+    /// <summary>
+    /// מחשב את הזמן המוערך לטיפול בקריאה, בהתבסס על מרחק וזמן רנדומלי נוסף
+    /// </summary>
+    /// <param name="volunteer"></param>
+    /// <param name="call"></param>
+    /// <returns></returns>
+    private static TimeSpan CalculateEstimatedTime(DO.Volunteer volunteer, DO.Call call)
+    {
+        // חישוב מרחק (אפשר להוסיף כאן חישוב מרחק גיאוגרפי אם יש פונקציה קיימת)
+        double distance = VolunteerManager.CalculateDistance(
+            (double)volunteer.latitude, (double)volunteer.longitude,
+            (double)call.latitude, (double)call.longitude
+        );
+
+        // תוספת זמן רנדומלית בין 10 ל-30 דקות
+        double randomMinutes = s_rand.Next(10, 30);
+
+        // זמן מוערך: זמן מבוסס מרחק + זמן רנדומלי
+        return TimeSpan.FromMinutes(distance / 10 + randomMinutes); // לדוגמה: 10 קמ"ש
     }
 }
 
