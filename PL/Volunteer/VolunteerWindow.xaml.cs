@@ -13,6 +13,9 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System.Windows.Threading;
 
+using DO;
+
+
 namespace PL.Volunteer
 {
     public partial class VolunteerWindow : Window, INotifyPropertyChanged
@@ -28,13 +31,17 @@ namespace PL.Volunteer
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
             set { SetValue(CurrentVolunteerProperty, value); }
         }
+
         public BO.Call? CurrentCall
         {
             get { return (BO.Call?)GetValue(CurrentCallProperty); }
             set { SetValue(CurrentCallProperty, value); }
         }
+
         public static readonly DependencyProperty CurrentCallProperty =
           DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(VolunteerWindow), new PropertyMetadata(null));
+
+
 
         public string? CallDetails { get; set; }
         // Property to check if a call is active
@@ -56,23 +63,30 @@ namespace PL.Volunteer
                 DataContext = this;
                 LoadVolunteer(id);
                 LoadCallDetails();
-                //LoadCallDetails();
+
+                s_bl.Call.AddObserver(LoadCallDetails);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
+        private void Window_Loaded(object sender, RoutedEventArgs e) { 
             if (CurrentVolunteer != null)
             {
                 s_bl.Volunteer.AddObserver(CurrentVolunteer.Id, VolunteerUpdated);
+                s_bl.Call.AddObserver(CurrentVolunteer.Id, LoadCallDetails);
+
             }
             if (CurrentCall != null)
             {
                 s_bl.Call.AddObserver(CurrentCall.Id, CallUpdated);
             }
+
+            LoadCallDetails();
+
+
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -114,18 +128,7 @@ namespace PL.Volunteer
                 }
             });
         }
-        private void CallUpdated()
-        {
-            Dispatcher.Invoke(() =>
-            {
-                if (CurrentCall != null)
-                {
-                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
-                    CurrentCall = updatedCall;
-
-                }
-            });
-        }
+        
         private void VolunteerListUpdated()
         {
             Dispatcher.Invoke(() =>
@@ -159,6 +162,23 @@ namespace PL.Volunteer
                 {
                     var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
                     CurrentVolunteer = updatedVolunteer;
+                    OnPropertyChanged(nameof(CurrentVolunteer));
+                 
+                }
+            });
+        }
+        private void CallUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (CurrentCall != null)
+                {
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
+                    CallDetails = $"ID: {updatedCall.Id}\nDescription: {updatedCall.Description}\nAddress: {updatedCall.Address}";
+                    OnPropertyChanged(nameof(CurrentCall));
+                    OnPropertyChanged(nameof(CallDetails));
+            
 
                 }
             });
@@ -256,8 +276,13 @@ namespace PL.Volunteer
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
+
             selectCallWindow.ShowDialog();
             LoadCallDetails();
+
+            selectCallWindow.Show();
+           
+
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
         {
@@ -273,7 +298,7 @@ namespace PL.Volunteer
                 try
                 {
                     var callId = int.Parse(CallDetails.Split('\n')[0].Split(':')[1].Trim());
-                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId, Role.Volunteer);
+                    s_bl.Call.CancelCallAssignment(CurrentVolunteer.Id, callId, BO.Role.Volunteer);
                     MessageBox.Show("The call was marked as cancelled.");
                     LoadCallDetails();
                 }
@@ -299,7 +324,7 @@ namespace PL.Volunteer
                 var call = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
                 if (call != null)
                 {
-                    CallDetails = $"ID: {call.Id}\nDescription: {call.Description}\nAddrees: {call.Address}";
+                    CallDetails = $"ID: {call.Id}\nDescription: {call.Description}\nAddress: {call.Address}";
                 }
                 else
                 {
@@ -312,7 +337,7 @@ namespace PL.Volunteer
             catch (Exception ex)
             {
                 CallDetails = "Error loading call details.";
-                MessageBox.Show($"Error loading call details: {ex.Message}");
+                MessageBox.Show($"Error loading call details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -335,6 +360,10 @@ namespace PL.Volunteer
                 }
             }
         }
+
+       
+
     }
+
 }
 

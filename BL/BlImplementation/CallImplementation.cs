@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Mail;
+using System.Net;
 using System.Reflection.Metadata;
 using BL.Helpers;
 using BlApi;
@@ -870,8 +872,8 @@ public class CallImplementation : ICall
             Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
         };
     }
-
-    public void AddObserver(Action listObserver) =>
+   
+        public void AddObserver(Action listObserver) =>
     CallManager.Observers.AddListObserver(listObserver); //stage 5
     public void AddObserver(int id, Action observer) =>
     CallManager.Observers.AddObserver(id, observer); //stage 5
