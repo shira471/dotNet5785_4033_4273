@@ -23,6 +23,7 @@ public partial class SelectCallWindow : Window
         set { SetValue(vMProperty, value); }
     }
 
+
     // Using a DependencyProperty as the backing store for Vm.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty vMProperty =
         DependencyProperty.Register("Vm", typeof(SelectCallWindowVM), typeof(SelectCallWindow));
@@ -104,6 +105,7 @@ public partial class SelectCallWindow : Window
             {
                 s_bl.Call.AssignCallToVolunteer(Vm.VolunteerId, selectedCall.Id);
                 MessageBox.Show($"Call {selectedCall.Id} has been assigned to volunteer {Vm.VolunteerId}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+               
                 queryCallList();
             }
             catch (Exception ex)
@@ -116,6 +118,4 @@ public partial class SelectCallWindow : Window
     {
         this.Close();
     }
-
-
 }

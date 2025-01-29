@@ -23,6 +23,8 @@ namespace PL.Volunteer
     public partial class AdminWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        private static VolunteerListWindow? _volunteerWindow = null;
+        private static CallsViewWindow? _callsWindow = null;
 
         public AdminWindow()
         {
@@ -207,14 +209,30 @@ namespace PL.Volunteer
 
         private void btnCallManage_Click(object sender, RoutedEventArgs e)
         {
-            CallsViewWindow cvw = new CallsViewWindow();
-            cvw.Show();
+            if (_callsWindow == null)
+            {
+                _callsWindow = new CallsViewWindow();
+                _callsWindow.Closed += (s, args) => _callsWindow = null; // מאפסים כשנסגר
+                _callsWindow.Show();
+            }
+            else
+            {
+                _callsWindow.Focus(); // מביא לחלון קיים
+            }
         }
 
         private void btnVolManage_Click(object sender, RoutedEventArgs e)
         {
-            VolunteerListWindow vlw = new VolunteerListWindow();
-            vlw.Show();
+            if (_volunteerWindow == null)
+            {
+                _volunteerWindow = new VolunteerListWindow();
+                _volunteerWindow.Closed += (s, args) => _volunteerWindow = null; // מאפסים כשנסגר
+                _volunteerWindow.Show();
+            }
+            else
+            {
+                _volunteerWindow.Focus(); // מביא לחלון קיים
+            }
         }
 
         private bool _isSimulationRunning = false; // Manage simulation state

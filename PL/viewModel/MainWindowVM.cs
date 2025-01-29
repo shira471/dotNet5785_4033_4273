@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace PL.Volunteer
 {
-    public class MainWindowVM : INotifyPropertyChanged
+    public class MainWindowVM 
     {
         private readonly BlApi.IBl _bl = BlApi.Factory.Get();
-
+        private static bool _isManagerLoggedIn = false;
         private string _userId;
         public string UserId
         {
@@ -63,12 +63,33 @@ namespace PL.Volunteer
 
                 if (userType == "Manager")
                 {
-                    new AdminWindow().Show();
+                    var result = MessageBox.Show(
+                        "You are logged in as a manager.\n\nClick **YES** to enter Admin Mode.\nClick **NO** to enter as a Volunteer.",
+                        "Manager Login",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        if (_isManagerLoggedIn)
+                        {
+                            MessageBox.Show("A manager is already logged in. Only one manager can be active at a time.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        _isManagerLoggedIn = true;
+                        var adminWindow = new AdminWindow();
+                        adminWindow.Closed += (s, e) => _isManagerLoggedIn = false; // כאשר נסגר – שחרור הדגל
+                        adminWindow.Show();
+                    }
+                    else
+                    {
+                        new VolunteerWindow(UserId).Show();
+                    }
                 }
                 else if (userType == "Volunteer")
                 {
                     new VolunteerWindow(UserId).Show(); 
                 }
+
             }
             catch(Exception ex) 
             {
