@@ -73,10 +73,14 @@ public class CallViewVM : ViewModelBase
         try
         {
             var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterField, SelectedSortField) ?? Enumerable.Empty<BO.CallInList>();
-            foreach (var call in calls)
+            // לוודא שהעדכון נעשה מה-UI Thread
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Calls.Add(call);
-            }
+                foreach (var call in calls)
+                {
+                    Calls.Add(call);
+                }
+            });
         }
         catch (Exception ex)
         {

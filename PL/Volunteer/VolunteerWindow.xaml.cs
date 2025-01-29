@@ -23,6 +23,8 @@ namespace PL.Volunteer
     {
         public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
         public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
+        private volatile DispatcherOperation? _volunteerObserverOperation = null;
+        private volatile DispatcherOperation? _callObserverOperation = null;
 
         // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
         public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? true;
@@ -156,32 +158,38 @@ namespace PL.Volunteer
         }
         private void VolunteerUpdated()
         {
-            Dispatcher.Invoke(() =>
+            if (_volunteerObserverOperation is null || _volunteerObserverOperation.Status == DispatcherOperationStatus.Completed)
             {
-                if (CurrentVolunteer != null)
+                _volunteerObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
-                    CurrentVolunteer = updatedVolunteer;
-                    OnPropertyChanged(nameof(CurrentVolunteer));
-                 
-                }
-            });
+                    if (CurrentVolunteer != null)
+                    {
+                        var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                        CurrentVolunteer = updatedVolunteer;
+                        OnPropertyChanged(nameof(CurrentVolunteer));
+
+                    }
+                });
+            }
         }
         private void CallUpdated()
         {
-            Dispatcher.Invoke(() =>
+            if (_callObserverOperation is null || _callObserverOperation.Status == DispatcherOperationStatus.Completed)
             {
-                if (CurrentCall != null)
+                _callObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
-                    CurrentCall = updatedCall;
-                    CallDetails = $"ID: {updatedCall.Id}\nDescription: {updatedCall.Description}\nAddress: {updatedCall.Address}";
-                    OnPropertyChanged(nameof(CurrentCall));
-                    OnPropertyChanged(nameof(CallDetails));
-            
+                    if (CurrentCall != null)
+                    {
+                        var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                        CurrentCall = updatedCall;
+                        CallDetails = $"ID: {updatedCall.Id}\nDescription: {updatedCall.Description}\nAddress: {updatedCall.Address}";
+                        OnPropertyChanged(nameof(CurrentCall));
+                        OnPropertyChanged(nameof(CallDetails));
 
-                }
-            });
+
+                    }
+                });
+            }
         }
         private void LoudVolunteerWindow(string? id = null)
         {
@@ -315,25 +323,31 @@ namespace PL.Volunteer
         /// </summary>
         private void LoadCallDetails()
         {
-            try
+            if (_callObserverOperation is null || _callObserverOperation.Status == DispatcherOperationStatus.Completed)
             {
-                var call = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
-                if (call != null)
+                _callObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    CallDetails = $"ID: {call.Id}\nDescription: {call.Description}\nAddress: {call.Address}";
-                }
-                else
-                {
-                    CallDetails = "No active call.";
-                }
+                    try
+                    {
+                        var call = s_bl.Call.GetAssignedCallByVolunteer(CurrentVolunteer.Id);
+                        if (call != null)
+                        {
+                            CallDetails = $"ID: {call.Id}\nDescription: {call.Description}\nAddress: {call.Address}";
+                        }
+                        else
+                        {
+                            CallDetails = "No active call.";
+                        }
 
-                OnPropertyChanged(nameof(CallDetails));
-                OnPropertyChanged(nameof(IsCallActive));
-            }
-            catch (Exception ex)
-            {
-                CallDetails = "Error loading call details.";
-                MessageBox.Show($"Error loading call details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        OnPropertyChanged(nameof(CallDetails));
+                        OnPropertyChanged(nameof(IsCallActive));
+                    }
+                    catch (Exception ex)
+                    {
+                        CallDetails = "Error loading call details.";
+                        MessageBox.Show($"Error loading call details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
