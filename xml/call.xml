@@ -140,4 +140,24 @@
     <startTime>2025-01-29T16:29:42.0595368+02:00</startTime>
     <maximumTime>2025-01-29T20:00:00</maximumTime>
   </Call>
+  <Call>
+    <id>24</id>
+    <detail>shalom</detail>
+    <adress>jerusalem</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>Breakfast</callType>
+    <startTime>2025-01-29T16:34:11.4467106+02:00</startTime>
+    <maximumTime>2025-01-29T17:00:00</maximumTime>
+  </Call>
+  <Call>
+    <id>25</id>
+    <detail>kjhg</detail>
+    <adress>jerusalem</adress>
+    <latitude xsi:nil="true" />
+    <longitude xsi:nil="true" />
+    <callType>Breakfast</callType>
+    <startTime>2025-01-29T16:39:03.3837706+02:00</startTime>
+    <maximumTime>2025-01-29T20:00:00</maximumTime>
+  </Call>
 </ArrayOfCall>

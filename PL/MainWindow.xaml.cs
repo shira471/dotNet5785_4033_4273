@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading; // נדרש לעבודה עם Dispatcher
 
 namespace PL.Volunteer
 {
@@ -15,7 +16,11 @@ namespace PL.Volunteer
         {
             if (DataContext is MainWindowVM viewModel)
             {
-                viewModel.Password = ((PasswordBox)sender).Password;
+                // וידוא שהעדכון קורה בתהליכון הראשי
+                Dispatcher.Invoke(() =>
+                {
+                    viewModel.Password = ((PasswordBox)sender).Password;
+                });
             }
         }
 
@@ -24,7 +29,11 @@ namespace PL.Volunteer
         {
             if (DataContext is MainWindowVM viewModel)
             {
-                viewModel.Login();
+                // וידוא שהקריאה ללוגין תתבצע בתהליכון הראשי
+                Dispatcher.Invoke(() =>
+                {
+                    viewModel.Login();
+                });
             }
         }
     }

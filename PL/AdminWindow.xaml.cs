@@ -28,7 +28,10 @@ namespace PL.Volunteer
         public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
 
 
-
+        // DispatcherOperation עבור כל מתודת השקפה
+        private volatile DispatcherOperation? _callStatusObserverOperation = null;
+        private volatile DispatcherOperation? _clockObserverOperation = null;
+        private volatile DispatcherOperation? _configObserverOperation = null;
         public AdminWindow()
         {
             InitializeComponent();
@@ -75,31 +78,38 @@ namespace PL.Volunteer
             s_bl.Call.RemoveObserver(LoadCallStatusData);
         }
         private void LoadCallStatusData()
-        { // מקבל את כמות הקריאות בכל סטטוס
-            int[] statusCounts = s_bl.Call.GetCallCountsByStatus();
-
-            // רשימת הסטטוסים מה-Enum
-            var callStatuses = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
-
-            // יצירת רשימה של אובייקטים להצגה ב-DataGrid
-            var groupedCalls = callStatuses
-                .Select((status, index) => new CallInList
-                {
-                    Status = status,
-                    TotalAssignments = statusCounts[index] // משייך את הכמות הנכונה לכל סטטוס
-                })
-                .Where(c => c.TotalAssignments > 0) // מסנן סטטוסים ללא קריאות
-                .ToList();
-
-            // עדכון ה-ObservableCollection מה-UI Thread
-            Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (_callStatusObserverOperation is null || _callStatusObserverOperation.Status == DispatcherOperationStatus.Completed)
             {
-                CallStatusSummaries.Clear();
-                foreach (var call in groupedCalls)
+                _callStatusObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    CallStatusSummaries.Add(call);
-                }
-            });
+                    // מקבל את כמות הקריאות בכל סטטוס
+                    int[] statusCounts = s_bl.Call.GetCallCountsByStatus();
+
+                    // רשימת הסטטוסים מה-Enum
+                    var callStatuses = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
+
+                    // יצירת רשימה של אובייקטים להצגה ב-DataGrid
+                    var groupedCalls = callStatuses
+                        .Select((status, index) => new CallInList
+                        {
+                            Status = status,
+                            TotalAssignments = statusCounts[index] // משייך את הכמות הנכונה לכל סטטוס
+                        })
+                        .Where(c => c.TotalAssignments > 0) // מסנן סטטוסים ללא קריאות
+                        .ToList();
+
+                    // עדכון ה-ObservableCollection מה-UI Thread
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        CallStatusSummaries.Clear();
+                        foreach (var call in groupedCalls)
+                        {
+                            CallStatusSummaries.Add(call);
+                        }
+                    });
+                });
+            }
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -133,22 +143,34 @@ namespace PL.Volunteer
                 MessageBox.Show(messageBuilder.ToString(), $"Calls in {selectedStatus.Status}", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
         public DateTime CurrentTime
         {
             get { return (DateTime)GetValue(CurrentTimeProperty); }
             set
             {
-                if (Dispatcher.CheckAccess())
+                if (_clockObserverOperation is null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
                 {
-                    SetValue(CurrentTimeProperty, value); // Update from the UI thread
-                }
-                else
-                {
-                    Dispatcher.Invoke(() => SetValue(CurrentTimeProperty, value)); // Update from a different thread
+                    _clockObserverOperation = Dispatcher.BeginInvoke(() => SetValue(CurrentTimeProperty, value));
                 }
             }
         }
+
+
+        //public DateTime CurrentTime
+        //{
+        //    get { return (DateTime)GetValue(CurrentTimeProperty); }
+        //    set
+        //    {
+        //        if (Dispatcher.CheckAccess())
+        //        {
+        //            SetValue(CurrentTimeProperty, value); // Update from the UI thread
+        //        }
+        //        else
+        //        {
+        //            Dispatcher.Invoke(() => SetValue(CurrentTimeProperty, value)); // Update from a different thread
+        //        }
+        //    }
+        //}
 
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register(

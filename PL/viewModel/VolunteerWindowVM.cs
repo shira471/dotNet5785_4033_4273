@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PL.viewModel;
 
@@ -11,7 +12,7 @@ internal class VolunteerWindowVM : ViewModelBase
 {
     private readonly BlApi.IBl _bl;
     private readonly int _volunteerId;
-
+    private volatile DispatcherOperation? _assignedCallObserverOperation = null;
     public VolunteerWindowVM(int volunteerId)
     {
         _bl = BlApi.Factory.Get();
@@ -23,14 +24,17 @@ internal class VolunteerWindowVM : ViewModelBase
     }
     private void UpdateAssignedCall()
     {
-        // LoadAssignedCall();
-        Application.Current.Dispatcher.Invoke(() =>
+
+        if (_assignedCallObserverOperation is null || _assignedCallObserverOperation.Status == DispatcherOperationStatus.Completed)
         {
-            LoadAssignedCall();
-            OnPropertyChanged(nameof(AssignedCall));
-            OnPropertyChanged(nameof(IsCallAssigned));
-            OnPropertyChanged(nameof(AssignedCallDetails));
-        });
+            _assignedCallObserverOperation = Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                LoadAssignedCall();
+                OnPropertyChanged(nameof(AssignedCall));
+                OnPropertyChanged(nameof(IsCallAssigned));
+                OnPropertyChanged(nameof(AssignedCallDetails));
+            });
+        }
     }
     private BO.Volunteer _currentVolunteer;
     public BO.Volunteer CurrentVolunteer
