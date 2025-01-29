@@ -15,7 +15,19 @@ internal class ConfigImplementation : Iconfig
         }
     }
 
-    public TimeSpan RiskTimeRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    //public TimeSpan RiskTimeRange { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    private TimeSpan _riskTimeRange = TimeSpan.FromDays(0); // ערך ברירת מחדל
+
+    public TimeSpan RiskTimeRange
+    {
+        get => _riskTimeRange;
+        set
+        {
+            // עדכון השדה
+            _riskTimeRange = value;
+        }
+    }
+
     public int MaxRange { get; set; }
 
     public int GetNextAssignmentId()

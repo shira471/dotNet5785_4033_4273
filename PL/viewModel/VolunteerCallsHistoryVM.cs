@@ -62,18 +62,23 @@ public class VolunteerCallsHistoryVM : ViewModelBase
     }
     public void LoadClosedCalls()
     {
-        ClosedCalls.Clear();
-        try
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            var calls = s_bl.Call.GetClosedCallsByVolunteer(volunteerId, SelectedFilterOption, SelectedSortOption) ?? Enumerable.Empty<ClosedCallInList>();
-            foreach (var call in calls)
+            ClosedCalls.Clear();
+            try
             {
-                ClosedCalls.Add(call);
+                var calls = s_bl.Call.GetClosedCallsByVolunteer(volunteerId, SelectedFilterOption, SelectedSortOption)
+                           ?? Enumerable.Empty<ClosedCallInList>();
+                foreach (var call in calls)
+                {
+                    ClosedCalls.Add(call);
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error loading closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        });
     }
+
 }

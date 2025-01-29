@@ -205,7 +205,7 @@ namespace PL.Volunteer
 
         private void ShowManagerLoginDialog()
         {
-            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            if (_observerOperation!=null)
             {
                 _observerOperation = Application.Current.Dispatcher.BeginInvoke(() =>
                 {
@@ -237,7 +237,7 @@ namespace PL.Volunteer
 
         private void OpenVolunteerWindow()
         {
-            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            if (_observerOperation != null)
             {
                 _observerOperation = Application.Current.Dispatcher.BeginInvoke(() =>
                 {

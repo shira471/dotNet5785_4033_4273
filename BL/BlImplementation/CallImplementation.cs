@@ -690,8 +690,49 @@ public class CallImplementation : ICall
         throw new InvalidOperationException("Unable to determine status for the given input.");
     
 }
+    //private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
+    //{
+    //    var latestAssignments = assignments
+    //        .GroupBy(a => a.callId)
+    //        .ToDictionary(
+    //            g => g.Key,
+    //            g => g.OrderByDescending(a => a.id).FirstOrDefault()
+    //        );
+
+
+    //    return calls.ToDictionary(
+    //            call => call.id,
+    //            call =>
+    //            {
+    //                var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
+    //                var currentSystemTime = DateTime.Now;
+    //                return DetermineStatus(call, assign, riskTimeSpan, currentSystemTime);
+    //            }
+    //        );
+    //}
     private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
     {
+        // זיהוי כפילויות ב-calls
+        var duplicateCallIds = calls.GroupBy(c => c.id)
+                                    .Where(g => g.Count() > 1)
+                                    .Select(g => g.Key);
+
+        if (duplicateCallIds.Any())
+        {
+            throw new Exception($"Duplicate call IDs found: {string.Join(", ", duplicateCallIds)}");
+        }
+
+        // זיהוי כפילויות ב-assignments
+        var duplicateAssignmentIds = assignments.GroupBy(a => a.callId)
+                                                .Where(g => g.Count() > 1)
+                                                .Select(g => g.Key);
+
+        if (duplicateAssignmentIds.Any())
+        {
+            throw new Exception($"Duplicate assignment IDs found: {string.Join(", ", duplicateAssignmentIds)}");
+        }
+
+        // יצירת מילון של ההשמות האחרונות
         var latestAssignments = assignments
             .GroupBy(a => a.callId)
             .ToDictionary(
@@ -699,17 +740,18 @@ public class CallImplementation : ICall
                 g => g.OrderByDescending(a => a.id).FirstOrDefault()
             );
 
-
+        // יצירת מילון של הסטטוסים
         return calls.ToDictionary(
-                call => call.id,
-                call =>
-                {
-                    var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-                    var currentSystemTime = DateTime.Now;
-                    return DetermineStatus(call, assign, riskTimeSpan, currentSystemTime);
-                }
-            );
+            call => call.id,
+            call =>
+            {
+                var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
+                var currentSystemTime = DateTime.Now;
+                return DetermineStatus(call, assignment, riskTimeSpan, currentSystemTime);
+            }
+        );
     }
+
     public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
     {
         // שליפת הקריאה
