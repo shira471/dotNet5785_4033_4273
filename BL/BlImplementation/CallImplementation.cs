@@ -535,11 +535,17 @@ public class CallImplementation : ICall
             switch (filterField)
             {
                 case CallField.Status:
-                    if (filterValue is object Status)
                     {
-                        callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
+                        //if (filterValue is object Status)
+                        //{
+                        //    callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
+                        //}
+                        if (filterValue is BO.Status statusFilter)
+                        {
+                            callAssignments = callAssignments.Where(c => c.Status == statusFilter);
+                        }
+                            break;
                     }
-                    break;
 
                 case CallField.AssignedTo:
                     if (filterValue is string assignedTo)
@@ -547,6 +553,7 @@ public class CallImplementation : ICall
                         callAssignments = callAssignments.Where(c => c.LastVolunteerName != null);
                     }
                     break;
+                
 
                 // הוסף סינונים נוספים אם יש צורך
                 default:
