@@ -1,6 +1,7 @@
 ﻿using BO;
 using DO;
 using PL.viewModel;
+using PL.Volunteer;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -105,6 +106,8 @@ public partial class SelectCallWindow : Window
                 s_bl.Call.AssignCallToVolunteer(Vm.VolunteerId, selectedCall.Id);
                 MessageBox.Show($"Call {selectedCall.Id} has been assigned to volunteer {Vm.VolunteerId}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 queryCallList();
+               
+                Close();
             }
             catch (Exception ex)
             {
@@ -112,6 +115,7 @@ public partial class SelectCallWindow : Window
             }
         }
     }
+
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
         this.Close();

@@ -7,6 +7,11 @@ using PL.Calls;
 using System.ComponentModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Windows.Controls;
+using static System.Net.Mime.MediaTypeNames;
+using System.Security.Claims;
+using System.Windows.Media.Media3D;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -23,6 +28,14 @@ namespace PL.Volunteer
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
             set { SetValue(CurrentVolunteerProperty, value); }
         }
+        public BO.Call? CurrentCall
+        {
+            get { return (BO.Call?)GetValue(CurrentCallProperty); }
+            set { SetValue(CurrentCallProperty, value); }
+        }
+        public static readonly DependencyProperty CurrentCallProperty =
+          DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(VolunteerWindow), new PropertyMetadata(null));
+
         public string? CallDetails { get; set; }
         // Property to check if a call is active
         public bool IsCallActive => !string.IsNullOrEmpty(CallDetails) && CallDetails != "No active call.";
@@ -43,18 +56,22 @@ namespace PL.Volunteer
                 DataContext = this;
                 LoadVolunteer(id);
                 LoadCallDetails();
-                LoadCallDetails();
+                //LoadCallDetails();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading Window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void Window_Louded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (CurrentVolunteer != null)
             {
                 s_bl.Volunteer.AddObserver(CurrentVolunteer.Id, VolunteerUpdated);
+            }
+            if (CurrentCall != null)
+            {
+                s_bl.Call.AddObserver(CurrentCall.Id, CallUpdated);
             }
         }
 
@@ -66,6 +83,48 @@ namespace PL.Volunteer
                 s_bl.Volunteer.RemoveObserver(CurrentVolunteer.Id, VolunteerUpdated);
             }
             s_bl.Volunteer.RemoveObserver(VolunteerListUpdated);
+            if (CurrentCall != null)
+            {
+                s_bl.Call.RemoveObserver(CurrentCall.Id, CallUpdated);
+            }
+            s_bl.Call.RemoveObserver(CallListUpdated);
+        }
+        private void CallListUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    // רענון רשימת המתנדבים
+                    var calls = s_bl.Call.GetCallsList(null, null, null);
+                    if (calls != null)
+                    {
+                        Calls.Clear();
+                        foreach (var call in calls)
+                        {
+                            Calls.Add(call);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
+                }
+            });
+        }
+        private void CallUpdated()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (CurrentCall != null)
+                {
+                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                    CurrentCall = updatedCall;
+
+                }
+            });
         }
         private void VolunteerListUpdated()
         {
@@ -197,7 +256,7 @@ namespace PL.Volunteer
         private void SelectCall_Click(object sender, RoutedEventArgs e)
         {
             var selectCallWindow = new SelectCallWindow(CurrentVolunteer.Id);
-            selectCallWindow.Show();
+            selectCallWindow.ShowDialog();
             LoadCallDetails();
         }
         private void ShowMyCallsHistory_Click(object sender, RoutedEventArgs e)
@@ -278,5 +337,4 @@ namespace PL.Volunteer
         }
     }
 }
-
 

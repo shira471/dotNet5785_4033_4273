@@ -147,6 +147,7 @@ public class CallImplementation : ICall
 
         // עדכון התצפיתנים (מחוץ לנעילה)
         CallManager.Observers.NotifyListUpdated();
+
     }
 
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
@@ -873,9 +874,9 @@ public class CallImplementation : ICall
     public void AddObserver(Action listObserver) =>
     CallManager.Observers.AddListObserver(listObserver); //stage 5
     public void AddObserver(int id, Action observer) =>
-CallManager.Observers.AddObserver(id, observer); //stage 5
+    CallManager.Observers.AddObserver(id, observer); //stage 5
     public void RemoveObserver(Action listObserver) =>
-CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    CallManager.Observers.RemoveListObserver(listObserver); //stage 5
     public void RemoveObserver(int id, Action observer) =>
-CallManager.Observers.RemoveObserver(id, observer); //stage 5
+    CallManager.Observers.RemoveObserver(id, observer); //stage 5
 }

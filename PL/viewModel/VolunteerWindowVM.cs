@@ -17,9 +17,21 @@ internal class VolunteerWindowVM : ViewModelBase
         _bl = BlApi.Factory.Get();
         _volunteerId = volunteerId;
         LoadVolunteerDetails();
+       
         LoadAssignedCall();
+        _bl.Call.AddObserver(volunteerId, UpdateAssignedCall);
     }
-
+    private void UpdateAssignedCall()
+    {
+        // LoadAssignedCall();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            LoadAssignedCall();
+            OnPropertyChanged(nameof(AssignedCall));
+            OnPropertyChanged(nameof(IsCallAssigned));
+            OnPropertyChanged(nameof(AssignedCallDetails));
+        });
+    }
     private BO.Volunteer _currentVolunteer;
     public BO.Volunteer CurrentVolunteer
     {
@@ -30,6 +42,18 @@ internal class VolunteerWindowVM : ViewModelBase
             OnPropertyChanged(nameof(CurrentVolunteer));
         }
     }
+    //private BO.Call? _currentCall;
+    //public BO.Call? CurrentCall
+    //{
+    //    get => _currentCall;
+    //    set
+    //    {
+    //        _currentCall = value;
+    //        OnPropertyChanged(nameof(CurrentCall));
+            
+    //    }
+   // }
+
 
     private BO.Call _assignedCall;
     public BO.Call AssignedCall
@@ -62,17 +86,40 @@ internal class VolunteerWindowVM : ViewModelBase
         }
     }
 
+    //private void LoadAssignedCall()
+    //{
+    //    try
+    //    {
+    //        AssignedCall = _bl.Call.GetAssignedCallByVolunteer(_volunteerId);
+
+    //    }
+    //    catch (Exception)
+    //    {
+    //        AssignedCall = null;
+    //    }
+    //}
+
     private void LoadAssignedCall()
     {
         try
         {
-            AssignedCall = _bl.Call.GetAssignedCallByVolunteer(_volunteerId);
+            var call = _bl.Call.GetAssignedCallByVolunteer(_volunteerId);
+            if (call != null)
+            {
+                AssignedCall = call;
+            }
+            else
+            {
+                AssignedCall = null;
+            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             AssignedCall = null;
+            MessageBox.Show($"Error loading assigned call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
 
     public void EndAssignedCall()
     {
