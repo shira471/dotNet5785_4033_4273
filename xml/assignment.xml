@@ -88,6 +88,7 @@
     <finishTime>2025-01-29T21:25:11.7539213+02:00</finishTime>
     <assignKind>handeled</assignKind>
   </Assignment>
+<<<<<<< HEAD
   <Assignment>
     <id>14</id>
     <callId>18</callId>
@@ -96,4 +97,6 @@
     <finishTime>2025-01-29T22:14:54.821568+02:00</finishTime>
     <assignKind>handeled</assignKind>
   </Assignment>
+=======
+>>>>>>> e388315da9f4e6ba88202c1de44990459e506b06
 </ArrayOfAssignment>
