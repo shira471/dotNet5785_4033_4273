@@ -6,6 +6,22 @@ namespace PL.Volunteer
 {
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty IntervalProperty =
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow), new PropertyMetadata(1));
+        public static readonly DependencyProperty IsSimulatorRunningProperty =
+           DependencyProperty.Register("IsSimulatorRunning", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+        public int Interval
+        {
+            get => (int)GetValue(IntervalProperty);
+            set => SetValue(IntervalProperty, value);
+        }
+
+        public bool IsSimulatorRunning
+        {
+            get => (bool)GetValue(IsSimulatorRunningProperty);
+            set => SetValue(IsSimulatorRunningProperty, value);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
