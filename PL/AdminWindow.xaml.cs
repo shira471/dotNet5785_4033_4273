@@ -367,7 +367,10 @@ namespace PL.Volunteer
             Console.WriteLine($"Current system clock: {clock}");
         }
 
+        public void SimulationTime_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
