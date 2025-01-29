@@ -26,7 +26,8 @@ namespace PL.Volunteer
         private static VolunteerListWindow? _volunteerWindow = null;
         private static CallsViewWindow? _callsWindow = null;
         public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
-
+        public bool IsSimulatorRunning { get; set; }
+        public int Interval { get; set; } = 1;
 
         // DispatcherOperation עבור כל מתודת השקפה
         private volatile DispatcherOperation? _callStatusObserverOperation = null;
@@ -73,6 +74,8 @@ namespace PL.Volunteer
         /// </summary>
         private void AdminWindow_Closed(object sender, EventArgs e)
         {
+            if (IsSimulatorRunning)
+                s_bl.Admin.StopSimulator();
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
             s_bl.Call.RemoveObserver(LoadCallStatusData);
@@ -155,6 +158,19 @@ namespace PL.Volunteer
             }
         }
 
+        private void ToggleSimulator_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsSimulatorRunning)
+            {
+                s_bl.Admin.StopSimulator();
+                IsSimulatorRunning = false;
+            }
+            else
+            {
+                s_bl.Admin.StartSimulator(Interval);
+                IsSimulatorRunning = true;
+            }
+        }
 
         //public DateTime CurrentTime
         //{
