@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Calls;
 
@@ -25,7 +26,7 @@ public partial class VolunteerCallsHistoryWindow : Window
 
     // Reference to the business logic layer
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
-
+    private volatile DispatcherOperation? _queryClosedCallOperation = null;
     // ViewModel for binding data to the UI
     public VolunteerCallsHistoryVM Vm { get; set; }
 
@@ -59,19 +60,29 @@ public partial class VolunteerCallsHistoryWindow : Window
     /// </summary>
     private void queryClosedCallList()
     {
-        Vm.ClosedCalls.Clear(); // Clear existing call data in the ViewModel
-        try
+        if (_queryClosedCallOperation is null || _queryClosedCallOperation.Status == DispatcherOperationStatus.Completed)
         {
-            var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null); // Get closed calls from the BL
-            foreach (var call in calls)
+            _queryClosedCallOperation = Dispatcher.BeginInvoke(() =>
             {
-                Vm.ClosedCalls.Add(call); // Add each call to the ViewModel's collection
-            }
+                Vm.ClosedCalls.Clear(); // ניקוי הרשימה הקיימת
+                try
+                {
+                    var calls = s_bl.Call.GetClosedCallsByVolunteer(VolunteerId, null, null); // שליפת הקריאות הסגורות
+                    foreach (var call in calls)
+                    {
+                        Vm.ClosedCalls.Add(call); // הוספת כל קריאה לרשימה
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading the list of closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
         }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error loading the list of closed calls: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+    }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        s_bl.Call.AddObserver(Vm.UpdateClosedCallsObserver); // רישום המשקיף
     }
     private void Window_Closed(object sender, EventArgs e)
     {

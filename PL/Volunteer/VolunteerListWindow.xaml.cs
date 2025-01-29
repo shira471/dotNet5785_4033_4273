@@ -6,13 +6,14 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace PL.Volunteer;
 
 // Window for managing the list of volunteers
 public partial class VolunteerListWindow : Window
 {
-
+    private volatile DispatcherOperation? _observerOperation = null;
 
     // Static instance for accessing the business logic layer (BL)
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
@@ -49,7 +50,13 @@ public partial class VolunteerListWindow : Window
     // Observer function to refresh the volunteer list when changes occur
     private void VolunteerListObserver()
     {
-        vm.LoadVolunteerList();
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+        {
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                vm.LoadVolunteerList();
+            });
+        }
     }
 
     // Event triggered when the window is loaded

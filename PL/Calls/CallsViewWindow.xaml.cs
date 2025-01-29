@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using BO;
 using PL.Call;
 using PL.Calls;
@@ -27,6 +28,7 @@ namespace PL;
 public partial class CallsViewWindow : Window
 {
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    private volatile DispatcherOperation? _updateCallsOperation = null;
     public CallViewVM vm
     {
         get { return (CallViewVM)GetValue(vmProperty); }
@@ -44,10 +46,13 @@ public partial class CallsViewWindow : Window
     }
     private void UpdateCallsObserver()
     {
-        Dispatcher.Invoke(() =>
+        if (_updateCallsOperation is null || _updateCallsOperation.Status == DispatcherOperationStatus.Completed)
         {
-            vm.LoadCalls(); // רענון רשימת הקריאות
-        });
+            _updateCallsOperation = Dispatcher.BeginInvoke(() =>
+            {
+                vm.LoadCalls(); // רענון רשימת הקריאות
+            });
+        }
     }
     private void Window_Closed(object sender, EventArgs e)
     {

@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using BO;
 
 namespace PL.Volunteer
@@ -21,7 +22,8 @@ namespace PL.Volunteer
     {
         public ObservableCollection<Role> Roles { get; set; }
         public ObservableCollection<BO.VolunteerInList> Volunteers { get; set; } = new ObservableCollection<BO.VolunteerInList>();
-
+        private volatile DispatcherOperation? _volunteerListUpdateOperation = null;
+        private volatile DispatcherOperation? _volunteerUpdateOperation = null;
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -135,40 +137,47 @@ namespace PL.Volunteer
 
         private void VolunteerListUpdated()
         {
-            Dispatcher.Invoke(() =>
+            if (_volunteerListUpdateOperation is null || _volunteerListUpdateOperation.Status == DispatcherOperationStatus.Completed)
             {
-                try
+                _volunteerListUpdateOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    // רענון רשימת המתנדבים
-                    var volunteers = s_bl.Volunteer.GetVolunteersList();
-                    if (volunteers != null)
+                    try
                     {
-                        Volunteers.Clear();
-                        foreach (var volunteer in volunteers)
+                        var volunteers = s_bl.Volunteer.GetVolunteersList();
+                        if (volunteers != null)
                         {
-                            Volunteers.Add(volunteer);
+                            Volunteers.Clear();
+                            foreach (var volunteer in volunteers)
+                            {
+                                Volunteers.Add(volunteer);
+                            }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
-                    CurrentVolunteer = updatedVolunteer;
-                }
-            });
-        }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (CurrentVolunteer != null)
+                        {
+                            var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                            CurrentVolunteer = updatedVolunteer;
+                        }
+                    }
+                });
+            }
+          }
         private void VolunteerUpdated()
         {
-            Dispatcher.Invoke(() =>
+            if (_volunteerUpdateOperation is null || _volunteerUpdateOperation.Status == DispatcherOperationStatus.Completed)
             {
-                if (CurrentVolunteer != null)
+                _volunteerUpdateOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
-                    CurrentVolunteer = updatedVolunteer;
-
-                }
-            });
+                    if (CurrentVolunteer != null)
+                    {
+                        var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
+                        CurrentVolunteer = updatedVolunteer;
+                    }
+                });
+            }
         }
     }
 }

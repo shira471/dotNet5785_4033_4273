@@ -41,13 +41,13 @@ internal static class AdminManager //stage 4
     /// <summary>
     /// Property for providing/setting current configuration variable value for any BL class that may need it
     /// </summary>
-    internal static int MaxRange
+    internal static TimeSpan MaxRange
     {
-        get => s_dal.config.MaxRange;
+        get => s_dal.config.RiskTimeRange;
         set
         {
-            s_dal.config.MaxRange = value;
-            NotifyObservers(ConfigUpdatedObservers);
+            s_dal.config.RiskTimeRange = value;
+            ConfigUpdatedObservers?.Invoke(); // stage 5
         }
     }
 
@@ -87,7 +87,6 @@ internal static class AdminManager //stage 4
         var oldClock = s_dal.config.clock;
         s_dal.config.clock = newClock;
 
-        // קריאה ללוגיקה מחזורית של ישויות
         if (_periodicTask is null || _periodicTask.IsCompleted)
         {
             _periodicTask = Task.Run(() =>
@@ -96,18 +95,14 @@ internal static class AdminManager //stage 4
                 {
                     VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock);
                     CallManager.PeriodicCallUpdates(oldClock, newClock);
-
                 }
                 catch (Exception ex)
                 {
-                    // טיפול בשגיאות
                     Console.WriteLine($"Error in periodic updates: {ex.Message}");
                 }
             });
         }
-        NotifyObservers(ClockUpdatedObservers);
-        // קריאה לכל המאזינים לעדכון שעון
-       // ClockUpdatedObservers?.Invoke();
+        ClockUpdatedObservers?.Invoke();
     }
 
     #endregion Stage 4
@@ -180,13 +175,17 @@ internal static class AdminManager //stage 4
     {
         while (!s_stop)
         {
-            UpdateClock(Now.AddMinutes(s_interval));
+
+            DateTime oldClock = Now;
+            DateTime newClock = Now.AddMinutes(s_interval);
+            UpdateClock(newClock);
+
 
             //TO_DO:
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
             if (_simulateTask is null || _simulateTask.IsCompleted)//stage 7
-                _simulateTask = Task.Run(() => CallManager.PeriodicCallUpdates());
+                _simulateTask = Task.Run(() => CallManager.PeriodicCallUpdates(oldClock,newClock));
 
             //etc...
 
@@ -203,11 +202,13 @@ internal static class AdminManager //stage 4
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            UpdateClock(Now.AddMinutes(s_interval));
+            DateTime oldClock = Now; // שומר את הזמן לפני העדכון
+            DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
 
-            // קריאה ללוגיקה מחזורית
-            await PerformPeriodicTasksAsync();
+            UpdateClock(newClock); // מעדכן את השעון
 
+            // קריאה לפונקציה עם הפרמטרים המתאימים
+            await PerformPeriodicTasksAsync(oldClock, newClock);
             // השהיה של שנייה
             try
             {
@@ -220,15 +221,15 @@ internal static class AdminManager //stage 4
         }
     }
 
-    private static async Task PerformPeriodicTasksAsync()
+    private static async Task PerformPeriodicTasksAsync(DateTime oldClock, DateTime newClock)
     {
         if (_simulateTask is null || _simulateTask.IsCompleted)
         {
-            _simulateTask = Task.Run(() =>
+            _simulateTask = Task.Run(async () =>
             {
                 try
                 {
-                    CallManager.PeriodicCallUpdates();
+                    CallManager.PeriodicCallUpdates(oldClock,newClock);// הפעלה אסינכרונית
                 }
                 catch (Exception ex)
                 {
@@ -236,7 +237,11 @@ internal static class AdminManager //stage 4
                 }
             });
         }
-        await _periodicTask;
+
+        if (_periodicTask is not null) // לוודא ש-_periodicTask לא null
+        {
+            await _periodicTask;
+        }
     }
 
     #endregion Stage 7 base
