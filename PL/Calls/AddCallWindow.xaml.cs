@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using PL.Volunteer;
 using BO;
+using System.Windows.Threading;
 
 
 namespace PL.Call
@@ -25,6 +26,8 @@ namespace PL.Call
     {
         public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
         public ObservableCollection<CallType> CallTypes { get; set; }
+        private volatile DispatcherOperation? _updateCallListOperation = null;
+        private volatile DispatcherOperation? _callUpdatedOperation = null;
 
         public BO.Call? CurrentCall
         {
@@ -95,10 +98,10 @@ namespace PL.Call
                 else
                 {
                     s_bl.Call.UpdateCallDetails(CurrentCall);
-                  
+
                     MessageBox.Show("Call updated successfully.");
                 }
-              
+
                 // סגור את החלון לאחר הצלחה
                 Close();
             }
@@ -106,7 +109,7 @@ namespace PL.Call
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-           
+
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -120,18 +123,21 @@ namespace PL.Call
             {
                 s_bl.Call.AddObserver(CurrentCall.Id, CallUpdated);
             }
+            s_bl.Call.AddObserver(UpdateCallList);
         }
         private void CallUpdated()
         {
-            Dispatcher.Invoke(() =>
+            if (_callUpdatedOperation is null || _callUpdatedOperation.Status == DispatcherOperationStatus.Completed)
             {
-                if (CurrentCall != null)
+                _callUpdatedOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
-                    CurrentCall = updatedCall;
-
-                }
-            });
+                    if (CurrentCall != null)
+                    {
+                        var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                        CurrentCall = updatedCall;
+                    }
+                });
+            }
         }
         private void NumericOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
@@ -150,32 +156,36 @@ namespace PL.Call
 
         private void UpdateCallList()
         {
-            Dispatcher.Invoke(() =>
+            if (_updateCallListOperation is null || _updateCallListOperation.Status == DispatcherOperationStatus.Completed)
             {
-                try
+                _updateCallListOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    // רענון רשימת המתנדבים
-                    var calls = s_bl.Call.GetCallsList(null,null,null);
-                    if (calls != null)
+                    try
                     {
-                        Calls.Clear();
-                        foreach (var call in calls)
+                        var calls = s_bl.Call.GetCallsList(null, null, null);
+                        if (calls != null)
                         {
-                            Calls.Add(call);
+                            Calls.Clear();
+                            foreach (var call in calls)
+                            {
+                                Calls.Add(call);
+                            }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error updating volunteer list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
-                    CurrentCall = updatedCall;
-                }
-                // MessageBox.Show("The call list has been updated!");
-            });
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error updating call list: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (CurrentCall != null)
+                        {
+                            var updatedCall = s_bl.Call.GetCallDetails(CurrentCall.Id.ToString());
+                            CurrentCall = updatedCall;
+                        }
+                    }
+                });
+            }
         }
-    }
 
+    }
 }
 
 

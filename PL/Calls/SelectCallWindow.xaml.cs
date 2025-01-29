@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Calls;
 
@@ -16,6 +17,7 @@ public partial class SelectCallWindow : Window
 {
     // Singleton instance of the business logic interface
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    private volatile DispatcherOperation? _callListUpdateOperation = null;
 
     // ViewModel instance for data binding
     public SelectCallWindowVM Vm
@@ -57,11 +59,13 @@ public partial class SelectCallWindow : Window
 
     private void callListObserver()
     {
-
-        Dispatcher.Invoke(() =>
+        if (_callListUpdateOperation is null || _callListUpdateOperation.Status == DispatcherOperationStatus.Completed)
         {
-            queryCallList(); // עדכן את הרשימה
-        });
+            _callListUpdateOperation = Dispatcher.BeginInvoke(() =>
+            {
+                queryCallList(); // עדכון הרשימה
+            });
+        }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)

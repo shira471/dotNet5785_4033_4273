@@ -254,14 +254,14 @@ internal static class VolunteerManager
                     // בחירה רנדומלית של קריאה לטיפול בהסתברות של 20%
                     if (s_rand.NextDouble() < 0.2)
                     {
-                        var openCalls = CallManager.GetOpenCallForVolunteer(doVolunteer.idVol);
+                        var openCalls = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol,null,null);
                         if (openCalls.Any())
                         {
                             int randomIndex = s_rand.Next(0, openCalls.Count());
                             var selectedCall = openCalls.ElementAt(randomIndex);
 
                             // הקצאת קריאה למתנדב
-                            AssignmentManager.AssignVolunteerToCall(doVolunteer.idVol, selectedCall.idVol);
+                            CallManager.AssignCallToVolunteer(doVolunteer.idVol, selectedCall.Id);
                             volunteerId = doVolunteer.idVol;
                         }
                     }
@@ -283,14 +283,16 @@ internal static class VolunteerManager
                         if (elapsedTime >= estimatedTime) // מספיק זמן
                         {
                             // סיום הקריאה
-                            AssignmentManager.UpdateCallForVolunteer(doVolunteer.idVol, activeAssignment.CallId);
+                            CallManager.CloseCallAssignment(doVolunteer.idVol, activeAssignment.callId);
 
                             volunteerId = doVolunteer.idVol;
                         }
                         else if (s_rand.NextDouble() < 0.1) // הסתברות של 10% לביטול
                         {
                             volunteerId = doVolunteer.idVol;
-                            AssignmentManager.CancelAssignment(volunteerId, activeAssignment.CallId, doVolunteer.Role);
+                           
+                                CallManager.CancelCallAssignment(volunteerId, activeAssignment.callId, (BO.Role)doVolunteer.role);
+                            
                         }
                     }
                 }
@@ -313,7 +315,7 @@ internal static class VolunteerManager
     private static TimeSpan CalculateEstimatedTime(DO.Volunteer volunteer, DO.Call call)
     {
         // חישוב מרחק (אפשר להוסיף כאן חישוב מרחק גיאוגרפי אם יש פונקציה קיימת)
-        double distance = VolunteerManager.CalculateDistance(
+        double distance = CallManager.CalculateDistance(
             (double)volunteer.latitude, (double)volunteer.longitude,
             (double)call.latitude, (double)call.longitude
         );
