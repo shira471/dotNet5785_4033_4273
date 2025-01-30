@@ -70,5 +70,5 @@ public interface ICall : IObservable //stage 5 הרחבת ממשק
     // 11. בחירת קריאה לטיפול
     // מקצה קריאה למתנדב, מעדכנת את זמן הכניסה לטיפול.
     // אם הקריאה לא מתאימה לטיפול (למשל, כבר טופלה או פג תוקפה), נזרקת חריגה.
-    Task AssignCallToVolunteer(int volunteerId, int callId);
+    void AssignCallToVolunteer(int volunteerId, int callId);
 }

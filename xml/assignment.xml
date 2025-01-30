@@ -96,4 +96,20 @@
     <finishTime xsi:nil="true" />
     <assignKind>cancelByVolunteer</assignKind>
   </Assignment>
+  <Assignment>
+    <id>13</id>
+    <callId>15</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2025-01-30T21:36:41.7052703+02:00</startTime>
+    <finishTime>2025-01-30T22:30:08.7620786+02:00</finishTime>
+    <assignKind>handeled</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>14</id>
+    <callId>4</callId>
+    <volunteerId>437737774</volunteerId>
+    <startTime>2025-01-31T01:57:27.0411749+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
 </ArrayOfAssignment>

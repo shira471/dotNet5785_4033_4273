@@ -20,7 +20,7 @@ public class VolunteerImplementation : IVolunteer
 {
     private readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-    public async Task AddVolunteer(BO.Volunteer volunteer)
+    public void AddVolunteer(BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
@@ -49,10 +49,9 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
-            var temp =await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
+            var temp = VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
 
-            lock (AdminManager.BlMutex) // Stage 7
-            {
+          
                 IsValidEmail(volunteer.Email);
                 IsValidPhoneNumber(volunteer.Phone);
                 IsValidId(volunteer.Id);
@@ -65,26 +64,57 @@ public class VolunteerImplementation : IVolunteer
                     email = volunteer.Email,
                     phoneNumber = volunteer.Phone,
                     password = volunteer.Password,
-                    latitude = temp[0],
-                    longitude = temp[1],
+                    latitude = 0,
+                    longitude = 0,
                     limitDestenation = volunteer.MaxDistance ?? 0,
                     isActive = volunteer.IsActive,
                     role = (DO.Role)volunteer.Role,
                     distanceType = (DO.TypeDistance)volunteer.DistanceType
                 };
-                _dal.volunteer.Create(dalVolunteer);
+
+                lock (AdminManager.BlMutex)
+                {
+                    _dal.volunteer.Create(dalVolunteer);
+                }
 
                 VolunteerManager.Observers.NotifyListUpdated();
                 // חישוב קואורדינטות אסינכרוני (לא ממתינים!)
                 _ = Task.Run(() => updateCoordinatesForVolunteerAsync(dalVolunteer));
-            }
+            
         }
         catch (Exception ex)
         {
             throw new BlInvalidValueException("Failed to add volunteer.", ex);
         }
     }
+    private async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer volunteer)
+    {
+        if (string.IsNullOrWhiteSpace(volunteer.adress))
+            return;
 
+        try
+        {
+            var coords = await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.adress);
+
+            if (coords != null)
+            {
+                // ✔ נעילה רק בזמן העדכון ב-DAL
+                lock (AdminManager.BlMutex)
+                {
+                    volunteer = volunteer with { latitude = coords[0], longitude = coords[1] };
+                    _dal.volunteer.Update(volunteer);
+                }
+
+                // ✔ עדכון הצופים שהתהליך הושלם
+                VolunteerManager.Observers.NotifyItemUpdated(volunteer.idVol);
+                VolunteerManager.Observers.NotifyListUpdated();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"⚠ שגיאה בחישוב קואורדינטות למתנדב {volunteer.idVol}: {ex.Message}");
+        }
+    }
     public void DeleteVolunteer(int volunteerId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
@@ -229,7 +259,7 @@ public class VolunteerImplementation : IVolunteer
         };
     }
 
-    public async Task UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
+    public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
@@ -245,18 +275,7 @@ public class VolunteerImplementation : IVolunteer
         var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
             ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
 
-        // אם כתובת שונתה, עדכון קואורדינטות
-        if (existingVolunteer.adress != volunteer.Address)
-        {
-            var coordinates =await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
-
-            if (coordinates == null)
-            {
-                throw new BlInvalidValueException("Invalid address provided.");
-            }
-            volunteer.Latitude = coordinates[0];
-            volunteer.Longitude = coordinates[1];
-        }
+        bool addressChanged = existingVolunteer.adress != volunteer.Address;
 
         try
         {
@@ -270,8 +289,8 @@ public class VolunteerImplementation : IVolunteer
                     email: volunteer.Email,
                     phoneNumber: volunteer.Phone,
                     password: volunteer.Password ?? existingVolunteer.password,  // אם אין סיסמה חדשה, שמירה על הישנה
-                    latitude: volunteer.Latitude ?? existingVolunteer.latitude,
-                    longitude: volunteer.Longitude ?? existingVolunteer.longitude,
+                    latitude: existingVolunteer.latitude,
+                    longitude: existingVolunteer.longitude,
                     limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
                     isActive: volunteer.IsActive,
                     role: (DO.Role?)volunteer.Role,

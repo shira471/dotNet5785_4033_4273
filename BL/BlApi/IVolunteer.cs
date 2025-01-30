@@ -48,7 +48,7 @@ public interface IVolunteer: IObservable //stage 5 הרחבת ממשק
     /// <param name="volunteer">אובייקט מתנדב עם הפרטים המעודכנים</param>
     /// <exception cref="UnauthorizedAccessException">נזרקת אם למבקש אין הרשאה</exception>
     /// <exception cref="InvalidDataException">נזרקת אם הפרטים אינם תקינים</exception>
-    Task UpdateVolunteer(int requesterId, BO.Volunteer volunteer);
+    void UpdateVolunteer(int requesterId, BO.Volunteer volunteer);
 
     /// <summary>
     /// בקשת מחיקת מתנדב
@@ -63,7 +63,7 @@ public interface IVolunteer: IObservable //stage 5 הרחבת ממשק
     /// <param name="volunteer">אובייקט מתנדב עם הפרטים</param>
     /// <exception cref="InvalidDataException">נזרקת אם הפרטים אינם תקינים</exception>
     /// <exception cref="DuplicateException">נזרקת אם כבר קיים מתנדב עם תעודת הזהות</exception>
-    Task AddVolunteer(BO.Volunteer volunteer);
+    void AddVolunteer(BO.Volunteer volunteer);
     int GetVolunteerForCall(int callId);
     void SimulateVolunteers();
     //CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId);

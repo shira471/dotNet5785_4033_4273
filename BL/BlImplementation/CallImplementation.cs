@@ -232,11 +232,11 @@ public class CallImplementation : ICall
     //    CallManager.Observers.NotifyListUpdated();
 
     //}
-    public async Task AssignCallToVolunteer(int volunteerId, int callId)
+    public void  AssignCallToVolunteer(int volunteerId, int callId)
     {
         
             AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7 
-            await CallManager.AssignCallToVolunteer(volunteerId, callId);
+            CallManager.AssignCallToVolunteer(volunteerId, callId);
        
     }
 
@@ -505,6 +505,10 @@ public class CallImplementation : ICall
                         //}
                         if (filterValue is BO.Status statusFilter)
                         {
+                            if(BO.Status.None== statusFilter)
+                            {
+                                break;
+                            }
                             callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                         }
                             break;

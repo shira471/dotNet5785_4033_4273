@@ -11,11 +11,11 @@ public class CallViewVM : ViewModelBase
 
     public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
 
-    public IEnumerable<CallField> FilterFields { get; } = Enum.GetValues(typeof(CallField)).Cast<CallField>();
+    public IEnumerable<Status> FilterFields { get; } = Enum.GetValues(typeof(Status)).Cast<Status>();
     public IEnumerable<CallField> SortFields { get; } = Enum.GetValues(typeof(CallField)).Cast<CallField>();
 
-    private CallField? selectedFilterField;
-    public CallField? SelectedFilterField
+    private Status? selectedFilterField;
+    public Status? SelectedFilterField
     {
         get => selectedFilterField;
         set
@@ -28,7 +28,6 @@ public class CallViewVM : ViewModelBase
             }
         }
     }
-
     private object? selectedFilterValue;
     public object? SelectedFilterValue
     {
@@ -71,8 +70,11 @@ public class CallViewVM : ViewModelBase
     {
         try
         {
-            var calls = s_bl.Call.GetCallsList(SelectedFilterField, SelectedFilterField, SelectedSortField)
-                       ?? Enumerable.Empty<BO.CallInList>();
+            var calls = s_bl.Call.GetCallsList(
+                        CallField.Status, // סינון לפי `Status`
+                        SelectedFilterField, // הערך שנבחר מהפילטר
+                        SelectedSortField) // המיון נשאר לפי `CallField`
+                   ?? Enumerable.Empty<BO.CallInList>();
             // לוודא שכל העדכונים ל-ObservableCollection מתבצעים ב-Dispatcher
             Application.Current.Dispatcher.Invoke(() =>
             {

@@ -118,41 +118,40 @@ internal static class CallManager
         }
     }
 
-    internal static async Task AssignCallToVolunteer(int volunteerId, int callId)
+    internal static void AssignCallToVolunteer(int volunteerId, int callId)
     {
-        var call = await Task.Run(() => s_dal.call.Read(callId))
-           ?? throw new Exception($"Call with ID={callId} does not exist.");
+        // קריאה ישירה לדאטהבייס, ללא Task.Run()
+        var call = s_dal.call.Read(callId);
+        if (call == null)
+            throw new Exception($"Call with ID={callId} does not exist.");
 
-        var volunteer = await Task.Run(() => s_dal.volunteer.Read(volunteerId))
-            ?? throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+        var volunteer = s_dal.volunteer.Read(volunteerId);
+        if (volunteer == null)
+            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
 
-        var volunteerCancelledAssignment = (await Task.Run(() => s_dal.assignment.ReadAll()))
+        // בדיקה אם המתנדב ביטל את ההשמה בעבר
+        var volunteerCancelledAssignment = s_dal.assignment.ReadAll()
             .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
 
         if (volunteerCancelledAssignment != null)
-        {
             throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
-        }
 
         // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-        var existingAssignment = (await Task.Run(() => s_dal.assignment.ReadAll()))
+        var existingAssignment = s_dal.assignment.ReadAll()
             .FirstOrDefault(a => a.callId == callId &&
                                  a.assignKind != DO.Hamal.cancelByManager &&
                                  (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
 
         if (existingAssignment != null)
-        {
             throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
-        }
 
-        // חישוב מרחק אסינכרוני
-        var distance = await Task.Run(() => CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude));
+        // חישוב מרחק סינכרוני
+        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
 
         if (distance > volunteer.limitDestenation)
-        {
             throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
-        }
 
+        // יצירת השמה חדשה
         var assignment = new DO.Assignment
         {
             callId = callId,
@@ -161,12 +160,12 @@ internal static class CallManager
             assignKind = DO.Hamal.inTreatment
         };
 
-        await Task.Run(() => s_dal.assignment.Create(assignment));
+        s_dal.assignment.Create(assignment); // קריאה ישירה לדאטהבייס, ללא Task.Run()
 
         var x = ConvertToBOCall(call);
         x.Status = Status.inProgres;
 
-        await Task.Run(() => CallManager.Observers.NotifyListUpdated());
+        CallManager.Observers.NotifyListUpdated(); // עדכון רשימה ללא Task.Run()
     }
     internal static BO.Call ConvertToBOCall(DO.Call doCall)
     {
