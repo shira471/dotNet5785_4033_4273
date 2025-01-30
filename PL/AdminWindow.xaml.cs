@@ -400,7 +400,7 @@ namespace PL.Volunteer
                         _isSimulationRunning = false;
                         //  BO.TimeUnit timeUnit = GetTimeUnitFromMinutes(Interval);
                         s_bl.Admin.StartSimulator(Interval); // Advance system clock
-
+                        SimulateVolunteers(); // קריאה לפונקציה שלך
                         PerformSimulationLogic();
                         Thread.Sleep(TimeSpan.FromSeconds(5)); // Simulator cycle delay
                     }
