@@ -45,6 +45,8 @@ namespace PL.Volunteer
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+     
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -249,6 +251,7 @@ namespace PL.Volunteer
                 _clockObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
                     CurrentTime = s_bl.Admin.GetSystemClock();
+                    OnPropertyChanged(nameof(CurrentTime));
                 });
             }
         }
@@ -279,26 +282,31 @@ namespace PL.Volunteer
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
+            clockObserver();
         }
 
         private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
+            clockObserver();
         }
 
         private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
+            clockObserver();
         }
 
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
+            clockObserver();
         }
 
         private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
+            clockObserver();
         }
 
         /// <summary>
