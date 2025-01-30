@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Volunteer"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Louded">
 
@@ -46,9 +47,13 @@
         <!-- Max End Time -->
         <Label Content="Maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left">
-            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" Width="200" />
+            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
+                DisplayDateStart="{x:Static sys:DateTime.Today}" Width="200" />
+
             <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="WhiteSmoke" BorderBrush="Gray" />
+             Width="80" Margin="10,0,0,0" Background="WhiteSmoke" BorderBrush="Gray" />
+    
+
         </StackPanel>
 
         <!-- Address -->
