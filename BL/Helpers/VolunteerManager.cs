@@ -200,6 +200,7 @@ internal static class VolunteerManager
 
         return null;
     }
+   
 
     /// <summary>
     /// עדכון המשקיפים.
@@ -272,13 +273,18 @@ internal static class VolunteerManager
 
                     if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
                     {
-                        //תנאי לא ברור
+                       
                     }
-                    else if (s_rand.Next(0, 10) == 0)
-                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id,(BO.Role)doVolunteer.role);
-                    else if (s_rand.Next(0, 5) == 0) // 20% סיכוי לסגירה מסודרת
+                    else
                     {
-                        CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                        if (s_rand.Next(0, 10) == 0) // 10% סיכוי לביטול
+                        {
+                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                        }
+                        else // 90% סיכוי לסגירה מוצלחת
+                        {
+                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                        }
                     }
                 }
             }

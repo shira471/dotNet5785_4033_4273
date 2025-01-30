@@ -130,10 +130,10 @@ public static class Initialization
         "Call for assistance", "Emergency call", "Routine check-in",
         "Follow-up call", "Service request", "Technical support",
         "Customer inquiry", "Appointment reminder", "Complaint report",
-        "Survey feedback",
-        "Medical emergency assistance", "Lost child at park", "Car accident report",
-        "House fire alert", "Tree blocking road", "Water pipe burst",
-        "Animal rescue request", "Missing person report", "Flooded street cleanup",
+        "Survey feedback", "Medical emergency assistance",
+        "Lost child at park", "Car accident report", "House fire alert",
+        "Tree blocking road", "Water pipe burst", "Animal rescue request",
+        "Missing person report", "Flooded street cleanup",
         "Electric outage report"
     };
 
@@ -142,30 +142,29 @@ public static class Initialization
         "27 Ben Yehuda St, Jerusalem, Israel",
         "52 Jaffa St, Jerusalem, Israel",
         "10 HaPalmach St, Jerusalem, Israel",
-       "3 Keren Hayesod St, Jerusalem, Israel",
-       "18 Shmuel HaNagid St, Jerusalem, Israel",
-       "25 Yaffo Rd, Jerusalem, Israel",
-       "6 Rabbi Akiva St, Jerusalem, Israel",
-       "34 Ein Karem, Jerusalem, Israel",
-      "12 HaNevi'im St, Jerusalem, Israel",
-    "22 Mamilla Mall, Jerusalem, Israel",
-    "7 Zion Square, Jerusalem, Israel",
-    "16 Herzl St, Jerusalem, Israel",
-    "40 Hillel St, Jerusalem, Israel",
-    "14 Agron St, Jerusalem, Israel",
-    "28 Emek Refaim St, Jerusalem, Israel",
-    "4 David Remez St, Jerusalem, Israel",
-    "20 HaNevi'im St, Jerusalem, Israel",
-    "5 Hahistadrut St, Jerusalem, Israel",
-    "9 Yitzhak Rabin Blvd, Jerusalem, Israel"
+        "3 Keren Hayesod St, Jerusalem, Israel",
+        "18 Shmuel HaNagid St, Jerusalem, Israel",
+        "25 Yaffo Rd, Jerusalem, Israel",
+        "6 Rabbi Akiva St, Jerusalem, Israel",
+        "34 Ein Karem, Jerusalem, Israel",
+        "12 HaNevi'im St, Jerusalem, Israel",
+        "22 Mamilla Mall, Jerusalem, Israel",
+        "7 Zion Square, Jerusalem, Israel",
+        "16 Herzl St, Jerusalem, Israel",
+        "40 Hillel St, Jerusalem, Israel",
+        "14 Agron St, Jerusalem, Israel",
+        "28 Emek Refaim St, Jerusalem, Israel",
+        "4 David Remez St, Jerusalem, Israel",
+        "20 HaNevi'im St, Jerusalem, Israel",
+        "5 Hahistadrut St, Jerusalem, Israel",
+        "9 Yitzhak Rabin Blvd, Jerusalem, Israel"
     };
 
-        // בסיס לזמנים: השעון הנוכחי
         DateTime now = DateTime.Now;
 
         foreach (string detail in details)
         {
-            // כתובת אקראית
+            // בחירת כתובת אקראית
             string address = addresses[s_rand.Next(addresses.Length)];
 
             // קבלת קורדינטות לכתובת
@@ -178,23 +177,27 @@ public static class Initialization
             double latitude = coordinates[0];
             double longitude = coordinates[1];
 
-            // יצירת תאריך התחלה
-            DateTime startTime = now.AddDays(-s_rand.Next(1, 30)).AddHours(s_rand.Next(0, 24));
+            // יצירת זמן התחלה של הקריאה (תמיד בעבר, אך לא רחוק מדי)
+            DateTime startTime = now.AddDays(-s_rand.Next(1, 10)).AddHours(s_rand.Next(0, 24));
 
-            // הסתברות של 50% שזמן הסיום יהיה בעתיד
+            // יצירת זמן מקסימום שתמיד יהיה בעתיד
             DateTime maximumTime;
-            if (s_rand.Next(0, 2) == 0)
+            do
             {
-                // זמן סיום רנדומלי בין 1 ל-30 ימים בעתיד
-                maximumTime = now.AddDays(s_rand.Next(1, 30)).AddHours(s_rand.Next(0, 24));
+                if (s_rand.Next(0, 2) == 0)
+                {
+                    // זמן סיום בין 1 ל-30 ימים בעתיד
+                    maximumTime = now.AddDays(s_rand.Next(1, 30)).AddHours(s_rand.Next(0, 24));
+                }
+                else
+                {
+                    // זמן סיום אחרי תחילת הקריאה (בין 30 ל-180 דקות אחרי)
+                    maximumTime = startTime.AddMinutes(s_rand.Next(30, 180));
+                }
             }
-            else
-            {
-                // זמן סיום רגיל אחרי תחילת הקריאה
-                maximumTime = startTime.AddMinutes(s_rand.Next(30, 180)); // 30 עד 180 דקות אחרי תחילת הקריאה
-            }
+            while (maximumTime <= now); // לוודא שהתוצאה היא בעתיד
 
-            // יצירת קריאה חדשה והוספתה
+            // יצירת הקריאה החדשה
             s_dal!.call.Create(new Call(
                 0, // מזהה אוטומטי
                 detail,
@@ -213,33 +216,39 @@ public static class Initialization
 
     public static void creatAssignment()
     {
-        var allCalls = s_dal!.call.ReadAll();
-        var allVolunteers = s_dal!.volunteer.ReadAll();
+        var allCalls = s_dal!.call.ReadAll().ToList(); // טעינת כל הקריאות
+        var allVolunteers = s_dal!.volunteer.ReadAll().ToList(); // טעינת כל המתנדבים
 
-        var assignedCalls = new HashSet<int>();
-        var availableVolunteers = allVolunteers.ToList();
+        var assignedVolunteers = new HashSet<int>(); // מתנדבים שכבר שובצו
+        var assignedCalls = new HashSet<int>(); // קריאות שכבר שובצו
 
         foreach (var call in allCalls)
         {
-            // דילוג על קריאות בהסתברות של 50%
-            if (s_rand.Next(0, 2) == 0) // דילוג על חצי מהקריאות
+            // הסתברות של 20% בלבד לבצע השמה לקריאה זו
+            if (s_rand.Next(0, 5) != 0) // 20% הסתברות (1 מתוך 5)
                 continue;
 
-            // בחירת מתנדב אקראי
+            // סינון מתנדבים שעדיין לא שובצו לקריאות
+            var availableVolunteers = allVolunteers.Where(v => !assignedVolunteers.Contains(v.idVol)).ToList();
+            if (!availableVolunteers.Any()) // אם נגמרו המתנדבים, יציאה מהלולאה
+                break;
+
+            // בחירת מתנדב אקראי מתוך הרשימה הזמינה
             int volunteerIndex = s_rand.Next(availableVolunteers.Count);
             var selectedVolunteer = availableVolunteers[volunteerIndex];
 
             // יצירת תאריך התחלת טיפול
             DateTime treatmentStartTime = call.startTime.Value.AddHours(s_rand.Next(1, 12)); // עד 12 שעות אחרי תחילת הקריאה
 
-            // הגבלת זמן תחילת הטיפול למקסימום המוגדר בקריאה
+            // הגבלת זמן תחילת הטיפול למקסימום הזמן המוגדר בקריאה
             if (call.maximumTime.HasValue && treatmentStartTime > call.maximumTime.Value)
             {
                 treatmentStartTime = call.maximumTime.Value;
             }
-         
-             DateTime? treatmentEndTime = null;
+
+            DateTime? treatmentEndTime = null;
             Hamal assignKind;
+
             if (s_rand.Next(0, 2) == 0) // הסתברות של 50% שהמשימה תסתיים
             {
                 treatmentEndTime = treatmentStartTime.AddHours(s_rand.Next(1, 6)); // זמן סיום בין 1 ל-6 שעות
@@ -253,20 +262,17 @@ public static class Initialization
             {
                 if (s_rand.Next(0, 2) == 0) // הסתברות של 50% להיות "בטיפול"
                 {
-                    // בטיפול: אין זמן סיום, וזמן התחלת הטיפול הוא לפני עכשיו
                     if (treatmentStartTime <= DateTime.Now)
                     {
                         assignKind = Hamal.inTreatment; // מוגדר כ"בטיפול"
                     }
                     else
                     {
-                        // אם לא מתאים להיות בטיפול, מסמן כבוטל
                         assignKind = (Hamal)s_rand.Next((int)Hamal.cancelByVolunteer, (int)Hamal.handelExpired + 1);
                     }
                 }
                 else
                 {
-                    // בחירה בין ביטול על ידי מתנדב או מנהל
                     assignKind = (Hamal)s_rand.Next((int)Hamal.cancelByVolunteer, (int)Hamal.handelExpired + 1);
                 }
             }
@@ -280,10 +286,14 @@ public static class Initialization
                 treatmentEndTime,
                 assignKind
             ));
+
+            // הוספת הקריאה והמתנדב לרשימות המעקב כדי למנוע השמה כפולה
+            assignedCalls.Add(call.id);
+            assignedVolunteers.Add(selectedVolunteer.idVol);
         }
     }
 
-    public static double[]? GetCoordinatesFromGoogle(string address)
+        public static double[]? GetCoordinatesFromGoogle(string address)
     {
         // Step 1: Validate the input
         if (string.IsNullOrWhiteSpace(address))

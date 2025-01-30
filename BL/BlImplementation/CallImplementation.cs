@@ -232,10 +232,12 @@ public class CallImplementation : ICall
     //    CallManager.Observers.NotifyListUpdated();
 
     //}
-    public async Task AssignCallToVolunteer(int volunteerId, int callId)
+    public void  AssignCallToVolunteer(int volunteerId, int callId)
     {
-        AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
-        CallManager.AssignCallToVolunteer(volunteerId, callId);
+        
+            AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7 
+            CallManager.AssignCallToVolunteer(volunteerId, callId);
+       
     }
 
 
@@ -503,6 +505,10 @@ public class CallImplementation : ICall
                         //}
                         if (filterValue is BO.Status statusFilter)
                         {
+                            if(BO.Status.None== statusFilter)
+                            {
+                                break;
+                            }
                             callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                         }
                             break;
@@ -658,67 +664,44 @@ public class CallImplementation : ICall
         throw new InvalidOperationException("Unable to determine status for the given input.");
 
     }
+
     private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
     {
+        // זיהוי כפילויות ב-calls
+        var duplicateCallIds = calls.GroupBy(c => c.id)
+                                    .Where(g => g.Count() > 1)
+                                    .Select(g => g.Key);
+
+        if (duplicateCallIds.Any())
+        {
+            throw new Exception($"Duplicate call IDs found: {string.Join(", ", duplicateCallIds)}");
+        }
+
+        // זיהוי כפילויות ב-assignments
+        var duplicateAssignmentIds = assignments.GroupBy(a => a.callId)
+                                                .Where(g => g.Count() > 1)
+                                                .Select(g => g.Key);
+
+        // יצירת מילון של ההשמות האחרונות
         var latestAssignments = assignments
             .GroupBy(a => a.callId)
             .ToDictionary(
                 g => g.Key,
                 g => g.OrderByDescending(a => a.id).FirstOrDefault()
             );
-
-
+        var adminImplementation = new AdminImplementation();
+        var systemClock = adminImplementation.GetSystemClock();
+        // יצירת מילון של הסטטוסים
         return calls.ToDictionary(
-                call => call.id,
-                call =>
-                {
-                    var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-                    var currentSystemTime = DateTime.Now;
-                    return DetermineStatus(call, assign, riskTimeSpan, currentSystemTime);
-                }
-            );
+            call => call.id,
+            call =>
+            {
+                var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
+                var currentSystemTime = DateTime.Now;
+                return DetermineStatus(call, assignment, riskTimeSpan, currentSystemTime);
+            }
+        );
     }
-    //private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
-    //{
-    //    // זיהוי כפילויות ב-calls
-    //    var duplicateCallIds = calls.GroupBy(c => c.id)
-    //                                .Where(g => g.Count() > 1)
-    //                                .Select(g => g.Key);
-
-    //    if (duplicateCallIds.Any())
-    //    {
-    //        throw new Exception($"Duplicate call IDs found: {string.Join(", ", duplicateCallIds)}");
-    //    }
-
-    //    // זיהוי כפילויות ב-assignments
-    //    var duplicateAssignmentIds = assignments.GroupBy(a => a.callId)
-    //                                            .Where(g => g.Count() > 1)
-    //                                            .Select(g => g.Key);
-
-    //    if (duplicateAssignmentIds.Any())
-    //    {
-    //        throw new Exception($"Duplicate assignment IDs found: {string.Join(", ", duplicateAssignmentIds)}");
-    //    }
-
-    //    // יצירת מילון של ההשמות האחרונות
-    //    var latestAssignments = assignments
-    //        .GroupBy(a => a.callId)
-    //        .ToDictionary(
-    //            g => g.Key,
-    //            g => g.OrderByDescending(a => a.id).FirstOrDefault()
-    //        );
-
-    //    // יצירת מילון של הסטטוסים
-    //    return calls.ToDictionary(
-    //        call => call.id,
-    //        call =>
-    //        {
-    //            var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-    //            var currentSystemTime = DateTime.Now;
-    //            return DetermineStatus(call, assignment, riskTimeSpan, currentSystemTime);
-    //        }
-    //    );
-    //}
 
     public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
     {

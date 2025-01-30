@@ -102,7 +102,8 @@ internal static class AdminManager //stage 4
                 }
             });
         }
-        ClockUpdatedObservers?.Invoke();
+        //ClockUpdatedObservers?.Invoke();
+        NotifyObservers(ClockUpdatedObservers);
     }
 
     #endregion Stage 4
@@ -179,7 +180,7 @@ internal static class AdminManager //stage 4
             DateTime oldClock = Now;
             DateTime newClock = Now.AddMinutes(s_interval);
             UpdateClock(newClock);
-
+            NotifyObservers(ClockUpdatedObservers);
 
             //TO_DO:
             //Add calls here to any logic simulation that was required in stage 7

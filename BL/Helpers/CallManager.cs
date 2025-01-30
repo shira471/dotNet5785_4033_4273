@@ -98,7 +98,7 @@ internal static class CallManager
             // Assuming these are expired calls that require updates
             lock (AdminManager.BlMutex) // Lock for database updates
             {
-                s_dal.call.Update(call with { maximumTime = null }); // Update the call
+              //  s_dal.call.Update(call with { maximumTime = null }); // Update the call
             }
 
             // Add the call ID to the local list for notifications
@@ -118,111 +118,40 @@ internal static class CallManager
         }
     }
 
-    //internal static async Task SendCancelationMail(DO.Assignment a)
-    //{
-    //    var fromAddress = new MailAddress("auviwin3@gmail.com");
-    //    MailAddress? toAddress = null;
-    //    lock (AdminManager.BlMutex)
-    //        toAddress = new MailAddress(s_dal.volunteer.Read(a.volunteerId)!.email, s_dal.volunteer.Read(a.volunteerId)!.name);
-    //    const string fromPassword = "pate iojy wgxd qkjx";
-    //    const string subject = "Assignment Cancelation";
-    //    string body = "Your assignment is no longer under your treatment!\nThank you for your service.\nReason: " + a.finishTime.ToString();
-
-    //    var smtp = new SmtpClient
-    //    {
-    //        Host = "smtp.gmail.com",
-    //        Port = 587,
-    //        EnableSsl = true,
-    //        DeliveryMethod = SmtpDeliveryMethod.Network,
-    //        UseDefaultCredentials = false,
-    //        Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-    //    };
-    //    using (var message = new MailMessage(fromAddress, toAddress)
-    //    {
-    //        Subject = subject,
-    //        Body = body
-    //    })
-    //    {
-    //        await smtp.SendMailAsync(message);
-    //    }
-    //}
-
-
-    //internal static async Task SendCallOpenMail(BO.Call call)
-    //{
-    //    IEnumerable<DO.Volunteer> doVolunteers;
-    //    lock (AdminManager.BlMutex) //stage 7
-    //        doVolunteers = s_dal.volunteer.ReadAll();
-
-    //    var Volunteers = from Volunteer in doVolunteers
-    //                     where Volunteer.limitDestenation <= CallImplementation.CalculateDistance((double)Volunteer.latitude, (double)Volunteer.longitude, (double)call.Latitude, (double)call.Longitude)
-    //                     where Volunteer.IsActive == true
-    //                     select Volunteer;
-
-    //    foreach (var Volunteer in Volunteers)
-    //    {
-    //        var fromAddress = new MailAddress("shimon78900@gmail.com");
-    //        MailAddress? toAddress = null;
-    //        lock (AdminManager.BlMutex)
-    //            toAddress = new MailAddress(s_dal.volunteer.Read(Volunteer.Id)!.Email, s_dal.volunteer.Read(Volunteer.Id)!.FullName);
-    //        const string fromPassword = "pate iojy wgxd qkjx";
-    //        const string subject = "New Call Open in your area";
-    //        string body = "This call is open in your area!\n" + call.ToString();
-
-    //        var smtp = new SmtpClient
-    //        {
-    //            Host = "smtp.gmail.com",
-    //            Port = 587,
-    //            EnableSsl = true,
-    //            DeliveryMethod = SmtpDeliveryMethod.Network,
-    //            UseDefaultCredentials = false,
-    //            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-    //        };
-    //        using (var message = new MailMessage(fromAddress, toAddress)
-    //        {
-    //            Subject = subject,
-    //            Body = body
-    //        })
-    //        {
-    //            await smtp.SendMailAsync(message);
-    //        }
-    //    }
-    //}
-    internal static async Task AssignCallToVolunteer(int volunteerId, int callId)
+    internal static void AssignCallToVolunteer(int volunteerId, int callId)
     {
-        var call = await Task.Run(() => s_dal.call.Read(callId))
-           ?? throw new Exception($"Call with ID={callId} does not exist.");
+        // קריאה ישירה לדאטהבייס, ללא Task.Run()
+        var call = s_dal.call.Read(callId);
+        if (call == null)
+            throw new Exception($"Call with ID={callId} does not exist.");
 
-        var volunteer = await Task.Run(() => s_dal.volunteer.Read(volunteerId))
-            ?? throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+        var volunteer = s_dal.volunteer.Read(volunteerId);
+        if (volunteer == null)
+            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
 
-        var volunteerCancelledAssignment = (await Task.Run(() => s_dal.assignment.ReadAll()))
+        // בדיקה אם המתנדב ביטל את ההשמה בעבר
+        var volunteerCancelledAssignment = s_dal.assignment.ReadAll()
             .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
 
         if (volunteerCancelledAssignment != null)
-        {
             throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
-        }
 
         // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-        var existingAssignment = (await Task.Run(() => s_dal.assignment.ReadAll()))
+        var existingAssignment = s_dal.assignment.ReadAll()
             .FirstOrDefault(a => a.callId == callId &&
                                  a.assignKind != DO.Hamal.cancelByManager &&
                                  (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
 
         if (existingAssignment != null)
-        {
             throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
-        }
 
-        // חישוב מרחק אסינכרוני
-        var distance = await Task.Run(() => CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude));
+        // חישוב מרחק סינכרוני
+        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
 
         if (distance > volunteer.limitDestenation)
-        {
             throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
-        }
 
+        // יצירת השמה חדשה
         var assignment = new DO.Assignment
         {
             callId = callId,
@@ -231,12 +160,12 @@ internal static class CallManager
             assignKind = DO.Hamal.inTreatment
         };
 
-        await Task.Run(() => s_dal.assignment.Create(assignment));
+        s_dal.assignment.Create(assignment); // קריאה ישירה לדאטהבייס, ללא Task.Run()
 
         var x = ConvertToBOCall(call);
         x.Status = Status.inProgres;
 
-        await Task.Run(() => CallManager.Observers.NotifyListUpdated());
+        CallManager.Observers.NotifyListUpdated(); // עדכון רשימה ללא Task.Run()
     }
     internal static BO.Call ConvertToBOCall(DO.Call doCall)
     {

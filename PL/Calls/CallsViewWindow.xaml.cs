@@ -148,8 +148,13 @@ public partial class CallsViewWindow : Window
                 {
                     var CallDetails = s_bl.Call.GetAssignmentsForCall(selectedCall.CallId); // Get volunteer details from BL
 
-                    // המרת המידע לטקסט להצגת End Type בלבד
-                    var details = string.Join("  ", CallDetails.Select(a => $"End Type: {a.EndType}  "));
+                    var details = string.Join("\n", CallDetails.Select(a =>
+                                                 $"Volunteer: {a.VolunteerName} \n" +
+                                                 $"Start Time: {a.EntryTime} \n" +
+                                                 $"End Time: {(a.EndTime.HasValue ? a.EndTime.Value.ToString() : "Not finished")} \n" +
+                                                 $"End Type: {a.EndType} \n" +
+                                                 $"-------------------------------------"
+                                                  ));
 
                     // הצגת המידע ב־MessageBox
                     MessageBox.Show(details, "Call Details", MessageBoxButton.OK, MessageBoxImage.Information);
