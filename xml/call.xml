@@ -198,7 +198,7 @@
     <longitude>35.2144685</longitude>
     <callType>medicalEquipment</callType>
     <startTime>2025-01-14T06:17:52.4137272+02:00</startTime>
-    <maximumTime>2025-01-30T22:17:00</maximumTime>
+    <maximumTime xsi:nil="true" />
   </Call>
   <Call>
     <id>21</id>
@@ -208,6 +208,6 @@
     <longitude xsi:nil="true" />
     <callType>Breakfast</callType>
     <startTime>2025-01-30T12:25:20.267947+02:00</startTime>
-    <maximumTime>2025-01-30T22:00:00</maximumTime>
+    <maximumTime xsi:nil="true" />
   </Call>
 </ArrayOfCall>

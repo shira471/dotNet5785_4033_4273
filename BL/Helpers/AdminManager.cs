@@ -134,7 +134,7 @@ internal static class AdminManager //stage 4
         if (s_thread is not null)
             throw new BO.BlTemporaryNotAvailableException("Cannot perform the operation since Simulator is running");
     }
-
+    
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 
     internal static void Start(int interval)
     {
@@ -243,6 +243,6 @@ internal static class AdminManager //stage 4
             await _periodicTask;
         }
     }
-
+    
     #endregion Stage 7 base
 }
