@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>12</NextAssignmentId>
-  <NextAssignmentId>19</NextAssignmentId>
+  <NextAssignmentId>13</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>22</NextCallId>
+  <NextCallId>28</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->

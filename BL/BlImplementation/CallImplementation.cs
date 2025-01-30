@@ -1,5 +1,4 @@
 ﻿namespace BlImplementation;
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +11,7 @@ using BO;
 using DalApi;
 
 using Helpers;
+using DO;
 
 
 public class CallImplementation : ICall
@@ -81,14 +81,14 @@ public class CallImplementation : ICall
     //        throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.", ex)));
     //    }
     //}
-    public async Task AddCall(Call call)
+    public void AddCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
 
         if (call == null)
             throw new ArgumentNullException(nameof(call), "Call cannot be null.");
 
-        if (call.CallType == CallType.None)
+        if (call.CallType == BO.CallType.None)
             throw new ArgumentException("Call type cannot be None.");
 
         if (call.MaxEndTime <= call.OpenTime)
@@ -97,9 +97,17 @@ public class CallImplementation : ICall
         if (call.MaxEndTime == null)
             throw new ArgumentException("End time cannot be null.");
 
+        // ✔ קריאה אסינכרונית לקבלת ה-ID הגבוה ביותר
+        int maxId = 0;
+        var calls =  _dal.call.ReadAll(); // נדרש await במקרה שזה async
+        if (calls != null && calls.Any())
+        {
+            maxId = calls.Max(c => c.id) + 1; // מחזירה את ה-ID הגבוה ביותר ומוסיפה 1
+        }
+
         // ✔ שליחה מיידית ל-DAL *בלי* הקואורדינטות
         var doCall = new DO.Call(
-            id: 0,
+            id: maxId,
             detail: call.Description,
             adress: call.Address,
             latitude: null,  // ❌ עדיין לא מחשבים קואורדינטות!
@@ -108,7 +116,7 @@ public class CallImplementation : ICall
             startTime: call.OpenTime,
             maximumTime: call.MaxEndTime
         );
-
+        
         lock (AdminManager.BlMutex)
         {
             _dal.call.Create(doCall);
@@ -117,7 +125,7 @@ public class CallImplementation : ICall
         call.Status = Status.open;
 
         // ✔ נשלח את העדכון לאובזרברים (רשימות קריאות מתנדבים וכו')
-        await Task.Run(() => CallManager.Observers.NotifyListUpdated());
+        CallManager.Observers.NotifyListUpdated();
 
         // ✔ חישוב קואורדינטות ברקע בלי לחכות
         _ = UpdateCallCoordinatesAsync(doCall);
@@ -307,7 +315,7 @@ public class CallImplementation : ICall
         return statusCounts;
     }
 
-    public Call GetCallDetails(string calld)
+    public BO.Call GetCallDetails(string calld)
     {
         var calls = _dal.call.ReadAll();
         int callId = 0;
@@ -354,18 +362,18 @@ public class CallImplementation : ICall
                           join call in calls on assign.callId equals call.id
                           select new ClosedCallInList(
                               id: call.id,
-                              callType: (CallType)(call.callType ?? 0), // המרת Enum
+                              callType: (BO.CallType)(call.callType ?? 0), // המרת Enum
                               address: call.adress,
                               openTime: call.startTime ?? DateTime.MinValue,
                               assignmentStartTime: assign.startTime ?? DateTime.MinValue,
                               actualEndTime: assign.finishTime ?? null,
-                              endType: (Hamal?)assign.assignKind ?? null// המרת Enum
+                              endType: (BO.Hamal?)assign.assignKind ?? null// המרת Enum
                           );
 
         // סינון לפי סוג הקריאה אם צוין
         if (cType != null)
         {
-            closedCalls = closedCalls.Where(c => c.CallType == (CallType)cType);
+            closedCalls = closedCalls.Where(c => c.CallType == (BO.CallType)cType);
         }
 
         // מיון הקריאות לפי השדה הנבחר
@@ -383,12 +391,12 @@ public class CallImplementation : ICall
         return closedCalls;
     }
 
-    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, CallType? callType = null, Enum? sortField = null)
+    public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, BO.CallType? callType = null, Enum? sortField = null)
     {
         return CallManager.GetOpenCallsByVolunteer(volunteerId, callType, sortField);
     }
 
-    public Call? GetAssignedCallByVolunteer(int volunteerId)
+    public BO.Call? GetAssignedCallByVolunteer(int volunteerId)
     {
         // בדיקת מתנדב
         var volunteer = _dal.volunteer.Read(volunteerId);
@@ -426,7 +434,7 @@ public class CallImplementation : ICall
         };
     }
 
-    public async Task UpdateCallDetails(Call call)
+    public async Task UpdateCallDetails(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
 
@@ -482,7 +490,7 @@ public class CallImplementation : ICall
     }
 
 
-    public void UpdateCallStatus(Call call, bool isFinish)
+    public void UpdateCallStatus(BO.Call call, bool isFinish)
     {
         if (isFinish)
             call.Status = Status.closed;
@@ -513,7 +521,7 @@ public class CallImplementation : ICall
                               select new CallInList
                               {
                                   CallId = call.id,
-                                  CallType = (CallType)(call.callType ?? 0),
+                                  CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
                                   TimeRemaining = call.maximumTime.HasValue
                                       ? call.maximumTime.Value - DateTime.Now
@@ -588,7 +596,7 @@ public class CallImplementation : ICall
     }
 
 
-    public Status UpdateStatus(Call call, TimeSpan riskTime)
+    public Status UpdateStatus(BO.Call call, TimeSpan riskTime)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
@@ -819,7 +827,7 @@ public class CallImplementation : ICall
         {
             Id = activeAssignment.id,
             CallId = call.id,
-            CallType = (CallType)(call.callType ?? 0),
+            CallType = (BO.CallType)(call.callType ?? 0),
             Description = call.detail,
             FullAddress = call.adress,
             OpenTime = call.startTime ?? DateTime.MinValue,
