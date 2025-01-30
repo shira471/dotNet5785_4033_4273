@@ -190,24 +190,4 @@
     <startTime>2025-01-04T15:17:52.4137272+02:00</startTime>
     <maximumTime>2025-02-26T00:00:00</maximumTime>
   </Call>
-  <Call>
-    <id>20</id>
-    <detail>Electric outage report</detail>
-    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
-    <latitude>31.779519</latitude>
-    <longitude>35.2144685</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2025-01-14T06:17:52.4137272+02:00</startTime>
-    <maximumTime xsi:nil="true" />
-  </Call>
-  <Call>
-    <id>21</id>
-    <detail>lkjhgf</detail>
-    <adress>tel aviv</adress>
-    <latitude xsi:nil="true" />
-    <longitude xsi:nil="true" />
-    <callType>Breakfast</callType>
-    <startTime>2025-01-30T12:25:20.267947+02:00</startTime>
-    <maximumTime xsi:nil="true" />
-  </Call>
 </ArrayOfCall>

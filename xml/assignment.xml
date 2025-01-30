@@ -8,4 +8,12 @@
     <finishTime xsi:nil="true" />
     <assignKind>cancelByVolunteer</assignKind>
   </Assignment>
+  <Assignment>
+    <id>12</id>
+    <callId>27</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2025-01-30T14:06:43.3938482+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
 </ArrayOfAssignment>
