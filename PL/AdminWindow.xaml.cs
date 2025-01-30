@@ -28,7 +28,6 @@ namespace PL.Volunteer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private static VolunteerListWindow? _volunteerWindow = null;
         private static CallsViewWindow? _callsWindow = null;
-
         public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
         //public bool IsSimulatorRunning { get; set; }
         public int Interval { get; set; } = 1;
@@ -45,8 +44,6 @@ namespace PL.Volunteer
 
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-     
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -88,7 +85,6 @@ namespace PL.Volunteer
 
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
-            s_bl.Call.AddObserver(LoadCallStatusData);
             Application.Current.Dispatcher.Invoke(() => LoadCallStatusData());
         }
 
@@ -99,15 +95,9 @@ namespace PL.Volunteer
         {
             if (IsSimulatorRunning)
                 s_bl.Admin.StopSimulator();
-            // ביטול משקיפים רק אם אין תהליך שרץ
-            if (_clockObserverOperation == null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
-                s_bl.Admin.RemoveClockObserver(clockObserver);
-
-            if (_configObserverOperation == null || _configObserverOperation.Status == DispatcherOperationStatus.Completed)
-                s_bl.Admin.RemoveConfigObserver(configObserver);
-
-            if (_callStatusObserverOperation == null || _callStatusObserverOperation.Status == DispatcherOperationStatus.Completed)
-                s_bl.Call.RemoveObserver(LoadCallStatusData);
+            s_bl.Admin.RemoveClockObserver(clockObserver);
+            s_bl.Admin.RemoveConfigObserver(configObserver);
+            s_bl.Call.RemoveObserver(LoadCallStatusData);
         }
         private void LoadCallStatusData()
         {
@@ -115,40 +105,32 @@ namespace PL.Volunteer
             {
                 _callStatusObserverOperation = Dispatcher.BeginInvoke(() =>
                 {
-                    try
-                    {
-                        // מקבל את כמות הקריאות בכל סטטוס
-                        int[] statusCounts = s_bl.Call.GetCallCountsByStatus();
+                    // מקבל את כמות הקריאות בכל סטטוס
+                    int[] statusCounts = s_bl.Call.GetCallCountsByStatus();
 
-                        // רשימת הסטטוסים מה-Enum
-                        var callStatuses = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
+                    // רשימת הסטטוסים מה-Enum
+                    var callStatuses = Enum.GetValues(typeof(Status)).Cast<Status>().ToList();
 
-                        // יצירת רשימה של אובייקטים להצגה ב-DataGrid
-                        var groupedCalls = callStatuses
-                            .Select((status, index) => new CallInList
-                            {
-                                Status = status,
-                                TotalAssignments = statusCounts[index] // משייך את הכמות הנכונה לכל סטטוס
-                            })
-                            .Where(c => c.TotalAssignments > 0) // מסנן סטטוסים ללא קריאות
-                            .ToList();
-
-                        // עדכון ה-ObservableCollection מה-UI Thread
-                        Application.Current.Dispatcher.Invoke(() =>
+                    // יצירת רשימה של אובייקטים להצגה ב-DataGrid
+                    var groupedCalls = callStatuses
+                        .Select((status, index) => new CallInList
                         {
-                            CallStatusSummaries.Clear();
-                            foreach (var call in groupedCalls)
-                            {
-                                CallStatusSummaries.Add(call);
-                            }
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error loading call status data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                });
+                            Status = status,
+                            TotalAssignments = statusCounts[index] // משייך את הכמות הנכונה לכל סטטוס
+                        })
+                        .Where(c => c.TotalAssignments > 0) // מסנן סטטוסים ללא קריאות
+                        .ToList();
 
+                    // עדכון ה-ObservableCollection מה-UI Thread
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        CallStatusSummaries.Clear();
+                        foreach (var call in groupedCalls)
+                        {
+                            CallStatusSummaries.Add(call);
+                        }
+                    });
+                });
             }
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -246,14 +228,7 @@ namespace PL.Volunteer
         /// </summary>
         private void clockObserver()
         {
-            if (_clockObserverOperation is null || _clockObserverOperation.Status == DispatcherOperationStatus.Completed)
-            {
-                _clockObserverOperation = Dispatcher.BeginInvoke(() =>
-                {
-                    CurrentTime = s_bl.Admin.GetSystemClock();
-                    OnPropertyChanged(nameof(CurrentTime));
-                });
-            }
+            CurrentTime = s_bl.Admin.GetSystemClock();
         }
 
         /// <summary>
@@ -261,14 +236,8 @@ namespace PL.Volunteer
         /// </summary>
         private void configObserver()
         {
-            if (_configObserverOperation is null || _configObserverOperation.Status == DispatcherOperationStatus.Completed)
-            {
-                _configObserverOperation = Dispatcher.BeginInvoke(() =>
-                {
-                    TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
-                    MaxYearRange = (int)(timeSpan.TotalDays / 365);
-                });
-            }
+            TimeSpan timeSpan = s_bl.Admin.GetRiskTimeSpan();
+            MaxYearRange = (int)(timeSpan.TotalDays / 365); // Convert days to years
         }
 
         private void UpdateMaxRange_Click(object sender, RoutedEventArgs e)
@@ -282,31 +251,26 @@ namespace PL.Volunteer
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Minute);
-            clockObserver();
         }
 
         private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Hour);
-            clockObserver();
         }
 
         private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Day);
-            clockObserver();
         }
 
         private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Month);
-            clockObserver();
         }
 
         private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
         {
             s_bl.Admin.AdvanceSystemClock(BO.TimeUnit.Year);
-            clockObserver();
         }
 
         /// <summary>
@@ -630,5 +594,3 @@ namespace PL.Volunteer
         }
     }
 }
-
-

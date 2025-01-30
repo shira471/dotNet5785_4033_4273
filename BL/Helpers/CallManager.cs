@@ -417,11 +417,12 @@ internal static class CallManager
             {
                 throw new Exception($"Assignment for Volunteer ID={volunteerId} and Call ID={callId} has already been closed.");
             }
-
+            var adminImplementation = new AdminImplementation();
+            var systemClock = adminImplementation.GetSystemClock();
             // עדכון זמן סיום השיוך
             var updatedAssignment = assign with
             {
-                finishTime = DateTime.Now,
+                finishTime = systemClock,
                 assignKind = DO.Hamal.handeled
             };
             s_dal.assignment.Update(updatedAssignment);

@@ -466,7 +466,8 @@ public class CallImplementation : ICall
             );
 
         AdminImplementation admin = new();
-
+        var adminImplementation = new AdminImplementation();
+        var systemClock = adminImplementation.GetSystemClock();
         // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
                               let assign = latestAssignments.TryGetValue(call.id, out var latestAssign) ? latestAssign : null
@@ -476,14 +477,14 @@ public class CallImplementation : ICall
                                   CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
                                   TimeRemaining = call.maximumTime.HasValue
-                                      ? call.maximumTime.Value - DateTime.Now
+                                      ? call.maximumTime.Value - systemClock
                                       : (TimeSpan?)null,
                                   LastVolunteerName = assign?.volunteerId != null &&
                                                       (assign.assignKind != DO.Hamal.cancelByManager && assign.assignKind != DO.Hamal.cancelByVolunteer)
                                       ? _dal.volunteer.Read(assign.volunteerId)?.name
                                       : null,
                                   CompletionTime = assign?.finishTime != null
-                                      ? assign.finishTime.Value - (call.startTime ?? DateTime.MinValue)
+                                      ? assign.finishTime.Value - (call.startTime ?? systemClock)
                                       : null,
                                   TotalAssignments = assignments.Count(a => a.callId == call.id),
                                   Status = statuses[call.id]
@@ -552,9 +553,11 @@ public class CallImplementation : ICall
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
 
+        var adminImplementation = new AdminImplementation();
+        var systemClock = adminImplementation.GetSystemClock();
         if (call.MaxEndTime.HasValue)
         {
-            var timeRemaining = call.MaxEndTime.Value - DateTime.Now;
+            var timeRemaining = call.MaxEndTime.Value - systemClock;
 
             // אם הזמן של הקריאה עבר (timeRemaining < 0), החזיר סטטוס "פג תוקף"
             if (timeRemaining <= TimeSpan.Zero)
