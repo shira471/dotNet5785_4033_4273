@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +21,31 @@ namespace PL.Volunteer
     /// <summary>
     /// Interaction logic for AdminWindow.xaml
     /// </summary>
-    public partial class AdminWindow : Window
+    public partial class AdminWindow : Window, INotifyPropertyChanged
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private static VolunteerListWindow? _volunteerWindow = null;
         private static CallsViewWindow? _callsWindow = null;
         public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
-        public bool IsSimulatorRunning { get; set; }
+        //public bool IsSimulatorRunning { get; set; }
         public int Interval { get; set; } = 1;
+        private bool _isSimulatorRunning;
+        public bool IsSimulatorRunning
+        {
+            get => _isSimulatorRunning;
+            set
+            {
+                _isSimulatorRunning = value;
+                OnPropertyChanged(nameof(IsSimulatorRunning)); // עדכון ה-Binding
+            }
+        }
+       
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         // DispatcherOperation עבור כל מתודת השקפה
         private volatile DispatcherOperation? _callStatusObserverOperation = null;
         private volatile DispatcherOperation? _clockObserverOperation = null;
@@ -350,12 +367,14 @@ namespace PL.Volunteer
             if (_isSimulationRunning)
             {
                 _isSimulationRunning = false;
+                IsSimulatorRunning = false;
                 btn.Content = "Start Simulator"; // שינוי הטקסט ל-Start
                 MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             _isSimulationRunning = true;
+            IsSimulatorRunning = true;
             btn.Content = "Stop Simulator"; // שינוי הטקסט ל-Stop
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 

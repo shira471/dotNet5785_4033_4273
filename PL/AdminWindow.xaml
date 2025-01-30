@@ -4,10 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
+        xmlns:converters="clr-namespace:PL.Converters"
         mc:Ignorable="d"
         Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" 
         Height="700" Width="900"
         Background="AliceBlue" FontFamily="Segoe UI">
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
+
+
+
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -15,10 +22,13 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
+        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+       
 
         <!-- כותרת -->
         <TextBlock Text="Welcome!" FontSize="24" FontWeight="Bold" Foreground="Green" 
@@ -31,11 +41,16 @@
                 <StackPanel>
                     <Label Content="Simulation Interval (minutes)" VerticalAlignment="Center" Margin="5"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="+1 Min" Margin="5" Click="btnAddOneMinute_Click" Width="100"/>
-                        <Button Content="+1 Hour" Margin="5" Click="btnAddOneHour_Click" Width="100"/>
-                        <Button Content="+1 Day" Margin="5" Click="btnAddOneDay_Click" Width="100"/>
-                        <Button Content="+1 Month" Margin="5" Click="btnAddOneMonth_Click" Width="100"/>
-                        <Button Content="+1 Year" Margin="5" Click="btnAddOneYear_Click" Width="100"/>
+                        <Button Content="+1 Min" Margin="5" Click="btnAddOneMinute_Click" Width="100"
+                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="+1 Hour" Margin="5" Click="btnAddOneHour_Click" Width="100"
+                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="+1 Day" Margin="5" Click="btnAddOneDay_Click" Width="100"
+                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="+1 Month" Margin="5" Click="btnAddOneMonth_Click" Width="100"
+                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="+1 Year" Margin="5" Click="btnAddOneYear_Click" Width="100"
+                    IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -51,8 +66,10 @@
             <!-- כפתורי ניהול בסיסיים -->
             <GroupBox Header="Database Management" Margin="5">
                 <StackPanel>
-                    <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click"/>
-                    <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click"/>
+                    <Button Content="Initialize Database" Width="200" Margin="5" Click="InitializeDB_Click"
+                            IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="Reset Database" Width="200" Margin="5" Click="ResetDB_Click"
+                            IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}"/>
                     <Button Content="Start Simulator" Width="200" Margin="5" Click="btnStrSimulat_Click"/>
                 </StackPanel>
             </GroupBox>

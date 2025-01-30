@@ -167,7 +167,7 @@ namespace PL.Volunteer
                         var updatedVolunteer = s_bl.Volunteer.GetVolunteerDetails(CurrentVolunteer.Id);
                         CurrentVolunteer = updatedVolunteer;
                         OnPropertyChanged(nameof(CurrentVolunteer));
-
+                        OnPropertyChanged(nameof(CanSelectCall)); // ⬅ עדכון היכולת לבחור קריאה
                     }
                 });
             }
@@ -341,6 +341,7 @@ namespace PL.Volunteer
 
                         OnPropertyChanged(nameof(CallDetails));
                         OnPropertyChanged(nameof(IsCallActive));
+                        OnPropertyChanged(nameof(CanSelectCall)); // ⬅ עדכון היכולת לבחור קריאה
                     }
                     catch (Exception ex)
                     {
@@ -351,6 +352,7 @@ namespace PL.Volunteer
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
+        public bool CanSelectCall => CurrentVolunteer?.IsActive == true && !IsCallActive;
 
         protected void OnPropertyChanged(string propertyName)
         {
