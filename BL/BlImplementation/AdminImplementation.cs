@@ -130,7 +130,6 @@ public class AdminImplementation : IAdmin
     {
         lock (AdminManager.BlMutex) // Stage 7
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
             AdminManager.Start(interval); // Stage 7
         }
     }

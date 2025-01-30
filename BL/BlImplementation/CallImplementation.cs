@@ -128,38 +128,11 @@ public class CallImplementation : ICall
         CallManager.Observers.NotifyListUpdated();
 
         // ✔ חישוב קואורדינטות ברקע בלי לחכות
-        _ = UpdateCallCoordinatesAsync(doCall);
+        _ = CallManager.UpdateCallCoordinatesAsync(doCall);
     }
 
     // ✔ תת-מתודה אסינכרונית לחישוב הקואורדינטות ולשליחה מחדש ל-DAL
-    private static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
-    {
-        if (string.IsNullOrWhiteSpace(doCall.adress))
-            return;
-
-        try
-        {
-            var coords = await VolunteerManager.GetCoordinatesFromGoogleAsync(doCall.adress);
-
-            if (coords != null)
-            {
-                // ✔ נעילה רק בזמן העדכון ב-DAL
-                lock (AdminManager.BlMutex)
-                {
-                    doCall = doCall with { latitude = coords[0], longitude = coords[1] };
-                    _dal.call.Update(doCall);
-                }
-
-                // ✔ עדכון הצופים שהתהליך הושלם
-                CallManager.Observers.NotifyItemUpdated(doCall.id);
-                CallManager.Observers.NotifyListUpdated();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠ שגיאה בחישוב קואורדינטות: {ex.Message}");
-        }
-    }
+   
 
 
 
@@ -436,7 +409,7 @@ public class CallImplementation : ICall
         };
     }
 
-    public async Task UpdateCallDetails(BO.Call call)
+    public void UpdateCallDetails(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
 

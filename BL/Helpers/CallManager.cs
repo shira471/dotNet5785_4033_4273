@@ -8,6 +8,7 @@ using DO;
 using Helpers;
 using BlImplementation;
 using BO;
+using BlApi;
 
 namespace BL.Helpers;
 
@@ -16,7 +17,7 @@ internal static class CallManager
     private static int s_periodicCounter = 0;
     internal static ObserverManager Observers = new(); // Stage 5
     // Access to DAL
-    private static Idal s_dal = Factory.Get; // Stage 4
+    private static Idal s_dal = DalApi.Factory.Get; // Stage 4
 
     /// <summary>
     /// Update calls according to the logic, based on the system clock.
@@ -366,7 +367,7 @@ internal static class CallManager
         x.Status = Status.closed;
         CallManager.Observers.NotifyListUpdated(); // שלב 5
     }
-    internal static async Task UpdateCallDetails(BO.Call call)
+    internal static void UpdateCallDetails(BO.Call call)
     {
         // וידוא שהקריאה אינה null
         if (call == null)
@@ -380,29 +381,23 @@ internal static class CallManager
             throw new ArgumentException("MaxEndTime must be greater than OpenTime.");
         }
 
-        // עדכון קווי אורך ורוחב לפי הכתובת
-        var coordinates = await VolunteerManager.GetCoordinatesFromGoogleAsync(call.Address);
-        if (coordinates == null || coordinates.Length < 2)
-        {
-            throw new InvalidOperationException("Invalid address: could not retrieve coordinates.");
-        }
+        var existingCall = s_dal.call.Read(call.Id)
+        ?? throw new Exception($"Call with ID {call.Id} not found.");
 
-        // נעילה סביב גישה ל-DAL
+        bool addressChanged = existingCall.adress != call.Address;
+        var doCall = new DO.Call
+        {
+            id = call.Id,
+            detail = call.Description,
+            adress = call.Address,
+            latitude = existingCall.latitude, // שימוש בקואורדינטות הקיימות עד לעדכון מאוחר יותר
+            longitude = existingCall.longitude,
+            callType = (DO.CallType?)call.CallType,
+            startTime = call.OpenTime,
+            maximumTime = call.MaxEndTime
+        };
         lock (AdminManager.BlMutex) // שלב 7
         {
-            // יצירת אובייקט DO.Call
-            var doCall = new DO.Call
-            {
-                id = call.Id,
-                detail = call.Description,
-                adress = call.Address,
-                latitude = coordinates[0],
-                longitude = coordinates[1],
-                callType = (DO.CallType?)call.CallType,
-                startTime = call.OpenTime,
-                maximumTime = call.MaxEndTime
-            };
-
             // עדכון הקריאה בשכבת ה-DAL
             try
             {
@@ -415,7 +410,41 @@ internal static class CallManager
         }
 
         // עדכון תצפיתנים (מחוץ לנעילה)
-        CallManager.Observers.NotifyItemUpdated(call.Id); // שלב 5
-        CallManager.Observers.NotifyListUpdated();        // שלב 5
+        CallManager.Observers.NotifyItemUpdated(call.Id);
+        CallManager.Observers.NotifyListUpdated();
+
+        // ✔ חישוב קואורדינטות ברקע **רק אם הכתובת שונתה**
+        if (addressChanged)
+        {
+            _ = Task.Run(() => UpdateCallCoordinatesAsync(doCall));
+        }
+    }
+    public static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
+    {
+        if (string.IsNullOrWhiteSpace(doCall.adress))
+            return;
+
+        try
+        {
+            var coords = await VolunteerManager.GetCoordinatesFromGoogleAsync(doCall.adress);
+
+            if (coords != null)
+            {
+                // ✔ נעילה רק בזמן העדכון ב-DAL
+                lock (AdminManager.BlMutex)
+                {
+                    doCall = doCall with { latitude = coords[0], longitude = coords[1] };
+                    s_dal.call.Update(doCall);
+                }
+
+                // ✔ עדכון הצופים שהתהליך הושלם
+                CallManager.Observers.NotifyItemUpdated(doCall.id);
+                CallManager.Observers.NotifyListUpdated();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"⚠ שגיאה בחישוב קואורדינטות: {ex.Message}");
+        }
     }
 }
