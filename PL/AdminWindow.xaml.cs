@@ -358,70 +358,66 @@ namespace PL.Volunteer
             }
         }
 
-        private bool _isSimulationRunning = false; // Manage simulation state
+        private volatile bool _isSimulationRunning = false;
+        private CancellationTokenSource _cts;
 
         private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;  // המרת ה-sender לכפתור
+            Button btn = sender as Button;
+            if (btn == null) return;
 
-            if (btn == null) return; // אם לא הצלחנו להמיר, לא נמשיך
-
-            if (_isSimulationRunning)
+            if (_isSimulationRunning) // עצירת סימולטור אם פועל
             {
                 _isSimulationRunning = false;
+                _cts?.Cancel();
                 IsSimulatorRunning = false;
-                btn.Content = "Start Simulator"; // שינוי הטקסט ל-Start
+                btn.Content = "Start Simulator";
                 MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
+            // הפעלת הסימולטור
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
-            
-            if (btn.Content == "Stop Simulator")
-            {
-                btn.Content = "Start Simulator";
-                _isSimulationRunning = false;
-                IsSimulatorRunning = false;
-                s_bl.Admin.StopSimulator();
-                MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                btn.Content = "Stop Simulator"; // שינוי הטקסט ל-Stop
-            }
+            btn.Content = "Stop Simulator";
+            MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            _cts = new CancellationTokenSource();
+
             try
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
-                try
-                {
-                    while (_isSimulationRunning)
+                    try
                     {
+                        while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
+                        {
+                            // ✅ עדכון סימולטור
+                            s_bl.Admin.StartSimulator(Interval);
+                            s_bl.Volunteer.SimulateVolunteers();
+                            PerformSimulationLogic();
 
-                        _isSimulationRunning = false;
-                        //  BO.TimeUnit timeUnit = GetTimeUnitFromMinutes(Interval);
-                        s_bl.Admin.StartSimulator(Interval); // Advance system clock
-                        s_bl.Volunteer.SimulateVolunteers(); // קריאה לפונקציה שלך
-                        PerformSimulationLogic();
-                        Thread.Sleep(TimeSpan.FromSeconds(5)); // Simulator cycle delay
+                            
+
+                            await Task.Delay(5000, _cts.Token);
+                        }
                     }
+                    catch (TaskCanceledException)
+                    {
+                        Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
                     }
                     catch (Exception ex)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
-                            MessageBox.Show($"Error during simulation: {ex.Message}",
-                                            "Error", MessageBoxButton.OK, MessageBoxImage.Error));
+                            MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
                     }
-                });
+                }, _cts.Token);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         private void PerformSimulationLogic()
         {
