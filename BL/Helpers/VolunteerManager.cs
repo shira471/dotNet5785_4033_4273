@@ -7,6 +7,9 @@ using DO;
 using Newtonsoft.Json.Linq;
 using BL.Helpers;
 using Helpers;
+using System.Numerics;
+using System.Net;
+using BO;
 
 internal static class VolunteerManager
 {
@@ -24,7 +27,7 @@ internal static class VolunteerManager
     {
         Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
 
-        List<Volunteer> volunteers;
+        List<DO.Volunteer> volunteers;
 
         // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
         lock (AdminManager.BlMutex) // Stage 7
@@ -70,7 +73,7 @@ internal static class VolunteerManager
     {
         Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; //stage 7 (optional)
 
-        List<Volunteer> volunteers;
+        List<DO.Volunteer> volunteers;
 
         // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
         lock (AdminManager.BlMutex) // Stage 7
@@ -118,7 +121,7 @@ internal static class VolunteerManager
     }
 
     // Custom logic for deciding whether to deactivate a volunteer
-    private static bool ShouldDeactivate(Volunteer volunteer)
+    private static bool ShouldDeactivate(DO.Volunteer volunteer)
     {
         // Example: Add your custom logic here. For now, we deactivate based on `isActive`.
         return true; // Placeholder: Change this to match your criteria
@@ -248,7 +251,7 @@ internal static class VolunteerManager
             {
                 BO.CallInProgress? callInProgress;
                 lock (AdminManager.BlMutex)
-                    callInProgress = VolunteerManager.converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
+                    callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
                 // אם אין למתנדב קריאה בטיפולו
                 if (callInProgress == null)
                 {
@@ -268,10 +271,15 @@ internal static class VolunteerManager
                     var totalTime = arrivingTime + handleTime;
 
                     if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
-                        CallManager.UpdateCallDetails(doVolunteer.idVol, callInProgress.Id);
-
+                    {
+                        //תנאי לא ברור
+                    }
                     else if (s_rand.Next(0, 10) == 0)
-                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id,doVolunteer.role);
+                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id,(BO.Role)doVolunteer.role);
+                    else if (s_rand.Next(0, 5) == 0) // 20% סיכוי לסגירה מסודרת
+                    {
+                        CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                    }
                 }
             }
         }
@@ -296,6 +304,25 @@ internal static class VolunteerManager
 
         // זמן מוערך: זמן מבוסס מרחק + זמן רנדומלי
         return TimeSpan.FromMinutes(distance / 10 + randomMinutes); // לדוגמה: 10 קמ"ש
+    }
+   internal static BO.Volunteer converterFromDoToBoVolunteer(DO.Volunteer doVolunteer)
+    {
+
+        return new BO.Volunteer
+        {
+           Id=doVolunteer.idVol,
+           FullName=doVolunteer.name,
+           Phone=doVolunteer.phoneNumber,
+            Email=doVolunteer.email,
+            Password=doVolunteer.password,
+            Address=doVolunteer.adress,
+            Latitude=doVolunteer.latitude,
+            Longitude=doVolunteer.longitude,
+            Role=(BO.Role)doVolunteer.role,
+            IsActive=doVolunteer.isActive,
+            MaxDistance=doVolunteer.limitDestenation,
+            DistanceType=(BO.DistanceType)doVolunteer.distanceType,
+        };
     }
 }
 

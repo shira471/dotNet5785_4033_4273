@@ -352,5 +352,9 @@ public class VolunteerImplementation : IVolunteer
     public void RemoveObserver(int id, Action observer) =>
         VolunteerManager.Observers.RemoveObserver(id, observer);
 
+    public void SimulateVolunteers()
+    {
+        VolunteerManager.SimulateVolunteers();
+    }
 }
 
