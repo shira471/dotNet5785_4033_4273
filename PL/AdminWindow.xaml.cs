@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -377,16 +378,30 @@ namespace PL.Volunteer
 
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
-            btn.Content = "Stop Simulator"; // שינוי הטקסט ל-Stop
-            MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
+            if (btn.Content == "Stop Simulator")
+            {
+                btn.Content = "Start Simulator";
+                _isSimulationRunning = false;
+                IsSimulatorRunning = false;
+                s_bl.Admin.StopSimulator();
+                MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                btn.Content = "Stop Simulator"; // שינוי הטקסט ל-Stop
+            }
             try
             {
                 await Task.Run(() =>
                 {
                     while (_isSimulationRunning)
                     {
-                        s_bl.Admin.AdvanceSystemClock(TimeUnit.Minute); // Advance system clock
+                        _isSimulationRunning = false;
+                        //  BO.TimeUnit timeUnit = GetTimeUnitFromMinutes(Interval);
+                        s_bl.Admin.StartSimulator(Interval); // Advance system clock
+                        SimulateVolunteers(); // קריאה לפונקציה שלך
                         PerformSimulationLogic();
                         Thread.Sleep(TimeSpan.FromSeconds(5)); // Simulator cycle delay
                     }
@@ -398,16 +413,99 @@ namespace PL.Volunteer
             }
         }
 
+
         private void PerformSimulationLogic()
         {
             var clock = s_bl.Admin.GetSystemClock();
             Console.WriteLine($"Current system clock: {clock}");
         }
 
-        public void SimulationTime_Click(object sender, RoutedEventArgs e)
-        {
+        //private void SimulationTime_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        // קבלת הערך מה-TextBox
+        //        if (int.TryParse(SimulationIntervalTextBox.Text, out int newInterval) && newInterval > 0)
+        //        {
+        //            Interval = newInterval; // עדכון קצב הסימולציה
+        //            OnPropertyChanged(nameof(Interval)); // עדכון ה-Binding
 
+        //            if (IsSimulatorRunning)
+        //            {
+        //                // עדכון מהירות הסימולציה בזמן ריצה
+        //                s_bl.Admin.StartSimulator(Interval);
+        //                MessageBox.Show($"Simulation speed updated to {Interval} minutes per second.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Please enter a valid positive number for simulation speed.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error updating simulation speed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
+        private void SimulationTime_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // חיפוש TextBox בתוך ה-GroupBox הרלוונטי
+                TextBox textBox = FindVisualChildren<TextBox>(this).FirstOrDefault(tb => tb.Text == MaxYearRange.ToString());
+
+                if (textBox != null && int.TryParse(textBox.Text, out int newInterval) && newInterval > 0)
+                {
+                    Interval = newInterval; // עדכון קצב הסימולציה
+                    OnPropertyChanged(nameof(Interval)); // עדכון ה-Binding
+
+                    // קביעת יחידת הזמן המתאימה
+                    BO.TimeUnit timeUnit = GetTimeUnitFromMinutes(Interval);
+                    // עדכון מהירות הסימולציה בזמן ריצה
+                    s_bl.Admin.AdvanceSystemClock(timeUnit);
+                        MessageBox.Show($"Simulation speed updated to {Interval} minutes per cycle.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid positive number for simulation speed.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating simulation speed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+        // פונקציה לקביעת יחידת הזמן המתאימה
+        private BO.TimeUnit GetTimeUnitFromMinutes(int minutes)
+        {
+            if (minutes < 60) return BO.TimeUnit.Minute;
+            if (minutes < 1440) return BO.TimeUnit.Hour;
+            if (minutes < 43200) return BO.TimeUnit.Day;
+            if (minutes < 525600) return BO.TimeUnit.Month;
+            return BO.TimeUnit.Year;
+        }
+        // פונקציה כללית למציאת כל ה-UI Elements מהסוג המבוקש
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent == null) yield break;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T typedChild)
+                {
+                    yield return typedChild;
+                }
+
+                foreach (T childOfChild in FindVisualChildren<T>(child))
+                {
+                    yield return childOfChild;
+                }
+            }
+        }
+
+
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try

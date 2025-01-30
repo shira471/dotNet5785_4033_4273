@@ -78,7 +78,7 @@
             <GroupBox Header="Simulation Interval Update" Margin="5">
                 <StackPanel>
                     <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                    <Button Content="Update Simulation Interval" Click="SimulationTime_Click" Width="200" Margin="5"/>
+                    <Button Content="Update Simulation Interval" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}" Click="SimulationTime_Click" Width="200" Margin="5"/>
                 </StackPanel>
             </GroupBox>
 

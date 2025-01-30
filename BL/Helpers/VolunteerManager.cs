@@ -244,66 +244,37 @@ internal static class VolunteerManager
 
         foreach (var doVolunteer in doVolunteerList)
         {
-            int volunteerId = 0;
-
             lock (AdminManager.BlMutex) // stage 7
             {
+                BO.CallInProgress? callInProgress;
+                lock (AdminManager.BlMutex)
+                    callInProgress = VolunteerManager.converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
                 // אם אין למתנדב קריאה בטיפולו
-                if (!CallManager.IsVolunteerBusy(doVolunteer.idVol))
+                if (callInProgress == null)
                 {
-                    // בחירה רנדומלית של קריאה לטיפול בהסתברות של 20%
-                    if (s_rand.NextDouble() < 0.2)
+                    IEnumerable<BO.OpenCallInList> openCallsOfVolunteer = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol);
+                    int openCalls = openCallsOfVolunteer.Count();
+                    if (openCalls != 0 && s_rand.Next(0, 5) == 0)
                     {
-                        var openCalls = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol,null,null);
-                        if (openCalls.Any())
-                        {
-                            int randomIndex = s_rand.Next(0, openCalls.Count());
-                            var selectedCall = openCalls.ElementAt(randomIndex);
-
-                            // הקצאת קריאה למתנדב
-                            CallManager.AssignCallToVolunteer(doVolunteer.idVol, selectedCall.Id);
-                            volunteerId = doVolunteer.idVol;
-                        }
+                        int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
+                        CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
                     }
                 }
                 else // אם למתנדב יש קריאה בטיפולו
                 {
-                    var activeAssignment = s_dal.assignment
-                        .ReadAll(a => a.volunteerId == doVolunteer.idVol && a.finishTime == null)
-                        .FirstOrDefault();
+                    int VolunteerSpeed = s_rand.Next(5, 50);
+                    var arrivingTime = TimeSpan.FromHours(callInProgress.DistanceFromVolunteer / VolunteerSpeed);
+                    var handleTime = TimeSpan.FromMinutes(s_rand.Next(5, 30));
+                    var totalTime = arrivingTime + handleTime;
 
-                    if (activeAssignment != null)
-                    {
-                        var elapsedTime = DateTime.Now - activeAssignment.startTime;
+                    if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
+                        CallManager.UpdateCallDetails(doVolunteer.idVol, callInProgress.Id);
 
-                        // בדיקת אם עבר "מספיק זמן"
-                        var relatedCall = s_dal.call.Read(activeAssignment.callId);
-                        var estimatedTime = CalculateEstimatedTime(doVolunteer, relatedCall);
-
-                        if (elapsedTime >= estimatedTime) // מספיק זמן
-                        {
-                            // סיום הקריאה
-                            CallManager.CloseCallAssignment(doVolunteer.idVol, activeAssignment.callId);
-
-                            volunteerId = doVolunteer.idVol;
-                        }
-                        else if (s_rand.NextDouble() < 0.1) // הסתברות של 10% לביטול
-                        {
-                            volunteerId = doVolunteer.idVol;
-                           
-                                CallManager.CancelCallAssignment(volunteerId, activeAssignment.callId, (BO.Role)doVolunteer.role);
-                            
-                        }
-                    }
+                    else if (s_rand.Next(0, 10) == 0)
+                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id,doVolunteer.role);
                 }
-            } // lock
-
-            if (volunteerId != 0)
-                volunteersToUpdate.AddLast(volunteerId);
+            }
         }
-
-        foreach (int id in volunteersToUpdate)
-            Observers.NotifyItemUpdated(id);
     }
 
     /// <summary>

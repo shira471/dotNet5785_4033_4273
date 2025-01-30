@@ -436,4 +436,56 @@ internal static class CallManager
         x.Status = Status.closed;
         CallManager.Observers.NotifyListUpdated(); // שלב 5
     }
+    internal static async Task UpdateCallDetails(BO.Call call)
+    {
+        // וידוא שהקריאה אינה null
+        if (call == null)
+        {
+            throw new ArgumentNullException(nameof(call), "Call cannot be null.");
+        }
+
+        // בדיקת תקינות לוגית
+        if (call.MaxEndTime <= call.OpenTime)
+        {
+            throw new ArgumentException("MaxEndTime must be greater than OpenTime.");
+        }
+
+        // עדכון קווי אורך ורוחב לפי הכתובת
+        var coordinates = await VolunteerManager.GetCoordinatesFromGoogleAsync(call.Address);
+        if (coordinates == null || coordinates.Length < 2)
+        {
+            throw new InvalidOperationException("Invalid address: could not retrieve coordinates.");
+        }
+
+        // נעילה סביב גישה ל-DAL
+        lock (AdminManager.BlMutex) // שלב 7
+        {
+            // יצירת אובייקט DO.Call
+            var doCall = new DO.Call
+            {
+                id = call.Id,
+                detail = call.Description,
+                adress = call.Address,
+                latitude = coordinates[0],
+                longitude = coordinates[1],
+                callType = (DO.CallType?)call.CallType,
+                startTime = call.OpenTime,
+                maximumTime = call.MaxEndTime
+            };
+
+            // עדכון הקריאה בשכבת ה-DAL
+            try
+            {
+                s_dal.call.Update(doCall);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update call.", ex);
+            }
+        }
+
+        // עדכון תצפיתנים (מחוץ לנעילה)
+        CallManager.Observers.NotifyItemUpdated(call.Id); // שלב 5
+        CallManager.Observers.NotifyListUpdated();        // שלב 5
+    }
 }
