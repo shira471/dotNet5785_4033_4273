@@ -35,6 +35,7 @@ public class AdminImplementation : IAdmin
         }
         // התראה למאזינים
         CallManager.Observers.NotifyListUpdated();
+        VolunteerManager.Observers.NotifyListUpdated();
     }
    
     // Request risk time span
@@ -45,6 +46,7 @@ public class AdminImplementation : IAdmin
         {
             return _riskTimeSpan;
         }
+        
     }
 
     // Request the system clock
@@ -85,6 +87,8 @@ public class AdminImplementation : IAdmin
         {
             _riskTimeSpan = riskTimeSpan;
         }
+        CallManager.Observers.NotifyListUpdated();
+        VolunteerManager.Observers.NotifyListUpdated();
     }
 
     #region Stage 5: Observer Management

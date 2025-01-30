@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -83,6 +84,7 @@ namespace PL.Volunteer
 
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
+            s_bl.Call.AddObserver(LoadCallStatusData);
             Application.Current.Dispatcher.Invoke(() => LoadCallStatusData());
         }
 
@@ -443,14 +445,19 @@ namespace PL.Volunteer
                 try
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
-
                     foreach (Window window in Application.Current.Windows)
                     {
                         if (window != this)
                             window.Close();
                     }
-
                     s_bl.Admin.InitializeDB();
+                    // 📌 קריאה ל-Observer כדי לרענן את כל הרכיבים
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LoadCallStatusData(); // מרענן נתוני קריאות
+                        OnPropertyChanged(nameof(CurrentTime)); // עדכון השעון
+                        OnPropertyChanged(nameof(CallStatusSummaries)); // עדכון הרשימה
+                    });
                 }
                 finally
                 {
@@ -469,14 +476,18 @@ namespace PL.Volunteer
                 try
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
-
                     foreach (Window window in Application.Current.Windows)
                     {
                         if (window != this)
                             window.Close();
                     }
-
                     s_bl.Admin.ResetDB();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LoadCallStatusData(); // מרענן נתוני קריאות
+                        OnPropertyChanged(nameof(CurrentTime)); // עדכון תצוגת השעון
+                        OnPropertyChanged(nameof(CallStatusSummaries)); // עדכון רשימת הקריאות
+                    });
                 }
                 finally
                 {
