@@ -377,7 +377,7 @@ namespace PL.Volunteer
 
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
-
+            
             if (btn.Content == "Stop Simulator")
             {
                 btn.Content = "Start Simulator";
@@ -395,14 +395,24 @@ namespace PL.Volunteer
             {
                 await Task.Run(() =>
                 {
+                try
+                {
                     while (_isSimulationRunning)
                     {
+
                         _isSimulationRunning = false;
                         //  BO.TimeUnit timeUnit = GetTimeUnitFromMinutes(Interval);
                         s_bl.Admin.StartSimulator(Interval); // Advance system clock
                         s_bl.Volunteer.SimulateVolunteers(); // קריאה לפונקציה שלך
                         PerformSimulationLogic();
                         Thread.Sleep(TimeSpan.FromSeconds(5)); // Simulator cycle delay
+                    }
+                    }
+                    catch (Exception ex)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                            MessageBox.Show($"Error during simulation: {ex.Message}",
+                                            "Error", MessageBoxButton.OK, MessageBoxImage.Error));
                     }
                 });
             }
