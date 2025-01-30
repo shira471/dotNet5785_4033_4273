@@ -46,6 +46,7 @@ public class CallInList
     /// סך הקצאות עבור הקריאה
     /// </summary>
     public int TotalAssignments { get; set; }
+   
 }
 
     

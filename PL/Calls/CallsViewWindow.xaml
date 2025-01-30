@@ -47,6 +47,7 @@
                 <DataGridTextColumn Header="Call Type" Binding="{Binding CallType,Mode=TwoWay}" />
                 <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName,Mode=TwoWay}" />
                 <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments,Mode=TwoWay}" />
+                <DataGridTextColumn Header="Time Remaining" Binding="{Binding TimeRemaining}" />
             </DataGrid.Columns>
         </DataGrid>
 
