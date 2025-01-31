@@ -177,19 +177,19 @@ namespace PL.Volunteer
             }
         }
 
-        private void ToggleSimulator_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsSimulatorRunning)
-            {
-                s_bl.Admin.StopSimulator();
-                IsSimulatorRunning = false;
-            }
-            else
-            {
-                s_bl.Admin.StartSimulator(Interval);
-                IsSimulatorRunning = true;
-            }
-        }
+        //private void ToggleSimulator_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (IsSimulatorRunning)
+        //    {
+        //        s_bl.Admin.StopSimulator();
+        //        IsSimulatorRunning = false;
+        //    }
+        //    else
+        //    {
+        //        s_bl.Admin.StartSimulator(Interval);
+        //        IsSimulatorRunning = true;
+        //    }
+        //}
 
         //public DateTime CurrentTime
         //{
@@ -382,7 +382,10 @@ namespace PL.Volunteer
             btn.Content = "Stop Simulator";
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            _cts = new CancellationTokenSource();
+            if (_cts == null || _cts.Token.IsCancellationRequested)
+            {
+                _cts = new CancellationTokenSource();
+            }
 
             try
             {
@@ -392,6 +395,7 @@ namespace PL.Volunteer
                     {
                         while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
                         {
+
                             // ✅ עדכון סימולטור
                             s_bl.Admin.StartSimulator(Interval);
                             s_bl.Volunteer.SimulateVolunteers();
@@ -408,7 +412,7 @@ namespace PL.Volunteer
                     }
                     catch (Exception ex)
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
+                        Application.Current.Dispatcher.BeginInvoke(() =>
                             MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
                     }
                 }, _cts.Token);

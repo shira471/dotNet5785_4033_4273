@@ -22,7 +22,7 @@ internal sealed class DalXml : Idal
 
     public Iconfig config { get; } = new ConfigImplementation();
 
-    public object Config => throw new NotImplementedException();
+    public object Config { get; } = new ConfigImplementation();
 
     //public Iconfig config => throw new NotImplementedException();
 

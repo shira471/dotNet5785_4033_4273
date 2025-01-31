@@ -150,6 +150,8 @@ internal static class CallManager
         var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
 
         if (distance > volunteer.limitDestenation)
+            
+            
             throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
 
         // יצירת השמה חדשה

@@ -277,7 +277,7 @@ public class CallImplementation : ICall
         var assignments = _dal.assignment.ReadAll();
 
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(0));
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
@@ -451,9 +451,11 @@ public class CallImplementation : ICall
                                   CallId = call.id,
                                   CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
-                                  TimeRemaining = call.maximumTime.HasValue
-                                      ? call.maximumTime.Value - systemClock
-                                      : (TimeSpan?)null,
+                                  TimeRemaining = call.maximumTime.HasValue ? new TimeSpan(
+                                                                                             (call.maximumTime.Value - systemClock).Days,
+                                                                                             (call.maximumTime.Value - systemClock).Hours,
+                                                                                             (call.maximumTime.Value - systemClock).Minutes, 0)
+                                                                                                : (TimeSpan?)null,
                                   LastVolunteerName = assign?.volunteerId != null &&
                                                       (assign.assignKind != DO.Hamal.cancelByManager && assign.assignKind != DO.Hamal.cancelByVolunteer)
                                       ? _dal.volunteer.Read(assign.volunteerId)?.name
