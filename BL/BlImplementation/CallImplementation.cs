@@ -285,9 +285,10 @@ public class CallImplementation : ICall
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
-
+        var risk = new AdminImplementation().GetRiskTimeSpan();
+       
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(0));
+        var statuses = GetStatusesByCall(calls, assignments, risk);
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
@@ -438,9 +439,9 @@ public class CallImplementation : ICall
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
-
+        var risk = new AdminImplementation().GetRiskTimeSpan();
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+        var statuses = GetStatusesByCall(calls, assignments, risk);
 
         // מציאת ההקצאה האחרונה לכל קריאה לפי ה-Id של ההקצאה
         var latestAssignments = assignments
@@ -682,7 +683,7 @@ public class CallImplementation : ICall
             call =>
             {
                 var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-                var currentSystemTime = DateTime.Now;
+                var currentSystemTime = systemClock;
                 return DetermineStatus(call, assignment, riskTimeSpan, currentSystemTime);
             }
         );
