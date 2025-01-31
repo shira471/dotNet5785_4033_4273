@@ -273,17 +273,18 @@ internal static class VolunteerManager
 
                     if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
                     {
-                       
+                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, BO.Role.Manager);
                     }
                     else
                     {
-                        if (s_rand.Next(0, 10) == 0) // 10% סיכוי לביטול
+                        if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
                         {
-                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                           
                         }
                         else // 90% סיכוי לסגירה מוצלחת
                         {
-                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
                         }
                     }
                 }
