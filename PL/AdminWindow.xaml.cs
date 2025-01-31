@@ -361,7 +361,73 @@ namespace PL.Volunteer
         private volatile bool _isSimulationRunning = false;
         private CancellationTokenSource _cts;
 
-        private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
+        //private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Button btn = sender as Button;
+        //    if (btn == null) return;
+
+        //    if (_isSimulationRunning) // עצירת סימולטור אם פועל
+        //    {
+        //        _isSimulationRunning = false;
+        //        _cts?.Cancel();
+        //        IsSimulatorRunning = false;
+        //        btn.Content = "Start Simulator";
+        //        MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        //        return;
+        //    }
+
+        //    // הפעלת הסימולטור
+        //    _isSimulationRunning = true;
+        //    IsSimulatorRunning = true;
+        //    btn.Content = "Stop Simulator";
+        //    MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        //    if (_cts == null || _cts.Token.IsCancellationRequested)
+        //    {
+        //        _cts = new CancellationTokenSource();
+        //    }
+
+        //    try
+        //    {
+        //        await Task.Run(async () =>
+        //        {
+        //            try
+        //            {
+        //                while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
+        //                {
+        //                    var x = Interval;
+        //                    var y = s_bl;
+
+        //                    if (Interval != null)
+        //                    {
+        //                        // ✅ עדכון סימולטור
+        //                        s_bl.Admin.StartSimulator(Interval);
+        //                    }
+        //                    s_bl.Volunteer.SimulateVolunteers();
+        //                    PerformSimulationLogic();
+
+
+
+        //                    await Task.Delay(5000, _cts.Token);
+        //                }
+        //            }
+        //            catch (TaskCanceledException)
+        //            {
+        //                Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Application.Current.Dispatcher.Invoke(() =>
+        //                    MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
+        //            }
+        //        }, _cts.Token);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
+        private void btnStrSimulat_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             if (btn == null) return;
@@ -371,6 +437,7 @@ namespace PL.Volunteer
                 _isSimulationRunning = false;
                 _cts?.Cancel();
                 IsSimulatorRunning = false;
+                s_bl.Admin.StopSimulator();
                 btn.Content = "Start Simulator";
                 MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -380,6 +447,7 @@ namespace PL.Volunteer
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
             btn.Content = "Stop Simulator";
+            s_bl.Admin.StopSimulator();
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             if (_cts == null || _cts.Token.IsCancellationRequested)
@@ -387,41 +455,42 @@ namespace PL.Volunteer
                 _cts = new CancellationTokenSource();
             }
 
-            try
+            // הרצת הסימולטור בלולאה נפרדת
+            Thread simulatorThread = new Thread(() =>
             {
-                await Task.Run(async () =>
+                try
                 {
-                    try
+                    while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
                     {
-                        while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
+                        try
                         {
-
-                            // ✅ עדכון סימולטור
                             s_bl.Admin.StartSimulator(Interval);
                             s_bl.Volunteer.SimulateVolunteers();
                             PerformSimulationLogic();
 
-                            
-
-                            await Task.Delay(5000, _cts.Token);
+                            Thread.Sleep(5000); // מחליף את Task.Delay
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                                MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
                         }
                     }
-                    catch (TaskCanceledException)
-                    {
-                        Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(() =>
-                            MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
-                    }
-                }, _cts.Token);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                }
+                finally
+                {
+                    Console.WriteLine("Simulation thread ended.");
+                }
+            });
+
+            simulatorThread.IsBackground = true; // מגדיר את ה-Thread כרקע כדי שלא ימשיך לרוץ כאשר התוכנית נסגרת
+            simulatorThread.Start();
         }
+
 
         private void PerformSimulationLogic()
         {

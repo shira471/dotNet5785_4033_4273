@@ -176,7 +176,7 @@ internal static class AdminManager //stage 4
     {
         while (!s_stop)
         {
-
+            var x = s_stop;
             DateTime oldClock = Now;
             DateTime newClock = Now.AddMinutes(s_interval);
             UpdateClock(newClock);
@@ -186,7 +186,18 @@ internal static class AdminManager //stage 4
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
             if (_simulateTask is null || _simulateTask.IsCompleted)//stage 7
-                _simulateTask = Task.Run(() => CallManager.PeriodicCallUpdates(oldClock,newClock));
+                _simulateTask = Task.Run(() =>
+{
+    try
+    {
+        CallManager.PeriodicCallUpdates(oldClock, newClock);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error in PeriodicCallUpdates: {ex.Message}");
+    }
+});
+
 
             //etc...
 
@@ -194,10 +205,17 @@ internal static class AdminManager //stage 4
             {
                 Thread.Sleep(1000); // 1 second
             }
-            catch (ThreadInterruptedException) {
+            catch (ThreadInterruptedException)
+            {
                 Console.WriteLine("Thread was interrupted.");
                 break; // יציאה מהלולאה בצורה מסודרת
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error in clockRunner: {ex.Message}");
+                break; // אופציונלי: יציאה מהלולאה במצב של שגיאה
+            }
+
         }
     }
     private static async Task clockRunnerAsync()

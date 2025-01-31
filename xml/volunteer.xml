@@ -29,212 +29,212 @@
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>413891037</idVol>
-    <adress>5 Yaffo Rd, Jerusalem, Israel</adress>
+    <idVol>532297125</idVol>
+    <adress>15 King David St, Jerusalem, Israel</adress>
     <name>Avigail barmi</name>
     <email>avigail.barmi@gmail.com</email>
-    <phoneNumber>0552585792</phoneNumber>
-    <password>OENzRUCR</password>
-    <latitude>31.7765193</latitude>
-    <longitude>35.2266923</longitude>
-    <limitDestenation>6.08</limitDestenation>
+    <phoneNumber>0529508768</phoneNumber>
+    <password>ZrJ6sZ</password>
+    <latitude>31.7757159</latitude>
+    <longitude>35.2221845</longitude>
+    <limitDestenation>21.48</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>822771253</idVol>
-    <adress>2 Jaffa St, Jerusalem, Israel</adress>
+    <idVol>468664419</idVol>
+    <adress>40 Hillel St, Jerusalem, Israel</adress>
     <name>Namma Koufman</name>
     <email>namma.koufman@gmail.com</email>
-    <phoneNumber>0505345752</phoneNumber>
-    <password>I0Exwpook</password>
-    <latitude>31.7836688</latitude>
-    <longitude>35.2188743</longitude>
-    <limitDestenation>49.12</limitDestenation>
+    <phoneNumber>0542522102</phoneNumber>
+    <password>4n5INZbjxm</password>
+    <latitude>31.7792301</latitude>
+    <longitude>35.220033</longitude>
+    <limitDestenation>14.32</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>863932366</idVol>
-    <adress>2 Jaffa St, Jerusalem, Israel</adress>
+    <idVol>970055469</idVol>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
     <name>Hodaya Carcom</name>
     <email>hodaya.carcom@gmail.com</email>
-    <phoneNumber>0535933423</phoneNumber>
-    <password>hlmq7KTi8</password>
-    <latitude>31.7836688</latitude>
-    <longitude>35.2188743</longitude>
-    <limitDestenation>26.35</limitDestenation>
-    <isActive>false</isActive>
+    <phoneNumber>0556956216</phoneNumber>
+    <password>o0WdCv</password>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <limitDestenation>9.46</limitDestenation>
+    <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>552419512</idVol>
-    <adress>15 King David St, Jerusalem, Israel</adress>
+    <idVol>767983969</idVol>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
     <name>Soll Atall</name>
     <email>soll.atall@gmail.com</email>
-    <phoneNumber>0532542001</phoneNumber>
-    <password>teOsH8JEr</password>
-    <latitude>31.7757159</latitude>
-    <longitude>35.2221845</longitude>
-    <limitDestenation>36.08</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>478191631</idVol>
-    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
-    <name>Rivka Azrad</name>
-    <email>rivka.azrad@gmail.com</email>
-    <phoneNumber>0507064001</phoneNumber>
-    <password>fEJEuHW</password>
+    <phoneNumber>0503643193</phoneNumber>
+    <password>6rvoOxpAYf</password>
     <latitude>31.7681613</latitude>
     <longitude>35.2127055</longitude>
-    <limitDestenation>25.44</limitDestenation>
+    <limitDestenation>16.96</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>283117417</idVol>
+    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
+    <name>Rivka Azrad</name>
+    <email>rivka.azrad@gmail.com</email>
+    <phoneNumber>0542338703</phoneNumber>
+    <password>bwC9zPonF</password>
+    <latitude>31.7797312</latitude>
+    <longitude>35.2179737</longitude>
+    <limitDestenation>40.19</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>116206903</idVol>
-    <adress>16 Herzl St, Jerusalem, Israel</adress>
+    <idVol>154952863</idVol>
+    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
     <name>Sara Alvesson</name>
     <email>sara.alvesson@gmail.com</email>
-    <phoneNumber>0521478274</phoneNumber>
-    <password>XGtag7IG</password>
-    <latitude>31.7865094</latitude>
-    <longitude>35.1985783</longitude>
-    <limitDestenation>31.33</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>743375000</idVol>
-    <adress>28 Emek Refaim St, Jerusalem, Israel</adress>
-    <name>Aviad Dan</name>
-    <email>aviad.dan@gmail.com</email>
-    <phoneNumber>0508586493</phoneNumber>
-    <password>aagLIeWKl</password>
-    <latitude>31.7641853</latitude>
-    <longitude>35.2200972</longitude>
-    <limitDestenation>24.75</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>562699535</idVol>
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <name>Ori Dayan</name>
-    <email>ori.dayan@gmail.com</email>
-    <phoneNumber>0541729171</phoneNumber>
-    <password>TecCnU</password>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-    <limitDestenation>18.05</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>144989149</idVol>
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <name>Shimon Choen</name>
-    <email>shimon.choen@gmail.com</email>
-    <phoneNumber>0559176072</phoneNumber>
-    <password>9ZFrpi</password>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-    <limitDestenation>40.16</limitDestenation>
-    <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>814428415</idVol>
-    <adress>14 Agron St, Jerusalem, Israel</adress>
-    <name>Elia Malachi</name>
-    <email>elia.malachi@gmail.com</email>
-    <phoneNumber>0587221216</phoneNumber>
-    <password>BGylLThrTs</password>
-    <latitude>31.7760473</latitude>
-    <longitude>35.2193304</longitude>
-    <limitDestenation>16.16</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>277782270</idVol>
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <name>Liam Leon</name>
-    <email>liam.leon@gmail.com</email>
-    <phoneNumber>0525975286</phoneNumber>
-    <password>UN3aR2bFu</password>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-    <limitDestenation>46.68</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>478723929</idVol>
-    <adress>7 Zion Sq, Jerusalem, Israel</adress>
-    <name>Yagel Levi</name>
-    <email>yagel.levi@gmail.com</email>
-    <phoneNumber>0533407162</phoneNumber>
-    <password>D6g6NvvnHT</password>
-    <latitude>31.77298219999999</latitude>
-    <longitude>35.2302499</longitude>
-    <limitDestenation>19.33</limitDestenation>
-    <isActive>false</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>631045458</idVol>
-    <adress>5 Yaffo Rd, Jerusalem, Israel</adress>
-    <name>Ari Eitan</name>
-    <email>ari.eitan@gmail.com</email>
-    <phoneNumber>0529511912</phoneNumber>
-    <password>nrKeMwOL</password>
-    <latitude>31.7765193</latitude>
-    <longitude>35.2266923</longitude>
-    <limitDestenation>23.71</limitDestenation>
-    <isActive>true</isActive>
-    <role>Volunteer</role>
-    <distanceType>air</distanceType>
-  </Volunteer>
-  <Volunteer>
-    <idVol>310243345</idVol>
-    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
-    <name>Noa Levi</name>
-    <email>noa.levi@gmail.com</email>
-    <phoneNumber>0528716974</phoneNumber>
-    <password>YbZM8zhu</password>
+    <phoneNumber>0546653700</phoneNumber>
+    <password>ch5sGgZVM</password>
     <latitude>31.779519</latitude>
     <longitude>35.2144685</longitude>
-    <limitDestenation>15.31</limitDestenation>
+    <limitDestenation>15.5</limitDestenation>
     <isActive>true</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
   <Volunteer>
-    <idVol>157144798</idVol>
-    <adress>15 King David St, Jerusalem, Israel</adress>
+    <idVol>655590011</idVol>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <name>Aviad Dan</name>
+    <email>aviad.dan@gmail.com</email>
+    <phoneNumber>0539069956</phoneNumber>
+    <password>sq292TuLs</password>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <limitDestenation>9</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>271501406</idVol>
+    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
+    <name>Ori Dayan</name>
+    <email>ori.dayan@gmail.com</email>
+    <phoneNumber>0545618709</phoneNumber>
+    <password>WIh56WxZCJ</password>
+    <latitude>31.7750888</latitude>
+    <longitude>35.218195</longitude>
+    <limitDestenation>49.93</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>698373149</idVol>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <name>Shimon Choen</name>
+    <email>shimon.choen@gmail.com</email>
+    <phoneNumber>0526507399</phoneNumber>
+    <password>FJzNGj</password>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <limitDestenation>34.65</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>715104705</idVol>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <name>Elia Malachi</name>
+    <email>elia.malachi@gmail.com</email>
+    <phoneNumber>0533248969</phoneNumber>
+    <password>ds94CRhO7r</password>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <limitDestenation>40.8</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>402894275</idVol>
+    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
+    <name>Liam Leon</name>
+    <email>liam.leon@gmail.com</email>
+    <phoneNumber>0524421029</phoneNumber>
+    <password>NfEMjr</password>
+    <latitude>31.779519</latitude>
+    <longitude>35.2144685</longitude>
+    <limitDestenation>23.5</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>617147678</idVol>
+    <adress>14 Agron St, Jerusalem, Israel</adress>
+    <name>Yagel Levi</name>
+    <email>yagel.levi@gmail.com</email>
+    <phoneNumber>0541146281</phoneNumber>
+    <password>Q781meYa7</password>
+    <latitude>31.7760473</latitude>
+    <longitude>35.2193304</longitude>
+    <limitDestenation>40.62</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>618783485</idVol>
+    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
+    <name>Ari Eitan</name>
+    <email>ari.eitan@gmail.com</email>
+    <phoneNumber>0508019542</phoneNumber>
+    <password>BU0x4LC6</password>
+    <latitude>31.7826843</latitude>
+    <longitude>35.2283058</longitude>
+    <limitDestenation>44.96</limitDestenation>
+    <isActive>false</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>666096160</idVol>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <name>Noa Levi</name>
+    <email>noa.levi@gmail.com</email>
+    <phoneNumber>0554127065</phoneNumber>
+    <password>U5R7gTbs</password>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
+    <limitDestenation>48.49</limitDestenation>
+    <isActive>true</isActive>
+    <role>Volunteer</role>
+    <distanceType>air</distanceType>
+  </Volunteer>
+  <Volunteer>
+    <idVol>128222659</idVol>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
     <name>Noam Blau</name>
     <email>noam.blau@gmail.com</email>
-    <phoneNumber>0582826974</phoneNumber>
-    <password>RD3E82</password>
-    <latitude>31.7757159</latitude>
-    <longitude>35.2221845</longitude>
-    <limitDestenation>29.03</limitDestenation>
-    <isActive>true</isActive>
+    <phoneNumber>0541147337</phoneNumber>
+    <password>bsQLKNK</password>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <limitDestenation>29.48</limitDestenation>
+    <isActive>false</isActive>
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>

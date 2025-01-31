@@ -266,7 +266,14 @@ internal static class VolunteerManager
                         if (openCalls != 0 && s_rand.Next(0, 5) == 0)
                         {
                             int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
-                            CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
+                            try
+                            {
+                                CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
                         }
                     }
                     else // אם למתנדב יש קריאה בטיפולו
@@ -276,11 +283,7 @@ internal static class VolunteerManager
                         var handleTime = TimeSpan.FromMinutes(s_rand.Next(5, 30));
                         var totalTime = arrivingTime + handleTime;
 
-                        if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
-                        {
-
-                        }
-                        else
+                        if (callInProgress.OpenTime + totalTime < callInProgress.MaxCloseTime)
                         {
                             if (s_rand.Next(0, 10) == 0) // 10% סיכוי לביטול
                             {
