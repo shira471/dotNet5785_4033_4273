@@ -148,16 +148,16 @@ internal static class AdminManager //stage 4
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+                                                 //[MethodImpl(MethodImplOptions.Synchronized)]
     internal static void Stop()
     {
         if (s_thread is not null)
         {
             try
             {
-                s_stop = true;
-                _cancellationTokenSource.Cancel();
-                s_thread.Interrupt();
+                s_stop = true; // סימון שהלולאה צריכה להפסיק
+                _cancellationTokenSource.Cancel(); // ביטול משימות אסינכרוניות
             }
             catch (Exception ex)
             {
@@ -169,6 +169,27 @@ internal static class AdminManager //stage 4
             }
         }
     }
+
+    //internal static void Stop()
+    //{
+    //    if (s_thread is not null)
+    //    {
+    //        try
+    //        {
+    //            s_stop = true;
+    //            _cancellationTokenSource.Cancel();
+    //            s_thread.Interrupt();
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Console.WriteLine($"Error stopping thread: {ex.Message}");
+    //        }
+    //        finally
+    //        {
+    //            s_thread = null;
+    //        }
+    //    }
+    //}
 
     private static Task? _simulateTask = null;
 
@@ -186,18 +207,7 @@ internal static class AdminManager //stage 4
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
             if (_simulateTask is null || _simulateTask.IsCompleted)//stage 7
-                _simulateTask = Task.Run(() =>
-{
-    try
-    {
-        CallManager.PeriodicCallUpdates(oldClock, newClock);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error in PeriodicCallUpdates: {ex.Message}");
-    }
-});
-
+                _simulateTask = Task.Run(() => CallManager.PeriodicCallUpdates(oldClock,newClock));
 
             //etc...
 
@@ -205,43 +215,36 @@ internal static class AdminManager //stage 4
             {
                 Thread.Sleep(1000); // 1 second
             }
-            catch (ThreadInterruptedException)
-            {
+            catch (ThreadInterruptedException) {
                 Console.WriteLine("Thread was interrupted.");
                 break; // יציאה מהלולאה בצורה מסודרת
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error in clockRunner: {ex.Message}");
-                break; // אופציונלי: יציאה מהלולאה במצב של שגיאה
-            }
-
         }
     }
-    private static async Task clockRunnerAsync()
-    {
-        var cancellationToken = _cancellationTokenSource.Token;
+    //private static async Task clockRunnerAsync()
+    //{
+    //    var cancellationToken = _cancellationTokenSource.Token;
 
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            DateTime oldClock = Now; // שומר את הזמן לפני העדכון
-            DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
+    //    while (!cancellationToken.IsCancellationRequested)
+    //    {
+    //        DateTime oldClock = Now; // שומר את הזמן לפני העדכון
+    //        DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
 
-            UpdateClock(newClock); // מעדכן את השעון
+    //        UpdateClock(newClock); // מעדכן את השעון
 
-            // קריאה לפונקציה עם הפרמטרים המתאימים
-            await PerformPeriodicTasksAsync(oldClock, newClock);
-            // השהיה של שנייה
-            try
-            {
-                await Task.Delay(1000, cancellationToken);
-            }
-            catch (TaskCanceledException) 
-            {
-                break;
-            }
-        }
-    }
+    //        // קריאה לפונקציה עם הפרמטרים המתאימים
+    //        await PerformPeriodicTasksAsync(oldClock, newClock);
+    //        // השהיה של שנייה
+    //        try
+    //        {
+    //            await Task.Delay(1000, cancellationToken);
+    //        }
+    //        catch (TaskCanceledException) 
+    //        {
+    //            break;
+    //        }
+    //    }
+    //}
 
     private static async Task PerformPeriodicTasksAsync(DateTime oldClock, DateTime newClock)
     {

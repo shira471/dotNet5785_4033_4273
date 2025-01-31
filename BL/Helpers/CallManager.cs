@@ -116,8 +116,8 @@ internal static class CallManager
 
     internal static void AssignCallToVolunteer(int volunteerId, int callId)
     {
-        try
-        {
+        try { 
+
             // קריאה ישירה לדאטהבייס, ללא Task.Run()
             var call = s_dal.call.Read(callId);
             if (call == null)
@@ -177,8 +177,8 @@ internal static class CallManager
     }
     catch (Exception ex)
     {
-        // טיפול בכל החריגות הכלליות
-        Console.WriteLine($"An error occurred: {ex.Message}");
+            // טיפול בכל החריגות הכלליות
+            Console.WriteLine($"An error occurred: {ex.Message}");
     }
     }
     internal static BO.Call ConvertToBOCall(DO.Call doCall)

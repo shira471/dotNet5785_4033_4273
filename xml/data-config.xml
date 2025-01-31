@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>6</NextAssignmentId>
+  <NextAssignmentId>18</NextAssignmentId>
   <NextAssignmentId>18</NextAssignmentId>
   <NextAssignmentId>15</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
@@ -8,7 +8,7 @@
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
-  <Clock>31/01/2025 11:33:57</Clock>
+  <Clock>31/01/2025 12:00:58</Clock>
   <Clock>28/01/2025 22:44:55</Clock>
   <!-- שעון המערכת, תאריך ושעה התחלתיים -->
   <RiskRange>00:00:00</RiskRange>
