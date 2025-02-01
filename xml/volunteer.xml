@@ -39,6 +39,7 @@
     <longitude>35.2188743</longitude>
     <limitDestenation>11.25</limitDestenation>
     <isActive>false</isActive>
+>>>>>>> 7a1f5250ead011bd4dd093f8b5b4bcb209fbd05d
     <role>Volunteer</role>
     <distanceType>air</distanceType>
   </Volunteer>
