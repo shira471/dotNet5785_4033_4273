@@ -135,6 +135,9 @@ internal static class VolunteerManager
     /// </summary>
     /// <param name="address">The address to geocode.</param>
     /// <returns>An array containing latitude and longitude if found, null otherwise.</returns>
+    private static readonly SemaphoreSlim _httpLock = new SemaphoreSlim(1, 1);
+    private static readonly HttpClient _httpClient = new HttpClient();
+
     public static async Task<double[]> GetCoordinatesFromGoogleAsync(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
@@ -143,42 +146,28 @@ internal static class VolunteerManager
         string apiKey = "AIzaSyDnyS5QMBa_4uwPOdbFH9T8_zNOXe3DzGw"; // Replace with your Google Maps API key.
         string apiUrl = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
 
-        using (HttpClient client = new HttpClient())
+        await _httpLock.WaitAsync(); // נעילה אסינכרונית כדי למנוע קריאות מקבילות בעייתיות
+        try
         {
-            try
-            {
-                HttpResponseMessage response;
+            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
 
-                // Lock for sending HTTP requests
-                lock (AdminManager.BlMutex) // Stage 7
-                {
-                    response = client.GetAsync(apiUrl).Result;
-                }
-
-                response.EnsureSuccessStatusCode();
-
-                string responseBody;
-
-                // Lock for reading the response content
-                lock (AdminManager.BlMutex) // Stage 7
-                {
-                    responseBody = response.Content.ReadAsStringAsync().Result;
-                }
-
-                // Parse the response outside of lock
-                return ParseCoordinatesFromGoogle(responseBody);
-            }
-            catch (HttpRequestException)
-            {
-                throw new Exception("Unable to connect to the internet or server is unreachable.");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while fetching coordinates.", ex);
-            }
+            string responseBody = await response.Content.ReadAsStringAsync();
+            return ParseCoordinatesFromGoogle(responseBody);
+        }
+        catch (HttpRequestException)
+        {
+            throw new Exception("Unable to connect to the internet or server is unreachable.");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("An error occurred while fetching coordinates.", ex);
+        }
+        finally
+        {
+            _httpLock.Release(); // שחרור המנעול
         }
     }
-
     /// <summary>
     /// Parses the JSON response from Google Maps API and extracts the latitude and longitude.
     /// </summary>
@@ -438,15 +427,10 @@ internal static class VolunteerManager
     {
         return id > 0 && id.ToString().Length == 9;
     }
-    internal static int GetVolunteerForCall(int callId)
-    {
-        return s_dal.assignment.ReadAll()
-            .Where(a => a.callId == callId)
-            .Select(a => a.volunteerId)
-            .FirstOrDefault(); // מחזיר את הערך הראשון או 0 אם אין תוצאות
-    }
+    private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
     internal static async Task updateCoordinatesForVolunteerAsync(DO.Volunteer doVolunteer)
     {
+
         if (!string.IsNullOrEmpty(doVolunteer.adress))
         {
             try
@@ -456,8 +440,15 @@ internal static class VolunteerManager
                 {
                     doVolunteer = doVolunteer with { latitude = loc[0], longitude = loc[1] };
 
-                    lock (AdminManager.BlMutex)
+                    await _lock.WaitAsync(); // נעילה אסינכרונית
+                    try
+                    {
                         DalApi.Factory.Get.volunteer.Update(doVolunteer);
+                    }
+                    finally
+                    {
+                        _lock.Release(); // שחרור הנעילה
+                    }
 
                     VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.idVol);
                     VolunteerManager.Observers.NotifyListUpdated();

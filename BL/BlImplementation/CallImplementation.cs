@@ -97,8 +97,6 @@ public class CallImplementation : ICall
         }
     }
 
-    
-
     public void CancelCallAssignment(int volunteerId, int callId, BO.Role role)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
