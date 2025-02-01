@@ -95,12 +95,7 @@ internal static class CallManager
 
         // Step 2: Process calls and perform updates
         foreach (var call in activeCalls)
-        {
-            // Assuming these are expired calls that require updates
-            lock (AdminManager.BlMutex) // Lock for database updates
-            {
-              //  s_dal.call.Update(call with { maximumTime = null }); // Update the call
-            }
+        { 
 
             // Add the call ID to the local list for notifications
             expiredCallIds.Add(call.id);
@@ -121,52 +116,70 @@ internal static class CallManager
 
     internal static void AssignCallToVolunteer(int volunteerId, int callId)
     {
-        // קריאה ישירה לדאטהבייס, ללא Task.Run()
-        var call = s_dal.call.Read(callId);
-        if (call == null)
-            throw new Exception($"Call with ID={callId} does not exist.");
+        try { 
 
-        var volunteer = s_dal.volunteer.Read(volunteerId);
-        if (volunteer == null)
-            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+            // קריאה ישירה לדאטהבייס, ללא Task.Run()
+            var call = s_dal.call.Read(callId);
+            if (call == null)
+                throw new Exception($"Call with ID={callId} does not exist.");
 
-        // בדיקה אם המתנדב ביטל את ההשמה בעבר
-        var volunteerCancelledAssignment = s_dal.assignment.ReadAll()
-            .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
+            var volunteer = s_dal.volunteer.Read(volunteerId);
+            if (volunteer == null)
+                throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
 
-        if (volunteerCancelledAssignment != null)
-            throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
+            // בדיקה אם המתנדב ביטל את ההשמה בעבר
+            var volunteerCancelledAssignment = s_dal.assignment.ReadAll()
+                .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
 
-        // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-        var existingAssignment = s_dal.assignment.ReadAll()
-            .FirstOrDefault(a => a.callId == callId &&
-                                 a.assignKind != DO.Hamal.cancelByManager &&
-                                 (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+            if (volunteerCancelledAssignment != null)
+                throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
 
-        if (existingAssignment != null)
-            throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
+            // בדיקה אם הקריאה כבר משויכת למתנדב אחר
+            var existingAssignment = s_dal.assignment.ReadAll()
+                .FirstOrDefault(a => a.callId == callId &&
+                                     a.assignKind != DO.Hamal.cancelByManager &&
+                                     (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
 
-        // חישוב מרחק סינכרוני
-        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
+            if (existingAssignment != null)
+                throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
 
-        if (distance > volunteer.limitDestenation)
-            throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
+            // חישוב מרחק סינכרוני
+            var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
 
-        // יצירת השמה חדשה
-        var assignment = new DO.Assignment
-        {
-            callId = callId,
-            volunteerId = volunteerId,
-            startTime = AdminManager.Now,
-            assignKind = DO.Hamal.inTreatment
-        };
+            if (distance > volunteer.limitDestenation)
+                throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
 
-        s_dal.assignment.Create(assignment); // קריאה ישירה לדאטהבייס, ללא Task.Run()
+            // יצירת השמה חדשה
+            var assignment = new DO.Assignment
+            {
+                callId = callId,
+                volunteerId = volunteerId,
+                startTime = AdminManager.Now,
+                assignKind = DO.Hamal.inTreatment
+            };
 
-        var x = ConvertToBOCall(call);
-        x.Status = Status.inProgres;
+            s_dal.assignment.Create(assignment); // קריאה ישירה לדאטהבייס, ללא Task.Run()
 
-        CallManager.Observers.NotifyListUpdated(); // עדכון רשימה ללא Task.Run()
+            var x = ConvertToBOCall(call);
+            x.Status = Status.inProgres;
+
+            CallManager.Observers.NotifyListUpdated(); // עדכון רשימה ללא Task.Run()
+        }
+    catch (NullReferenceException ex)
+    {
+        // טיפול בחריגות של Null Reference
+        Console.WriteLine($"A null reference error occurred: {ex.Message}");
+    }
+    catch (InvalidOperationException ex)
+    {
+        // טיפול בחריגות של Invalid Operation
+        Console.WriteLine($"An invalid operation occurred: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+            // טיפול בכל החריגות הכלליות
+            Console.WriteLine($"An error occurred: {ex.Message}");
+    }
     }
     internal static BO.Call ConvertToBOCall(DO.Call doCall)
     {
@@ -274,7 +287,7 @@ internal static class CallManager
             assignments = s_dal.assignment.ReadAll()
                 .Where(a => a.volunteerId == volunteerId && a.callId == callId)
                 .ToList();
-
+        }
             if (!assignments.Any())
             {
                 throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
@@ -288,7 +301,7 @@ internal static class CallManager
             // בדיקת הקריאה
             call = s_dal.call.Read(callId) ??
                 throw new Exception($"Call with ID={callId} does not exist.");
-        }
+        
 
         var assign = assignments.First();
 
@@ -329,7 +342,7 @@ internal static class CallManager
             assignments = s_dal.assignment.ReadAll()
                 .Where(a => a.volunteerId == volunteerId && a.callId == callId)
                 .ToList();
-
+        }
             if (!assignments.Any())
             {
                 throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
@@ -341,9 +354,9 @@ internal static class CallManager
                 throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
             }
 
-            // בדיקת סטטוס השיוך
-            var assign = assignments.First();
-            if (assign.assignKind != DO.Hamal.inTreatment)
+        // בדיקת סטטוס השיוך
+        var assign = assignments.First();
+        if (assign.assignKind != DO.Hamal.inTreatment)
             {
                 throw new Exception($"Assignment for Volunteer ID={volunteerId} and Call ID={callId} has already been closed.");
             }
@@ -360,7 +373,7 @@ internal static class CallManager
             // שליפת הקריאה ועדכון סטטוס הקריאה
             call = s_dal.call.Read(callId) ??
                 throw new Exception($"Call with ID={callId} does not exist.");
-        }
+        
 
         // עדכון סטטוס הקריאה
         var x = ConvertToBOCall(call);
@@ -396,18 +409,20 @@ internal static class CallManager
             startTime = call.OpenTime,
             maximumTime = call.MaxEndTime
         };
-        lock (AdminManager.BlMutex) // שלב 7
+
+        // עדכון הקריאה בשכבת ה-DAL
+        try
         {
-            // עדכון הקריאה בשכבת ה-DAL
-            try
+            lock (AdminManager.BlMutex) // שלב 7
             {
                 s_dal.call.Update(doCall);
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Failed to update call.", ex);
-            }
         }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to update call.", ex);
+        }
+        
 
         // עדכון תצפיתנים (מחוץ לנעילה)
         CallManager.Observers.NotifyItemUpdated(call.Id);

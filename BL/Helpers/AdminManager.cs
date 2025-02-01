@@ -148,16 +148,16 @@ internal static class AdminManager //stage 4
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
+                                                 //[MethodImpl(MethodImplOptions.Synchronized)]
     internal static void Stop()
     {
         if (s_thread is not null)
         {
             try
             {
-                s_stop = true;
-                _cancellationTokenSource.Cancel();
-                s_thread.Interrupt();
+                s_stop = true; // סימון שהלולאה צריכה להפסיק
+                _cancellationTokenSource.Cancel(); // ביטול משימות אסינכרוניות
             }
             catch (Exception ex)
             {
@@ -170,13 +170,34 @@ internal static class AdminManager //stage 4
         }
     }
 
+    //internal static void Stop()
+    //{
+    //    if (s_thread is not null)
+    //    {
+    //        try
+    //        {
+    //            s_stop = true;
+    //            _cancellationTokenSource.Cancel();
+    //            s_thread.Interrupt();
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Console.WriteLine($"Error stopping thread: {ex.Message}");
+    //        }
+    //        finally
+    //        {
+    //            s_thread = null;
+    //        }
+    //    }
+    //}
+
     private static Task? _simulateTask = null;
 
     private static void clockRunner()
     {
         while (!s_stop)
         {
-
+            var x = s_stop;
             DateTime oldClock = Now;
             DateTime newClock = Now.AddMinutes(s_interval);
             UpdateClock(newClock);
@@ -194,33 +215,36 @@ internal static class AdminManager //stage 4
             {
                 Thread.Sleep(1000); // 1 second
             }
-            catch (ThreadInterruptedException) { }
-        }
-    }
-    private static async Task clockRunnerAsync()
-    {
-        var cancellationToken = _cancellationTokenSource.Token;
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            DateTime oldClock = Now; // שומר את הזמן לפני העדכון
-            DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
-
-            UpdateClock(newClock); // מעדכן את השעון
-
-            // קריאה לפונקציה עם הפרמטרים המתאימים
-            await PerformPeriodicTasksAsync(oldClock, newClock);
-            // השהיה של שנייה
-            try
-            {
-                await Task.Delay(1000, cancellationToken);
-            }
-            catch (TaskCanceledException) 
-            {
-                break;
+            catch (ThreadInterruptedException) {
+                Console.WriteLine("Thread was interrupted.");
+                break; // יציאה מהלולאה בצורה מסודרת
             }
         }
     }
+    //private static async Task clockRunnerAsync()
+    //{
+    //    var cancellationToken = _cancellationTokenSource.Token;
+
+    //    while (!cancellationToken.IsCancellationRequested)
+    //    {
+    //        DateTime oldClock = Now; // שומר את הזמן לפני העדכון
+    //        DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
+
+    //        UpdateClock(newClock); // מעדכן את השעון
+
+    //        // קריאה לפונקציה עם הפרמטרים המתאימים
+    //        await PerformPeriodicTasksAsync(oldClock, newClock);
+    //        // השהיה של שנייה
+    //        try
+    //        {
+    //            await Task.Delay(1000, cancellationToken);
+    //        }
+    //        catch (TaskCanceledException) 
+    //        {
+    //            break;
+    //        }
+    //    }
+    //}
 
     private static async Task PerformPeriodicTasksAsync(DateTime oldClock, DateTime newClock)
     {

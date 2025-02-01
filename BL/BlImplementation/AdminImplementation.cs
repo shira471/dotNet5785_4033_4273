@@ -53,10 +53,10 @@ public class AdminImplementation : IAdmin
     public DateTime GetSystemClock()
     {
         // Lock to ensure thread-safe access to AdminManager.Now
-        lock (AdminManager.BlMutex) // Stage 7
-        {
+        //lock (AdminManager.BlMutex) // Stage 7
+        //{
             return AdminManager.Now;
-        }
+        //}
     }
 
     // Initialize the database

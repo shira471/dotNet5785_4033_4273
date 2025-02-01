@@ -209,8 +209,16 @@ public class CallImplementation : ICall
     {
         
             AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7 
+        try
+        {
             CallManager.AssignCallToVolunteer(volunteerId, callId);
-       
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+
+
     }
 
 
@@ -239,32 +247,34 @@ public class CallImplementation : ICall
     public void DeleteCall(int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
+                                                  // בדיקת קיום הקריאה
+        var call = _dal.call.Read(callId) ??
+            throw new Exception($"Call with ID={callId} does not exist.");
 
-        lock (AdminManager.BlMutex) // נעילה סביב גישה ל-DAL
+        // שליפת כל ההקצאות הקשורות לקריאה
+        var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
+
+        // בדיקה אם יש הקצאות כלשהן לקריאה
+        if (assignments.Any())
         {
-            // בדיקת קיום הקריאה
-            var call = _dal.call.Read(callId) ??
-                throw new Exception($"Call with ID={callId} does not exist.");
+            throw new Exception($"Cannot delete a call with assignments (Call ID={callId}).");
+        }
 
-            // שליפת כל ההקצאות הקשורות לקריאה
-            var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
 
-            // בדיקה אם יש הקצאות כלשהן לקריאה
-            if (assignments.Any())
-            {
-                throw new Exception($"Cannot delete a call with assignments (Call ID={callId}).");
-            }
-
-            try
+        try
+        {
+            lock (AdminManager.BlMutex) // נעילה סביב גישה ל-DAL
             {
                 // מחיקת הקריאה
                 _dal.call.Delete(callId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Failed to delete call.", ex);
+
             }
         }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to delete call.", ex);
+        }
+        
 
         // עדכון צופים (אם קיים מנגנון צופים)
         CallManager.Observers.NotifyListUpdated(); // שלב 5
@@ -275,9 +285,10 @@ public class CallImplementation : ICall
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
-
+        var risk = new AdminImplementation().GetRiskTimeSpan();
+       
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+        var statuses = GetStatusesByCall(calls, assignments, risk);
 
         // מערך לאחסון המספרים עבור כל סטטוס
         int[] statusCounts = new int[Enum.GetValues(typeof(Status)).Length];
@@ -428,9 +439,9 @@ public class CallImplementation : ICall
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         var calls = _dal.call.ReadAll();
         var assignments = _dal.assignment.ReadAll();
-
+        var risk = new AdminImplementation().GetRiskTimeSpan();
         // שליפת סטטוסים לכל קריאה
-        var statuses = GetStatusesByCall(calls, assignments, TimeSpan.FromHours(1));
+        var statuses = GetStatusesByCall(calls, assignments, risk);
 
         // מציאת ההקצאה האחרונה לכל קריאה לפי ה-Id של ההקצאה
         var latestAssignments = assignments
@@ -451,9 +462,11 @@ public class CallImplementation : ICall
                                   CallId = call.id,
                                   CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
-                                  TimeRemaining = call.maximumTime.HasValue
-                                      ? call.maximumTime.Value - systemClock
-                                      : (TimeSpan?)null,
+                                  TimeRemaining = call.maximumTime.HasValue ? new TimeSpan(
+                                                                                             (call.maximumTime.Value - systemClock).Days,
+                                                                                             (call.maximumTime.Value - systemClock).Hours,
+                                                                                             (call.maximumTime.Value - systemClock).Minutes, 0)
+                                                                                                : (TimeSpan?)null,
                                   LastVolunteerName = assign?.volunteerId != null &&
                                                       (assign.assignKind != DO.Hamal.cancelByManager && assign.assignKind != DO.Hamal.cancelByVolunteer)
                                       ? _dal.volunteer.Read(assign.volunteerId)?.name
@@ -670,7 +683,7 @@ public class CallImplementation : ICall
             call =>
             {
                 var assignment = latestAssignments.TryGetValue(call.id, out var assign) ? assign : null;
-                var currentSystemTime = DateTime.Now;
+                var currentSystemTime = systemClock;
                 return DetermineStatus(call, assignment, riskTimeSpan, currentSystemTime);
             }
         );
@@ -678,6 +691,7 @@ public class CallImplementation : ICall
 
     public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
     {
+        try { 
         // שליפת הקריאה
         var call = _dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
@@ -708,6 +722,25 @@ public class CallImplementation : ICall
         });
 
         return assignmentList;
+        }
+        catch (NullReferenceException ex)
+        {
+            // טיפול בחריגות NullReferenceException
+            Console.WriteLine($"Error: A null reference occurred. Details: {ex.Message}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            // טיפול בחריגות InvalidOperationException
+            Console.WriteLine($"Error: An invalid operation occurred. Details: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // טיפול בכל החריגות האחרות
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+        // במקרה של חריגה, להחזיר רשימה ריקה
+        return Enumerable.Empty<CallAssignInList>();
     }
     public CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId)
     {

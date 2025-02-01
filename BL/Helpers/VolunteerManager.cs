@@ -248,43 +248,51 @@ internal static class VolunteerManager
 
         foreach (var doVolunteer in doVolunteerList)
         {
-            lock (AdminManager.BlMutex) // stage 7
+            if (AdminManager.BlMutex != null)
             {
-                BO.CallInProgress? callInProgress;
-                lock (AdminManager.BlMutex)
-                    callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
-                // אם אין למתנדב קריאה בטיפולו
-                if (callInProgress == null)
-                {
-                    IEnumerable<BO.OpenCallInList> openCallsOfVolunteer = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol);
-                    int openCalls = openCallsOfVolunteer.Count();
-                    if (openCalls != 0 && s_rand.Next(0, 5) == 0)
-                    {
-                        int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
-                        CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
-                    }
-                }
-                else // אם למתנדב יש קריאה בטיפולו
-                {
-                    int VolunteerSpeed = s_rand.Next(5, 50);
-                    var arrivingTime = TimeSpan.FromHours(callInProgress.DistanceFromVolunteer / VolunteerSpeed);
-                    var handleTime = TimeSpan.FromMinutes(s_rand.Next(5, 30));
-                    var totalTime = arrivingTime + handleTime;
 
-                    if (callInProgress.OpenTime + totalTime >= callInProgress.MaxCloseTime)
+                lock (AdminManager.BlMutex) // stage 7
+                {
+
+
+                    BO.CallInProgress? callInProgress;
+                    lock (AdminManager.BlMutex)
+                        callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
+                    // אם אין למתנדב קריאה בטיפולו
+                    if (callInProgress == null)
                     {
-                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, BO.Role.Manager);
-                    }
-                    else
-                    {
-                        if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
+                        IEnumerable<BO.OpenCallInList> openCallsOfVolunteer = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol);
+                        int openCalls = openCallsOfVolunteer.Count();
+                        if (openCalls != 0 && s_rand.Next(0, 5) == 0)
                         {
-                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
-                           
+                            int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
+                            try
+                            {
+                                CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine($"Error: {ex.Message}");
+                            }
                         }
-                        else // 90% סיכוי לסגירה מוצלחת
+                    }
+                    else // אם למתנדב יש קריאה בטיפולו
+                    {
+                        int VolunteerSpeed = s_rand.Next(5, 50);
+                        var arrivingTime = TimeSpan.FromHours(callInProgress.DistanceFromVolunteer / VolunteerSpeed);
+                        var handleTime = TimeSpan.FromMinutes(s_rand.Next(5, 30));
+                        var totalTime = arrivingTime + handleTime;
+
+                        if (callInProgress.OpenTime + totalTime < callInProgress.MaxCloseTime)
                         {
-                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                            if (s_rand.Next(0, 10) == 0) // 10% סיכוי לביטול
+                            {
+                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                            }
+                            else // 90% סיכוי לסגירה מוצלחת
+                            {
+                                CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                            }
                         }
                     }
                 }
