@@ -18,69 +18,6 @@ public class CallImplementation : ICall
 {
     private static readonly DalApi.Idal _dal = DalApi.Factory.Get;
 
-
-    //public async Task AddCall(Call call)
-    //{
-    //    AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
-    //    if (call == null)
-    //    {
-    //        throw new ArgumentNullException(nameof(call), "Call cannot be null.");
-    //    }
-
-    //    if (call.CallType == CallType.None)
-    //    {
-    //        throw new ArgumentException("Call type cannot be None.");
-    //    }
-
-    //    if (call.MaxEndTime <= call.OpenTime)
-    //    {
-    //        throw new ArgumentException("End time cannot be earlier than start time.");
-    //    }
-    //    if (call.MaxEndTime == null)
-    //    {
-    //        throw new ArgumentException("End time cannot be null.");
-    //    }
-    //    try
-    //    {
-    //        var temp = await VolunteerManager.GetCoordinatesFromGoogleAsync(call.Address);
-
-    //        lock (AdminManager.BlMutex) // Stage 7
-    //        {
-    //            var calls = _dal.call.ReadAll();
-    //            foreach (var call2 in calls)
-    //            {
-    //                if (call2.detail == call.Description)
-    //                {
-    //                    throw new Exception("This call already exists.");
-    //                }
-    //            }
-
-    //            var doCall = new DO.Call(
-    //                id: 0, // ייווצר מזהה חדש ב-DAL
-    //                detail: call.Description,
-    //                adress: call.Address,
-    //                latitude: temp[0],
-    //                longitude: temp[1],
-    //                callType: (DO.CallType?)call.CallType,
-    //                startTime: call.OpenTime,
-    //                maximumTime: call.MaxEndTime
-    //            );
-
-    //            _dal.call.Create(doCall);
-    //            call.Status = Status.open;
-
-    //            AdminImplementation admin = new AdminImplementation();
-    //            UpdateStatus(call, admin.GetRiskTimeSpan());
-    //        }
-
-    //        // Notification to observers (outside lock)
-    //        CallManager.Observers.NotifyListUpdated(); // Stage 5
-    //    }
-    //    catch (DO.DalAlreadyExistsException ex)
-    //    {
-    //        throw new Exception(ExceptionsManager.HandleException(new Exception("Failed to add call.", ex)));
-    //    }
-    //}
     public void AddCall(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
@@ -131,80 +68,7 @@ public class CallImplementation : ICall
         _ = CallManager.UpdateCallCoordinatesAsync(doCall);
     }
 
-    // ✔ תת-מתודה אסינכרונית לחישוב הקואורדינטות ולשליחה מחדש ל-DAL
-   
-
-
-
-    //public void AssignCallToVolunteer(int volunteerId, int callId)
-    //{
-    //    AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
-
-    //    lock (AdminManager.BlMutex) // Stage 7
-    //    {
-    //        // שליפת הקריאה ממאגר הנתונים
-    //        var call = _dal.call.Read(callId) ??
-    //            throw new Exception($"Call with ID={callId} does not exist.");
-
-    //        // שליפת המתנדב ממאגר הנתונים
-    //        var volunteer = _dal.volunteer.Read(volunteerId) ??
-    //            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
-
-    //        // בדיקה אם המתנדב כבר ביטל את הקריאה בעבר
-    //        var volunteerCancelledAssignment = _dal.assignment.ReadAll()
-    //            .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
-
-    //        if (volunteerCancelledAssignment != null)
-    //        {
-    //            throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
-    //        }
-
-    //        // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-    //        var existingAssignment = _dal.assignment.ReadAll()
-    //            .FirstOrDefault(a => a.callId == callId &&
-    //                                 a.assignKind != DO.Hamal.cancelByManager &&
-    //                                 (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
-
-    //        if (existingAssignment != null)
-    //        {
-    //            throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
-    //        }
-
-    //        // בדיקה אם למתנדב יש קריאה אחרת במצב "בטיפול"
-    //        var volunteerActiveAssignment = _dal.assignment.ReadAll()
-    //            .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
-
-    //        if (volunteerActiveAssignment != null)
-    //        {
-    //            throw new Exception($"Volunteer with ID={volunteerId} is already working on another call.");
-    //        }
-
-    //        // חישוב המרחק ובדיקת טווח
-    //        var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
-    //        if (distance > volunteer.limitDestenation)
-    //        {
-    //            throw new Exception($"Call is out of volunteer's range (Distance: {distance} > Limit: {volunteer.limitDestenation}).");
-    //        }
-
-    //        // יצירת שיוך חדש
-    //        var assignment = new DO.Assignment
-    //        {
-    //            callId = callId,
-    //            volunteerId = volunteerId,
-    //            startTime = AdminManager.Now,
-    //            assignKind = DO.Hamal.inTreatment
-    //        };
-    //        _dal.assignment.Create(assignment);
-
-    //        // עדכון סטטוס הקריאה
-    //        var x = ConvertToBOCall(call);
-    //        x.Status = Status.inProgres;
-    //    }
-
-    //    // עדכון התצפיתנים (מחוץ לנעילה)
-    //    CallManager.Observers.NotifyListUpdated();
-
-    //}
+    
     public void  AssignCallToVolunteer(int volunteerId, int callId)
     {
         
@@ -215,7 +79,7 @@ public class CallImplementation : ICall
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            throw;
         }
 
 
@@ -224,7 +88,13 @@ public class CallImplementation : ICall
 
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
-       return CallManager.CalculateDistance(lat1, lon1, lat2, lon2);
+        try
+        {
+            return CallManager.CalculateDistance(lat1, lon1, lat2, lon2);
+        }catch(Exception ex)
+        {
+            throw;
+        }
     }
 
     
@@ -232,14 +102,26 @@ public class CallImplementation : ICall
     public void CancelCallAssignment(int volunteerId, int callId, BO.Role role)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
-        CallManager.CancelCallAssignment(volunteerId,callId,role);
+        try
+        {
+            CallManager.CancelCallAssignment(volunteerId, callId, role);
+        }catch(Exception ex)
+        {
+            throw;
+        }
     }
 
 
     public void CloseCallAssignment(int volunteerId, int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
-        CallManager.CloseCallAssignment(volunteerId,callId);
+        try
+        {
+            CallManager.CloseCallAssignment(volunteerId, callId);
+        }catch(Exception ex)
+        {
+            throw;
+        }
     }
 
 
@@ -282,11 +164,18 @@ public class CallImplementation : ICall
 
     public int[] GetCallCountsByStatus()
     {
-        // טוען את כל הקריאות וההקצאות משכבת ה-DAL
-        var calls = _dal.call.ReadAll();
-        var assignments = _dal.assignment.ReadAll();
-        var risk = new AdminImplementation().GetRiskTimeSpan();
-       
+        List<DO.Call> calls;
+        List<DO.Assignment> assignments;
+        TimeSpan risk;
+
+        // נעילה אחת לכל קריאות ה-DAL כדי למנוע קריסות
+        lock (AdminManager.BlMutex)
+        {
+            calls = _dal.call.ReadAll().ToList(); // קריאת כל הקריאות
+            assignments = _dal.assignment.ReadAll().ToList(); // קריאת כל השיוכים
+            risk = new AdminImplementation().GetRiskTimeSpan(); // שליפת זמן סיכון
+        }
+
         // שליפת סטטוסים לכל קריאה
         var statuses = GetStatusesByCall(calls, assignments, risk);
 
@@ -297,7 +186,6 @@ public class CallImplementation : ICall
         {
             statusCounts[(int)status]++;
         }
-
         return statusCounts;
     }
 
@@ -379,7 +267,13 @@ public class CallImplementation : ICall
 
     public IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, BO.CallType? callType = null, Enum? sortField = null)
     {
-        return CallManager.GetOpenCallsByVolunteer(volunteerId, callType, sortField);
+        try
+        {
+            return CallManager.GetOpenCallsByVolunteer(volunteerId, callType, sortField);
+        }catch (Exception e)
+        {
+            throw;
+        }
     }
 
     public BO.Call? GetAssignedCallByVolunteer(int volunteerId)
@@ -423,8 +317,13 @@ public class CallImplementation : ICall
     public void UpdateCallDetails(BO.Call call)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
-
-        CallManager.UpdateCallDetails(call);
+        try
+        {
+            CallManager.UpdateCallDetails(call);
+        }catch (Exception e)
+        {
+            throw;
+        }
     }
 
 
@@ -608,12 +507,24 @@ public class CallImplementation : ICall
         // אם הזמן עבר ואין הקצאה
         if (assign == null && call.maximumTime < systemClock)
         {
+            var updatedAssignment = assign with { assignKind = DO.Hamal.handelExpired };
+
+            lock (AdminManager.BlMutex)
+            {
+                _dal.assignment.Update(updatedAssignment);
+            }
             return Status.expired;
         }
 
         // אם הזמן עבר ויש הקצאה פעילה
         if (assign != null && call.maximumTime < systemClock && assign.finishTime == null)
         {
+            var updatedAssignment = assign with { assignKind = DO.Hamal.handelExpired };
+
+            lock (AdminManager.BlMutex)
+            {
+                _dal.assignment.Update(updatedAssignment);
+            }
             return Status.expired;
         }
 

@@ -43,14 +43,15 @@ namespace PL.Volunteer
         // Handle Login button click event
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (DataContext is MainWindowVM viewModel)
-            {
-                // וידוא שהקריאה ללוגין תתבצע בתהליכון הראשי
-                Dispatcher.Invoke(() =>
+                if (DataContext is MainWindowVM viewModel)
                 {
-                    viewModel.Login();
-                });
-            }
+                    // וידוא שהקריאה ללוגין תתבצע בתהליכון הראשי
+                    Dispatcher.Invoke(() =>
+                    {
+                        viewModel.Login();
+                    });
+                }
+            
         }
 
 

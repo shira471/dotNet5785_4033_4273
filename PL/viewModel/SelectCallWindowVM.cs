@@ -82,7 +82,9 @@ namespace PL.viewModel;
     {
         VolunteerId = volunteerId;
         Calls = new ObservableCollection<BO.OpenCallInList>();
-        LoadCalls();
+       
+            LoadCalls();
+       
     }
 
     public void LoadCalls()
