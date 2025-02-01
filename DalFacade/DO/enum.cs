@@ -10,14 +10,7 @@
         cancelByVolunteer,
         cancelByManager,
         handelExpired,
-        //Breakfast,            // חמל לארוחת בוקר
-        //lunch,                // חמל לארוחת צהריים
-        //dinner,               // חמל לארוחת ערב
-        //madication,           // חמל לתרופות
-        //medicalEquipment,     // חמל לציוד רפואי
-        //militaryEquipment,    // חמל לציוד צבאי
-        //OriginLocation,       // מיקום המקור
-        ////role               // סוג תפקיד (מחובר לתפקיד המתנדב או המנהל
+               
     }
     /// <summary>
     /// Enumerator עבור תפקידי משתמשים במערכת

@@ -135,26 +135,33 @@ namespace PL.Volunteer
 
         private void ShowLoginError(string message)
         {
-            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                _observerOperation = Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    var result = MessageBox.Show(
-                        $"Login failed: {message}\nWould you like to try again?",
-                        "Login Error",
-                        MessageBoxButton.OKCancel,
-                        MessageBoxImage.Warning);
+                var result = MessageBox.Show(
+                    $"Login failed: {message}\nWould you like to try again?",
+                    "Login Error",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Warning);
 
-                    if (result == MessageBoxResult.Cancel)
-                    {
-                        Application.Current.Shutdown();
-                    }
-                    else
-                    {
-                        SetErrorVisibility("Visible");
-                    }
-                });
-            }
+                if (result == MessageBoxResult.Cancel)
+                {
+                    // במקום לסגור את האפליקציה, נאפס את שדות המשתמש
+                    UserId = string.Empty;
+                    Password = string.Empty;
+                    ErrorVisibility = "Visible";
+
+                    // נוודא שה-UI מתעדכן
+                    OnPropertyChanged(nameof(UserId));
+                    OnPropertyChanged(nameof(Password));
+                    OnPropertyChanged(nameof(ErrorVisibility));
+                }
+                else
+                {
+                    ErrorVisibility = "Visible";
+                    OnPropertyChanged(nameof(ErrorVisibility));
+                }
+            });
+
         }
 
         private void SetErrorVisibility(string visibility)

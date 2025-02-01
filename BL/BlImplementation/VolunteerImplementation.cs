@@ -14,6 +14,7 @@ using System.Data.Common;
 using DO;
 using DalApi;
 using System.Data;
+using System.Collections.Generic;
 
 //using Newtonsoft.Json.Linq;
 public class VolunteerImplementation : IVolunteer
@@ -29,17 +30,17 @@ public class VolunteerImplementation : IVolunteer
             throw new BlNullPropertyException("Volunteer object cannot be null.");
         }
 
-        if (!IsValidEmail(volunteer.Email))
+        if (!VolunteerManager.IsValidEmail(volunteer.Email))
         {
             throw new BlInvalidValueException("Invalid email format.");
         }
 
-        if (!IsValidPhoneNumber(volunteer.Phone))
+        if (!VolunteerManager.IsValidPhoneNumber(volunteer.Phone))
         {
             throw new BlInvalidValueException("Invalid phone number.");
         }
 
-        if (!IsValidId(volunteer.Id))
+        if (!VolunteerManager.IsValidId(volunteer.Id))
         {
             throw new BlInvalidValueException("Invalid ID number.");
         }
@@ -52,9 +53,9 @@ public class VolunteerImplementation : IVolunteer
             var temp = VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
 
           
-                IsValidEmail(volunteer.Email);
-                IsValidPhoneNumber(volunteer.Phone);
-                IsValidId(volunteer.Id);
+                VolunteerManager.IsValidEmail(volunteer.Email);
+            VolunteerManager.IsValidPhoneNumber(volunteer.Phone);
+            VolunteerManager.IsValidId(volunteer.Id);
 
                 var dalVolunteer = new DO.Volunteer
                 {
@@ -79,7 +80,7 @@ public class VolunteerImplementation : IVolunteer
 
                 VolunteerManager.Observers.NotifyListUpdated();
                 // חישוב קואורדינטות אסינכרוני (לא ממתינים!)
-                _ = Task.Run(() => updateCoordinatesForVolunteerAsync(dalVolunteer));
+                _ = Task.Run(() => VolunteerManager.updateCoordinatesForVolunteerAsync(dalVolunteer));
             
         }
         catch (Exception ex)
@@ -87,34 +88,7 @@ public class VolunteerImplementation : IVolunteer
             throw new BlInvalidValueException("Failed to add volunteer.", ex);
         }
     }
-    private async Task UpdateVolunteerCoordinatesAsync(DO.Volunteer volunteer)
-    {
-        if (string.IsNullOrWhiteSpace(volunteer.adress))
-            return;
-
-        try
-        {
-            var coords = await VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.adress);
-
-            if (coords != null)
-            {
-                // ✔ נעילה רק בזמן העדכון ב-DAL
-                lock (AdminManager.BlMutex)
-                {
-                    volunteer = volunteer with { latitude = coords[0], longitude = coords[1] };
-                    _dal.volunteer.Update(volunteer);
-                }
-
-                // ✔ עדכון הצופים שהתהליך הושלם
-                VolunteerManager.Observers.NotifyItemUpdated(volunteer.idVol);
-                VolunteerManager.Observers.NotifyListUpdated();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠ שגיאה בחישוב קואורדינטות למתנדב {volunteer.idVol}: {ex.Message}");
-        }
-    }
+   
     public void DeleteVolunteer(int volunteerId)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
@@ -137,12 +111,12 @@ public class VolunteerImplementation : IVolunteer
     {
         try
         {
-            var volunteerDO = _dal.volunteer.Read(volunteerId);
 
-            if (volunteerDO == null)
-            {
-                throw new BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
-            }
+
+            DO.Volunteer volunteerDO;
+            lock (AdminManager.BlMutex)
+                volunteerDO = _dal.volunteer.Read(volunteerId)?? throw new BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
+           
 
             return new BO.Volunteer
             {
@@ -165,36 +139,15 @@ public class VolunteerImplementation : IVolunteer
             throw new BlDoesNotExistException("Failed to retrieve volunteer details.", ex);
         }
     }
-    private static async Task updateCoordinatesForVolunteerAsync(DO.Volunteer doVolunteer)
-    {
-        if (!string.IsNullOrEmpty(doVolunteer.adress))
-        {
-            try
-            {
-                double[]? loc = await VolunteerManager.GetCoordinatesFromGoogleAsync(doVolunteer.adress);
-                if (loc != null)
-                {
-                    doVolunteer = doVolunteer with { latitude = loc[0], longitude = loc[1] };
-
-                    lock (AdminManager.BlMutex)
-                        DalApi.Factory.Get.volunteer.Update(doVolunteer);
-
-                    VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.idVol);
-                    VolunteerManager.Observers.NotifyListUpdated();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ERROR] Failed to fetch coordinates: {ex.Message}");
-            }
-        }
-    }
+   
 
     public IEnumerable<VolunteerInList> GetVolunteersList(bool? isActive = null, VolunteerSortBy? sortBy = null)
     {
         try
         {
-            var volunteers = _dal.volunteer.ReadAll();
+            IEnumerable<DO.Volunteer> volunteers;
+            lock (AdminManager.BlMutex)
+                  volunteers = _dal.volunteer.ReadAll();
 
             if (isActive.HasValue)
             {
@@ -241,7 +194,9 @@ public class VolunteerImplementation : IVolunteer
     public string Login(string username, string password)
     {
         int userId = int.Parse(username);
-        var vol = _dal.volunteer.Read(userId);
+        DO.Volunteer vol;
+        lock(AdminManager.BlMutex)
+                vol = _dal.volunteer.Read(userId);
 
         if (vol == null)
         {
@@ -262,100 +217,25 @@ public class VolunteerImplementation : IVolunteer
     public void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-
-        if (volunteer == null)
-        {
-            throw new BlNullPropertyException("Volunteer object cannot be null.");
-        }
-
-        // וידוא פורמט תקין של המייל, הטלפון וה-ID
-        ValidateVolunteer(volunteer);
-
-        // בדיקה אם המתנדב קיים במערכת
-        var existingVolunteer = _dal.volunteer.Read(volunteer.Id)
-            ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
-
-        bool addressChanged = existingVolunteer.adress != volunteer.Address;
-
         try
         {
-            lock (AdminManager.BlMutex)  // נעילה סביב גישה ל-DAL
-            {
-                // יצירת המתנדב המעודכן
-                var updatedVolunteer = new DO.Volunteer(
-                    idVol: volunteer.Id,
-                    adress: volunteer.Address,
-                    name: volunteer.FullName,
-                    email: volunteer.Email,
-                    phoneNumber: volunteer.Phone,
-                    password: volunteer.Password ?? existingVolunteer.password,  // אם אין סיסמה חדשה, שמירה על הישנה
-                    latitude: existingVolunteer.latitude,
-                    longitude: existingVolunteer.longitude,
-                    limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
-                    isActive: volunteer.IsActive,
-                    role: (DO.Role?)volunteer.Role,
-                    distanceType: (DO.TypeDistance?)volunteer.DistanceType
-                );
-
-                // עדכון המתנדב בשכבת ה-DAL
-                _dal.volunteer.Update(updatedVolunteer);
-
-                // עדכון צופים
-                VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol);
-                VolunteerManager.Observers.NotifyListUpdated();
-                // אם הכתובת השתנתה, חישוב הקואורדינטות ברקע
-                if (existingVolunteer.adress != volunteer.Address)
-                    _ = Task.Run(() => updateCoordinatesForVolunteerAsync(updatedVolunteer));
-            }
-        }
-        catch (Exception ex)
+            VolunteerManager.UpdateVolunteer(requesterId, volunteer);
+        }catch(Exception ex)
         {
-            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
+            throw;
         }
+        
+       
     }
 
-    // פונקציה לבדיקות תקינות
-    private void ValidateVolunteer(BO.Volunteer volunteer)
-    {
-        if (!IsValidEmail(volunteer.Email))
-        {
-            throw new BlInvalidValueException("Invalid email format.");
-        }
-
-        if (!IsValidPhoneNumber(volunteer.Phone))
-        {
-            throw new BlInvalidValueException("Invalid phone number.");
-        }
-
-        if (!IsValidId(volunteer.Id))
-        {
-            throw new BlInvalidValueException("Invalid ID number.");
-        }
-    }
-
-
-    private bool IsValidEmail(string email)
-    {
-
-        var mail = new System.Net.Mail.MailAddress(email);
-        return mail.Address == email;
-    }
-
-    private bool IsValidPhoneNumber(string phoneNumber)
-    {
-        return phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 7;
-    }
-
-    private bool IsValidId(int id)
-    {
-        return id > 0 && id.ToString().Length == 9;
-    }
     public int GetVolunteerForCall(int callId)
     {
-        return _dal.assignment.ReadAll()
+        lock (AdminManager.BlMutex)
+          return  _dal.assignment.ReadAll()
             .Where(a => a.callId == callId)
             .Select(a => a.volunteerId)
-            .FirstOrDefault(); // מחזיר את הערך הראשון או 0 אם אין תוצאות
+             .FirstOrDefault(); // מחזיר את הערך הראשון או 0 אם אין תוצאות
+       
     }
 
 

@@ -72,7 +72,7 @@ internal static class VolunteerManager
     internal static void SimulateVolunteerActivity(DateTime startClock, DateTime endClock)
     {
         Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; //stage 7 (optional)
-
+        PeriodicVolunteersUpdates(startClock, endClock);
         List<DO.Volunteer> volunteers;
 
         // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
@@ -285,14 +285,16 @@ internal static class VolunteerManager
 
                         if (callInProgress.OpenTime + totalTime < callInProgress.MaxCloseTime)
                         {
-                            if (s_rand.Next(0, 10) == 0) // 10% סיכוי לביטול
-                            {
-                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
-                            }
-                            else // 90% סיכוי לסגירה מוצלחת
-                            {
-                                CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
-                            }
+                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, BO.Role.Manager);
+                        }
+                        if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
+                        {
+                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                        }
+                        else // 90% סיכוי לסגירה מוצלחת
+                        {
+                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                           
                         }
                     }
                 }
@@ -339,5 +341,128 @@ internal static class VolunteerManager
             DistanceType=(BO.DistanceType)doVolunteer.distanceType,
         };
     }
+
+    internal static void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
+    {
+        if (volunteer == null)
+        {
+            throw new BlNullPropertyException("Volunteer object cannot be null.");
+        }
+
+        // וידוא פורמט תקין של המייל, הטלפון וה-ID
+        ValidateVolunteer(volunteer);
+        DO.Volunteer existingVolunteer;
+        lock (AdminManager.BlMutex)
+        {
+            // בדיקה אם המתנדב קיים במערכת
+            existingVolunteer = s_dal.volunteer.Read(volunteer.Id)
+               ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+        }
+
+        bool addressChanged = existingVolunteer.adress != volunteer.Address;
+
+        try
+        {
+            lock (AdminManager.BlMutex)  // נעילה סביב גישה ל-DAL
+            {
+                // יצירת המתנדב המעודכן
+                var updatedVolunteer = new DO.Volunteer(
+                    idVol: volunteer.Id,
+                    adress: volunteer.Address,
+                    name: volunteer.FullName,
+                    email: volunteer.Email,
+                    phoneNumber: volunteer.Phone,
+                    password: volunteer.Password ?? existingVolunteer.password,  // אם אין סיסמה חדשה, שמירה על הישנה
+                    latitude: existingVolunteer.latitude,
+                    longitude: existingVolunteer.longitude,
+                    limitDestenation: volunteer.MaxDistance ?? existingVolunteer.limitDestenation,
+                    isActive: volunteer.IsActive,
+                    role: (DO.Role?)volunteer.Role,
+                    distanceType: (DO.TypeDistance?)volunteer.DistanceType
+                );
+
+                // עדכון המתנדב בשכבת ה-DAL
+                s_dal.volunteer.Update(updatedVolunteer);
+
+                // עדכון צופים
+                VolunteerManager.Observers.NotifyItemUpdated(updatedVolunteer.idVol);
+                VolunteerManager.Observers.NotifyListUpdated();
+                // אם הכתובת השתנתה, חישוב הקואורדינטות ברקע
+                if (existingVolunteer.adress != volunteer.Address)
+                    _ = Task.Run(() => updateCoordinatesForVolunteerAsync(updatedVolunteer));
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
+        }
+    }
+
+    internal static void ValidateVolunteer(BO.Volunteer volunteer)
+    {
+        if (!IsValidEmail(volunteer.Email))
+        {
+            throw new BlInvalidValueException("Invalid email format.");
+        }
+
+        if (!IsValidPhoneNumber(volunteer.Phone))
+        {
+            throw new BlInvalidValueException("Invalid phone number.");
+        }
+
+        if (!IsValidId(volunteer.Id))
+        {
+            throw new BlInvalidValueException("Invalid ID number.");
+        }
+    }
+
+    internal static bool IsValidEmail(string email)
+    {
+
+        var mail = new System.Net.Mail.MailAddress(email);
+        return mail.Address == email;
+    }
+
+    internal static bool IsValidPhoneNumber(string phoneNumber)
+    {
+        return phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 7;
+    }
+
+    internal static bool IsValidId(int id)
+    {
+        return id > 0 && id.ToString().Length == 9;
+    }
+    internal static int GetVolunteerForCall(int callId)
+    {
+        return s_dal.assignment.ReadAll()
+            .Where(a => a.callId == callId)
+            .Select(a => a.volunteerId)
+            .FirstOrDefault(); // מחזיר את הערך הראשון או 0 אם אין תוצאות
+    }
+    internal static async Task updateCoordinatesForVolunteerAsync(DO.Volunteer doVolunteer)
+    {
+        if (!string.IsNullOrEmpty(doVolunteer.adress))
+        {
+            try
+            {
+                double[]? loc = await VolunteerManager.GetCoordinatesFromGoogleAsync(doVolunteer.adress);
+                if (loc != null)
+                {
+                    doVolunteer = doVolunteer with { latitude = loc[0], longitude = loc[1] };
+
+                    lock (AdminManager.BlMutex)
+                        DalApi.Factory.Get.volunteer.Update(doVolunteer);
+
+                    VolunteerManager.Observers.NotifyItemUpdated(doVolunteer.idVol);
+                    VolunteerManager.Observers.NotifyListUpdated();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Failed to fetch coordinates: {ex.Message}");
+            }
+        }
+    }
+
 }
 
