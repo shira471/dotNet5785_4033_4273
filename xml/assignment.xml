@@ -1,2 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Assignment>
+    <id>1</id>
+    <callId>9</callId>
+    <volunteerId>343150291</volunteerId>
+    <startTime>2025-02-02T07:06:49.8545968+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>2</id>
+    <callId>15</callId>
+    <volunteerId>750504050</volunteerId>
+    <startTime>2025-02-02T07:06:49.8545968+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>3</id>
+    <callId>2</callId>
+    <volunteerId>272048684</volunteerId>
+    <startTime>2025-02-02T23:46:49.8545968+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
+  <Assignment>
+    <id>4</id>
+    <callId>10</callId>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2025-02-03T16:26:49.8545968+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>inTreatment</assignKind>
+  </Assignment>
+</ArrayOfAssignment>
