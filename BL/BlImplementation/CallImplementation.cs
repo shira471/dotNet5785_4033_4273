@@ -129,13 +129,25 @@ public class CallImplementation : ICall
     public void DeleteCall(int callId)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
-                                                  // בדיקת קיום הקריאה
-        var call = _dal.call.Read(callId) ??
-            throw new Exception($"Call with ID={callId} does not exist.");
-
-        // שליפת כל ההקצאות הקשורות לקריאה
-        var assignments = _dal.assignment.ReadAll(a => a.callId == callId);
-
+        try
+        {
+            DO.Call call;
+            lock(AdminManager.BlMutex){                                     // בדיקת קיום הקריאה
+                 call = _dal.call.Read(callId);
+            }
+            if (call==null)
+                 throw new Exception($"Call with ID={callId} does not exist.");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Not found",ex);
+        }
+        IEnumerable<Assignment> assignments;
+        lock (AdminManager.BlMutex)
+        {
+            // שליפת כל ההקצאות הקשורות לקריאה
+             assignments = _dal.assignment.ReadAll(a => a.callId == callId);
+        }
         // בדיקה אם יש הקצאות כלשהן לקריאה
         if (assignments.Any())
         {
@@ -191,7 +203,11 @@ public class CallImplementation : ICall
 
     public BO.Call GetCallDetails(string calld)
     {
-        var calls = _dal.call.ReadAll();
+        IEnumerable<DO.Call> calls;
+        lock (AdminManager.BlMutex)
+        {
+            calls = _dal.call.ReadAll();
+        }
         int callId = 0;
         foreach (var call2 in calls)
         {
@@ -200,8 +216,12 @@ public class CallImplementation : ICall
                 callId = call2.id;
             }
         }
-        // קריאת הקריאה הספציפית משכבת ה-DAL לפי המזהה
-        var call = _dal.call.Read(int.Parse(calld));
+        DO.Call call;
+        lock (AdminManager.BlMutex)
+        {
+            // קריאת הקריאה הספציפית משכבת ה-DAL לפי המזהה
+            call = _dal.call.Read(int.Parse(calld));
+        }
 
         // בדיקת קיום הקריאה
         if (call == null)
@@ -224,13 +244,19 @@ public class CallImplementation : ICall
     }
     public IEnumerable<ClosedCallInList> GetClosedCallsByVolunteer(int vId, Enum? cType, Enum? sortField)
     {
-        // קיבלתי את כל הקריאות שהוקצו למתנדב ויש להם זמן סיום
-        var assigns = _dal.assignment.ReadAll()
-            .Where(assign => assign.volunteerId == vId && assign.finishTime != null); // רק קריאות שסיימו טיפול
-
+        IEnumerable< DO.Assignment> assigns;
+        lock (AdminManager.BlMutex)
+        {
+            // קיבלתי את כל הקריאות שהוקצו למתנדב ויש להם זמן סיום
+             assigns = _dal.assignment.ReadAll()
+                .Where(assign => assign.volunteerId == vId && assign.finishTime != null); // רק קריאות שסיימו טיפול
+        }
         var callIds = assigns.Select(assign => assign.callId);
-        var calls = _dal.call.ReadAll(c => callIds.Contains(c.id)); // כל הקריאות המתאימות לפי מזהי הקריאות
-
+        IEnumerable<DO.Call> calls;
+        lock (AdminManager.BlMutex)
+        {
+            calls = _dal.call.ReadAll(c => callIds.Contains(c.id)); // כל הקריאות המתאימות לפי מזהי הקריאות
+        }
         // מיזוג נתוני הקריאות והשיוכים ליצירת ClosedCallInList
         var closedCalls = from assign in assigns
                           join call in calls on assign.callId equals call.id
@@ -279,22 +305,28 @@ public class CallImplementation : ICall
     public BO.Call? GetAssignedCallByVolunteer(int volunteerId)
     {
         // בדיקת מתנדב
-        var volunteer = _dal.volunteer.Read(volunteerId);
+        DO.Volunteer volunteer;
+        lock (AdminManager.BlMutex) { volunteer = _dal.volunteer.Read(volunteerId); }
         if (volunteer == null)
         {
             throw new KeyNotFoundException($"Volunteer with ID {volunteerId} not found.");
         }
-
+        Assignment assignment;
         // חיפוש הקצאה פעילה למתנדב
-        var assignment = _dal.assignment.ReadAll()
+        lock (AdminManager.BlMutex)
+        {
+            assignment = _dal.assignment.ReadAll()
             .FirstOrDefault(a => a.volunteerId == volunteerId && a.assignKind == DO.Hamal.inTreatment);
+        }
         if (assignment == null)
         {
             return null;
         }
 
         // קריאת פרטי הקריאה
-        var call = _dal.call.Read(assignment.callId);
+        DO.Call call;
+        lock (AdminManager.BlMutex)
+           call = _dal.call.Read(assignment.callId);
         if (call == null)
         {
             throw new KeyNotFoundException($"Call with ID {assignment.callId} not found.");
@@ -336,8 +368,13 @@ public class CallImplementation : ICall
     public IEnumerable<CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField)
     {
         // טוען את כל הקריאות וההקצאות משכבת ה-DAL
-        var calls = _dal.call.ReadAll();
-        var assignments = _dal.assignment.ReadAll();
+        IEnumerable<DO.Call> calls;
+        IEnumerable<Assignment> assignments;
+        lock (AdminManager.BlMutex)
+        {
+            calls = _dal.call.ReadAll();
+            assignments = _dal.assignment.ReadAll();
+        }
         var risk = new AdminImplementation().GetRiskTimeSpan();
         // שליפת סטטוסים לכל קריאה
         var statuses = GetStatusesByCall(calls, assignments, risk);
@@ -602,15 +639,22 @@ public class CallImplementation : ICall
 
     public IEnumerable<CallAssignInList> GetAssignmentsForCall(int callId)
     {
-        try { 
-        // שליפת הקריאה
-        var call = _dal.call.Read(callId) ??
-            throw new Exception($"Call with ID={callId} does not exist.");
+        try {
+            // שליפת הקריאה
+            DO.Call call;
+            lock (AdminManager.BlMutex) {
+                call = _dal.call.Read(callId); }
+            if (call == null) 
+                throw new Exception($"Call with ID={callId} does not exist.");
 
-        // שליפת כל ההשמות הקשורות לקריאה
-        var assignments = _dal.assignment.ReadAll()
+            // שליפת כל ההשמות הקשורות לקריאה
+             IEnumerable<Assignment> assignments;
+            lock (AdminManager.BlMutex)
+            {
+                assignments = _dal.assignment.ReadAll()
             .Where(a => a.callId == callId)
             .ToList();
+            }
 
         if (!assignments.Any())
         {
@@ -620,7 +664,11 @@ public class CallImplementation : ICall
         // מיפוי ההשמות למודל BO
         var assignmentList = assignments.Select(assign =>
         {
-            var volunteer = _dal.volunteer.Read(assign.volunteerId);
+            DO.Volunteer volunteer;
+            lock (AdminManager.BlMutex)
+            {
+                volunteer = _dal.volunteer.Read(assign.volunteerId);
+            }
 
             return new CallAssignInList
             {
@@ -656,17 +704,32 @@ public class CallImplementation : ICall
     public CallInProgress? GetActiveAssignmentForVolunteer(int volunteerId)
     {
         // שליפת מתנדב
-        var volunteer = _dal.volunteer.Read(volunteerId) ??
-            throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
-
+        DO.Volunteer volunteer=new DO.Volunteer();
+        try
+        {
+            lock (AdminManager.BlMutex)
+            {
+                volunteer = _dal.volunteer.Read(volunteerId);
+            }
+            if(volunteer == null)
+                throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
         if (volunteer.latitude == null || volunteer.longitude == null)
         {
             throw new Exception($"Location data for Volunteer ID={volunteerId} is not provided.");
         }
 
         // שליפת השיוך הפעיל של המתנדב
-        var activeAssignment = _dal.assignment.ReadAll()
+        Assignment activeAssignment=new Assignment();
+        lock (AdminManager.BlMutex)
+        {
+            activeAssignment = _dal.assignment.ReadAll()
             .FirstOrDefault(a => a.volunteerId == volunteerId && a.finishTime == null && a.assignKind == DO.Hamal.inTreatment);
+        }
 
         if (activeAssignment == null)
         {
@@ -674,23 +737,36 @@ public class CallImplementation : ICall
         }
 
         // שליפת הקריאה הקשורה לשיוך הפעיל
-        var call = _dal.call.Read(activeAssignment.callId) ??
-            throw new Exception($"Call with ID={activeAssignment.callId} does not exist.");
-
-        // יצירת האובייקט CallInProgress
-        return new CallInProgress
+        DO.Call call = new DO.Call();
+        try
         {
-            Id = activeAssignment.id,
-            CallId = call.id,
-            CallType = (BO.CallType)(call.callType ?? 0),
-            Description = call.detail,
-            FullAddress = call.adress,
-            OpenTime = call.startTime ?? DateTime.MinValue,
-            MaxCloseTime = call.maximumTime,
-            EntryTime = activeAssignment.startTime ?? DateTime.MinValue,
-            DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude),
-            Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
-        };
+            lock (AdminManager.BlMutex)
+            {
+                call = _dal.call.Read(activeAssignment.callId);
+            }
+            if (call == null)
+                throw new Exception($"Call with ID={activeAssignment.callId} does not exist.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        
+            // יצירת האובייקט CallInProgress
+            return new CallInProgress
+            {
+                Id = activeAssignment.id,
+                CallId = call.id,
+                CallType = (BO.CallType)(call.callType ?? 0),
+                Description = call.detail,
+                FullAddress = call.adress,
+                OpenTime = call.startTime ?? DateTime.MinValue,
+                MaxCloseTime = call.maximumTime,
+                EntryTime = activeAssignment.startTime ?? DateTime.MinValue,
+                DistanceFromVolunteer = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude),
+                Status = Status.inProgres // השיוך פעיל, ולכן הסטטוס הוא "בטיפול"
+            };
+        
     }
    
         public void AddObserver(Action listObserver) =>
