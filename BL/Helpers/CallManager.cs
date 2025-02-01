@@ -474,6 +474,8 @@ internal static class CallManager
             _ = Task.Run(() => UpdateCallCoordinatesAsync(doCall));
         }
     }
+    private static readonly SemaphoreSlim _dbLock = new SemaphoreSlim(1, 1);
+
     public static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
     {
         if (string.IsNullOrWhiteSpace(doCall.adress))
@@ -485,14 +487,19 @@ internal static class CallManager
 
             if (coords != null)
             {
-                // ✔ נעילה רק בזמן העדכון ב-DAL
-                lock (AdminManager.BlMutex)
+                doCall = doCall with { latitude = coords[0], longitude = coords[1] };
+
+                await _dbLock.WaitAsync(); // נעילה אסינכרונית
+                try
                 {
-                    doCall = doCall with { latitude = coords[0], longitude = coords[1] };
                     s_dal.call.Update(doCall);
                 }
+                finally
+                {
+                    _dbLock.Release(); // שחרור הנעילה
+                }
 
-                // ✔ עדכון הצופים שהתהליך הושלם
+                // עדכון הצופים שהתהליך הושלם
                 CallManager.Observers.NotifyItemUpdated(doCall.id);
                 CallManager.Observers.NotifyListUpdated();
             }

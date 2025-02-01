@@ -97,8 +97,6 @@ public class CallImplementation : ICall
         }
     }
 
-    
-
     public void CancelCallAssignment(int volunteerId, int callId, BO.Role role)
     {
         AdminManager.ThrowOnSimulatorIsRunning(); // שלב 7
@@ -544,12 +542,6 @@ public class CallImplementation : ICall
         // אם הזמן עבר ואין הקצאה
         if (assign == null && call.maximumTime < systemClock)
         {
-            var updatedAssignment = assign with { assignKind = DO.Hamal.handelExpired };
-
-            lock (AdminManager.BlMutex)
-            {
-                _dal.assignment.Update(updatedAssignment);
-            }
             return Status.expired;
         }
 
