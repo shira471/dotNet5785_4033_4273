@@ -505,12 +505,6 @@ public class CallImplementation : ICall
         // אם הזמן עבר ואין הקצאה
         if (assign == null && call.maximumTime < systemClock)
         {
-            var updatedAssignment = assign with { assignKind = DO.Hamal.handelExpired };
-
-            lock (AdminManager.BlMutex)
-            {
-                _dal.assignment.Update(updatedAssignment);
-            }
             return Status.expired;
         }
 
