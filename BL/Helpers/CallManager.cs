@@ -333,10 +333,11 @@ internal static class CallManager
             {
                 throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
             }
-
+        lock (AdminManager.BlMutex) {
             // בדיקת הקריאה
-            call = s_dal.call.Read(callId) ??
-                throw new Exception($"Call with ID={callId} does not exist.");
+            call = s_dal.call.Read(callId); }
+        if (call == null) {
+            throw new Exception($"Call with ID={callId} does not exist.");
         
 
         var assign = assignments.First();
@@ -404,11 +405,14 @@ internal static class CallManager
                 finishTime = systemClock,
                 assignKind = DO.Hamal.handeled
             };
+        lock (AdminManager.BlMutex) {
             s_dal.assignment.Update(updatedAssignment);
 
             // שליפת הקריאה ועדכון סטטוס הקריאה
-            call = s_dal.call.Read(callId) ??
-                throw new Exception($"Call with ID={callId} does not exist.");
+            call = s_dal.call.Read(callId);
+        }
+        if (call == null)
+            throw new Exception($"Call with ID={callId} does not exist.");
         
 
         // עדכון סטטוס הקריאה
