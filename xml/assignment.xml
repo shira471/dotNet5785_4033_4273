@@ -2,73 +2,65 @@
 <ArrayOfAssignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Assignment>
     <id>1</id>
-    <callId>1</callId>
-    <volunteerId>325004273</volunteerId>
-    <startTime>2025-01-26T16:38:17.3263331+02:00</startTime>
-    <finishTime xsi:nil="true" />
-    <assignKind>cancelByManager</assignKind>
+    <callId>17</callId>
+    <volunteerId>883973270</volunteerId>
+    <startTime>2025-01-25T01:26:09.546113+02:00</startTime>
+    <finishTime>2025-01-25T02:26:09.546113+02:00</finishTime>
+    <assignKind>handeled</assignKind>
   </Assignment>
   <Assignment>
     <id>2</id>
     <callId>2</callId>
-    <volunteerId>319027226</volunteerId>
-    <startTime>2025-01-25T14:38:17.3263331+02:00</startTime>
+    <volunteerId>325004273</volunteerId>
+    <startTime>2025-02-01T22:26:50.535771+02:00</startTime>
     <finishTime xsi:nil="true" />
-    <assignKind>inTreatment</assignKind>
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>3</id>
-    <callId>3</callId>
-    <volunteerId>417605741</volunteerId>
-    <startTime>2025-01-26T20:38:17.3263331+02:00</startTime>
-    <finishTime>2025-01-27T01:38:17.3263331+02:00</finishTime>
-    <assignKind>handeled</assignKind>
+    <callId>7</callId>
+    <volunteerId>842292323</volunteerId>
+    <startTime>2025-02-01T22:26:50.535771+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>4</id>
-    <callId>5</callId>
-    <volunteerId>841839904</volunteerId>
-    <startTime>2025-01-26T09:38:17.3263331+02:00</startTime>
-    <finishTime>2025-01-26T13:38:17.3263331+02:00</finishTime>
-    <assignKind>handeled</assignKind>
+    <callId>1</callId>
+    <volunteerId>986852861</volunteerId>
+    <startTime>2025-02-01T22:26:50.535771+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>5</id>
-    <callId>8</callId>
-    <volunteerId>503540637</volunteerId>
-    <startTime>2025-01-31T11:38:17.3263331+02:00</startTime>
+    <callId>20</callId>
+    <volunteerId>160833341</volunteerId>
+    <startTime>2025-02-01T22:26:50.535771+02:00</startTime>
     <finishTime xsi:nil="true" />
-    <assignKind>cancelByVolunteer</assignKind>
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>6</id>
-    <callId>11</callId>
-    <volunteerId>248966485</volunteerId>
-    <startTime>2025-01-31T15:38:17.3263331+02:00</startTime>
-    <finishTime>2025-01-31T18:38:17.3263331+02:00</finishTime>
-    <assignKind>handeled</assignKind>
+    <callId>10</callId>
+    <volunteerId>212314033</volunteerId>
+    <startTime>2025-02-01T22:31:50.535771+02:00</startTime>
+    <finishTime xsi:nil="true" />
+    <assignKind>cancelByManager</assignKind>
   </Assignment>
   <Assignment>
     <id>7</id>
-    <callId>10</callId>
-    <volunteerId>969805147</volunteerId>
-    <startTime>2025-02-01T18:40:55.5470967+02:00</startTime>
+    <callId>11</callId>
+    <volunteerId>300002068</volunteerId>
+    <startTime>2025-02-01T22:35:44.8326305+02:00</startTime>
     <finishTime xsi:nil="true" />
     <assignKind>inTreatment</assignKind>
   </Assignment>
   <Assignment>
     <id>8</id>
-    <callId>17</callId>
-    <volunteerId>417605741</volunteerId>
-    <startTime>2025-02-01T18:40:55.5470967+02:00</startTime>
-    <finishTime xsi:nil="true" />
-    <assignKind>inTreatment</assignKind>
-  </Assignment>
-  <Assignment>
-    <id>9</id>
-    <callId>15</callId>
-    <volunteerId>969805147</volunteerId>
-    <startTime>2025-02-01T18:50:55.5470967+02:00</startTime>
+    <callId>16</callId>
+    <volunteerId>495329069</volunteerId>
+    <startTime>2025-02-01T22:40:44.8326305+02:00</startTime>
     <finishTime xsi:nil="true" />
     <assignKind>inTreatment</assignKind>
   </Assignment>

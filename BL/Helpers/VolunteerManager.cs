@@ -10,6 +10,7 @@ using Helpers;
 using System.Numerics;
 using System.Net;
 using BO;
+using BlImplementation;
 
 internal static class VolunteerManager
 {
@@ -250,14 +251,12 @@ internal static class VolunteerManager
         {
             if (AdminManager.BlMutex != null)
             {
-
-                lock (AdminManager.BlMutex) // stage 7
-                {
-
-
                     BO.CallInProgress? callInProgress;
                     lock (AdminManager.BlMutex)
+                    {
+
                         callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
+                    }
                     // אם אין למתנדב קריאה בטיפולו
                     if (callInProgress == null)
                     {
@@ -266,14 +265,15 @@ internal static class VolunteerManager
                         if (openCalls != 0 && s_rand.Next(0, 5) == 0)
                         {
                             int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
-                            try
-                            {
+                        try
+                        {
+                            lock(AdminManager.BlMutex)
                                 CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
-                            }
-                            catch(Exception ex)
-                            {
-                                Console.WriteLine($"Error: {ex.Message}");
-                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw;
+                        }
                         }
                     }
                     else // אם למתנדב יש קריאה בטיפולו
@@ -285,19 +285,18 @@ internal static class VolunteerManager
 
                         if (callInProgress.OpenTime + totalTime < callInProgress.MaxCloseTime)
                         {
-                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, BO.Role.Manager);
+                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.CallId, BO.Role.Manager);
                         }
-                        if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
+                        else if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
                         {
-                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.Id);
+                            CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.CallId);
                         }
                         else // 90% סיכוי לסגירה מוצלחת
                         {
-                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.Id, (BO.Role)doVolunteer.role);
+                            CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.CallId, (BO.Role)doVolunteer.role);
                            
                         }
                     }
-                }
             }
         }
     }
@@ -322,24 +321,26 @@ internal static class VolunteerManager
         // זמן מוערך: זמן מבוסס מרחק + זמן רנדומלי
         return TimeSpan.FromMinutes(distance / 10 + randomMinutes); // לדוגמה: 10 קמ"ש
     }
-   internal static BO.Volunteer converterFromDoToBoVolunteer(DO.Volunteer doVolunteer)
+    internal static BO.Volunteer converterFromDoToBoVolunteer(DO.Volunteer doVolunteer)
     {
-
+        var callImplementation = new CallImplementation();
+        var assignedCall = callImplementation.GetActiveAssignmentForVolunteer(doVolunteer.idVol); // מחזיר BO.CallInProgres
         return new BO.Volunteer
         {
-           Id=doVolunteer.idVol,
-           FullName=doVolunteer.name,
-           Phone=doVolunteer.phoneNumber,
-            Email=doVolunteer.email,
-            Password=doVolunteer.password,
-            Address=doVolunteer.adress,
-            Latitude=doVolunteer.latitude,
-            Longitude=doVolunteer.longitude,
-            Role=(BO.Role)doVolunteer.role,
-            IsActive=doVolunteer.isActive,
-            MaxDistance=doVolunteer.limitDestenation,
-            DistanceType=(BO.DistanceType)doVolunteer.distanceType,
-        };
+            Id = doVolunteer.idVol,
+            FullName = doVolunteer.name,
+            Phone = doVolunteer.phoneNumber,
+            Email = doVolunteer.email,
+            Password = doVolunteer.password,
+            Address = doVolunteer.adress,
+            Latitude = doVolunteer.latitude,
+            Longitude = doVolunteer.longitude,
+            Role = (BO.Role)doVolunteer.role,
+            IsActive = doVolunteer.isActive,
+            MaxDistance = doVolunteer.limitDestenation,
+            DistanceType = (BO.DistanceType)doVolunteer.distanceType,
+            CurrentCall = assignedCall
+         };
     }
 
     internal static void UpdateVolunteer(int requesterId, BO.Volunteer volunteer)
@@ -355,8 +356,13 @@ internal static class VolunteerManager
         lock (AdminManager.BlMutex)
         {
             // בדיקה אם המתנדב קיים במערכת
-            existingVolunteer = s_dal.volunteer.Read(volunteer.Id)
-               ?? throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+            existingVolunteer = s_dal.volunteer.Read(volunteer.Id);
+        }
+
+        // בדיקה לאחר ה-lock
+        if (existingVolunteer == null)
+        {
+            throw new BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
         }
 
         bool addressChanged = existingVolunteer.adress != volunteer.Address;

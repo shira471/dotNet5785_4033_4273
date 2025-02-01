@@ -106,5 +106,49 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
+        <!-- Popup להצגת פרטי הקריאה -->
+        <Popup Name="popupDetails" Placement="Mouse" StaysOpen="True">
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Padding="10">
+                <StackPanel>
+                    <ScrollViewer Width="400" Height="250">
+                        <TextBlock Name="txtPopupContent" TextWrapping="Wrap" Padding="10"/>
+                    </ScrollViewer>
+                    <Button Content="Close" 
+        HorizontalAlignment="Right" 
+        Margin="5" 
+        Padding="5,2" 
+        Width="100" 
+        FontWeight="Bold" 
+        Background="LightGray" 
+        Foreground="Black" 
+        BorderBrush="Gray" 
+        BorderThickness="1" 
+        Click="ClosePopup_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Padding" Value="5,2"/>
+                                <Setter Property="BorderBrush" Value="Gray"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="Width" Value="100"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="5"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="DarkGray"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="DimGray"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
 </Window>

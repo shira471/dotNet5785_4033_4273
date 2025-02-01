@@ -42,10 +42,10 @@ public class AdminImplementation : IAdmin
     public TimeSpan GetRiskTimeSpan()
     {
         // Lock to ensure thread-safe access to _riskTimeSpan
-        lock (AdminManager.BlMutex) // Stage 7
-        {
+        
+    
             return _riskTimeSpan;
-        }
+        
         
     }
 
@@ -64,9 +64,10 @@ public class AdminImplementation : IAdmin
     {
         lock (AdminManager.BlMutex) // Stage 7
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
             AdminManager.InitializeDB(); // Stage 7
         }
+        AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+
     }
 
     // Reset the database
@@ -74,9 +75,10 @@ public class AdminImplementation : IAdmin
     {
         lock (AdminManager.BlMutex) // Stage 7
         {
-            AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
             AdminManager.ResetDB(); // Stage 7
         }
+        AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
+
     }
 
     // Set the risk time span

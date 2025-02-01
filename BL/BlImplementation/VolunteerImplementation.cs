@@ -113,9 +113,7 @@ public class VolunteerImplementation : IVolunteer
         {
 
 
-            DO.Volunteer volunteerDO;
-            lock (AdminManager.BlMutex)
-                volunteerDO = _dal.volunteer.Read(volunteerId)?? throw new BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
+            DO.Volunteer volunteerDO = _dal.volunteer.Read(volunteerId) ?? throw new BlDoesNotExistException($"Volunteer with ID={volunteerId} does not exist.");
            
 
             return new BO.Volunteer
@@ -230,7 +228,7 @@ public class VolunteerImplementation : IVolunteer
 
     public int GetVolunteerForCall(int callId)
     {
-        lock (AdminManager.BlMutex)
+       
           return  _dal.assignment.ReadAll()
             .Where(a => a.callId == callId)
             .Select(a => a.volunteerId)

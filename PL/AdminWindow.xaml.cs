@@ -161,8 +161,14 @@ namespace PL.Volunteer
                     messageBuilder.AppendLine(new string('-', 30)); // קו מפריד
                 }
 
-                // הצגת כל הקריאות שנמצאו
-                MessageBox.Show(messageBuilder.ToString(), $"Calls in {selectedStatus.Status}", MessageBoxButton.OK, MessageBoxImage.Information);
+                // עדכון תוכן הפופאפ
+                txtPopupContent.Text = messageBuilder.ToString();
+
+                // קביעת מיקום הפופאפ ליד העכבר
+                popupDetails.PlacementTarget = dgCallStatus;
+                popupDetails.HorizontalOffset = 50;
+                popupDetails.VerticalOffset = 20;
+                popupDetails.IsOpen = true;
             }
         }
         public DateTime CurrentTime
@@ -175,6 +181,10 @@ namespace PL.Volunteer
                     _clockObserverOperation = Dispatcher.BeginInvoke(() => SetValue(CurrentTimeProperty, value));
                 }
             }
+        }
+        private void ClosePopup_Click(object sender, RoutedEventArgs e)
+        {
+            popupDetails.IsOpen = false; // סגירת ה-Popup
         }
 
         //private void ToggleSimulator_Click(object sender, RoutedEventArgs e)
@@ -447,7 +457,7 @@ namespace PL.Volunteer
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
             btn.Content = "Stop Simulator";
-            s_bl.Admin.StopSimulator();
+            s_bl.Admin.StartSimulator(Interval);
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             if (_cts == null || _cts.Token.IsCancellationRequested)
@@ -465,7 +475,13 @@ namespace PL.Volunteer
                         try
                         {
                             s_bl.Admin.StartSimulator(Interval);
-                            s_bl.Volunteer.SimulateVolunteers();
+                            try
+                            {
+                                s_bl.Volunteer.SimulateVolunteers();
+                            }
+                            catch(Exception ex) { 
+                                MessageBox.Show($"Error: {ex.Message}","ERROR",MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                             PerformSimulationLogic();
 
                             Thread.Sleep(5000); // מחליף את Task.Delay

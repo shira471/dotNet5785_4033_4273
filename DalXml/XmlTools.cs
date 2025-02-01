@@ -35,21 +35,24 @@ static class XMLTools
     {
         string xmlFilePath = Path.Combine(s_xmlDir, xmlFileName);
 
-        lock (fileLock)
+
+        try
         {
-            try
+            lock (fileLock)
             {
                 if (!File.Exists(xmlFilePath)) return new();
                 if (!IsFileAccessible(xmlFilePath)) throw new IOException("File is in use by another process.");
 
-                using FileStream file = new(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                XmlSerializer x = new(typeof(List<T>));
-                return x.Deserialize(file) as List<T> ?? new();
+                
+                
             }
-            catch (Exception ex)
-            {
-                throw new DalXMLFileLoadCreateException($"fail to load xml file: {xmlFilePath}, {ex.Message}", ex);
-            }
+            using FileStream file = new(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            XmlSerializer x = new(typeof(List<T>));
+            return x.Deserialize(file) as List<T> ?? new();
+        }
+        catch (Exception ex)
+        {
+            throw new DalXMLFileLoadCreateException($"fail to load xml file: {xmlFilePath}, {ex.Message}", ex);
         }
     }
 

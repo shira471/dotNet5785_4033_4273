@@ -127,18 +127,15 @@ internal static class CallManager
             lock (AdminManager.BlMutex)
             {
                 // שליפת הקריאה
-                call = s_dal.call.Read(callId) ?? throw new Exception($"Call with ID={callId} does not exist.");
+                call = s_dal.call.Read(callId);
 
                 // שליפת המתנדב
-                volunteer = s_dal.volunteer.Read(volunteerId) ?? throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+                volunteer = s_dal.volunteer.Read(volunteerId);
 
                 // בדיקה אם המתנדב כבר ביטל את הקריאה בעבר
                 volunteerCancelledAssignment = s_dal.assignment
                     .ReadAll()
                     .FirstOrDefault(a => a.callId == callId && a.volunteerId == volunteerId && a.assignKind == DO.Hamal.cancelByVolunteer);
-
-                if (volunteerCancelledAssignment != null)
-                    throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
 
                 // בדיקה אם הקריאה כבר משויכת למתנדב אחר
                 existingAssignment = s_dal.assignment
@@ -146,10 +143,26 @@ internal static class CallManager
                     .FirstOrDefault(a => a.callId == callId &&
                                          a.assignKind != DO.Hamal.cancelByManager &&
                                          (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+            }
 
-                if (existingAssignment != null)
-                    throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
-            } // 🔒 סיום ה-lock
+            // 🔒 כל ה-throw נמצאים מחוץ ל-lock
+            if (call == null)
+                throw new Exception($"Call with ID={callId} does not exist.");
+
+            if (volunteer == null)
+                throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
+
+            if (volunteerCancelledAssignment != null)
+                throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
+
+            // בדיקה אם הקריאה כבר משויכת למתנדב אחר
+            if (existingAssignment != null)
+            {
+                // הוסף טיפול מתאים או זרוק חריגה בהתאם ללוגיקה העסקית שלך
+            }
+
+            if (existingAssignment != null)
+                throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
 
             // ✅ חישוב מרחק מחוץ ל-lock (אין צורך בנעילה עבור פונקציה חישובית)
             var distance = CalculateDistance(call.latitude ?? 0, call.longitude ?? 0, volunteer.latitude, volunteer.longitude);
@@ -179,8 +192,7 @@ internal static class CallManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            throw; // ✅ זריקה מחדש של החריגה כדי לא לאבד מידע
+            throw;
         }
     }
     internal static BO.Call ConvertToBOCall(DO.Call doCall)

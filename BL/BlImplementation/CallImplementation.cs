@@ -565,19 +565,19 @@ public class CallImplementation : ICall
     private Dictionary<int, Status> GetStatusesByCall(IEnumerable<DO.Call> calls, IEnumerable<DO.Assignment> assignments, TimeSpan riskTimeSpan)
     {
         // זיהוי כפילויות ב-calls
-        var duplicateCallIds = calls.GroupBy(c => c.id)
-                                    .Where(g => g.Count() > 1)
-                                    .Select(g => g.Key);
+        //var duplicateCallIds = calls.GroupBy(c => c.id)
+        //                            .Where(g => g.Count() > 1)
+        //                            .Select(g => g.Key);
 
-        if (duplicateCallIds.Any())
-        {
-            throw new Exception($"Duplicate call IDs found: {string.Join(", ", duplicateCallIds)}");
-        }
+        //if (duplicateCallIds.Any())
+        //{
+        //    throw new Exception($"Duplicate call IDs found: {string.Join(", ", duplicateCallIds)}");
+        //}
 
         // זיהוי כפילויות ב-assignments
-        var duplicateAssignmentIds = assignments.GroupBy(a => a.callId)
-                                                .Where(g => g.Count() > 1)
-                                                .Select(g => g.Key);
+        //var duplicateAssignmentIds = assignments.GroupBy(a => a.callId)
+        //                                        .Where(g => g.Count() > 1)
+        //                                        .Select(g => g.Key);
 
         // יצירת מילון של ההשמות האחרונות
         var latestAssignments = assignments
