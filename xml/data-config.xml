@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-  <NextAssignmentId>5</NextAssignmentId>
->>>>>>> 7a1f5250ead011bd4dd093f8b5b4bcb209fbd05d
-  <NextAssignmentId>23</NextAssignmentId>
-  <NextAssignmentId>18</NextAssignmentId>
-  <NextAssignmentId>15</NextAssignmentId>
-  <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>21</NextCallId>
-  <!-- מזהה רץ לקריאה הבאה -->
-  <NextVolunteerId>1</NextVolunteerId>
-  <!-- מזהה רץ למתנדב הבא -->
-  <Clock>01/02/2025 23:22:20</Clock>
-  <Clock>01/02/2025 16:35:55</Clock>
-  <Clock>28/01/2025 22:44:55</Clock>
-  <!-- שעון המערכת, תאריך ושעה התחלתיים -->
-  <RiskRange>00:00:00</RiskRange>
-  <!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס -->
-</config>
+  <NextAssignmentId>13</NextAssignmentId>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 7a1f5250ead011bd4dd093f8b5b4bcb209fbd05d
+  <NextAssignmentId>23</NextAssignmentId><NextAssignmentId>18</NextAssignmentId><NextAssignmentId>15</NextAssignmentId><!-- מזהה רץ למשימה הבא --><NextCallId>21</NextCallId><!-- מזהה רץ לקריאה הבאה --><NextVolunteerId>1</NextVolunteerId><!-- מזהה רץ למתנדב הבא --><Clock>02/02/2025 00:08:15</Clock><Clock>01/02/2025 16:35:55</Clock><Clock>28/01/2025 22:44:55</Clock><!-- שעון המערכת, תאריך ושעה התחלתיים --><RiskRange>00:00:00</RiskRange><!-- טווח סיכון התחלתי, TimeSpan עם ערך התחלתי של אפס --></config>

@@ -74,8 +74,6 @@ internal static class CallManager
             Observers.NotifyListUpdated();
         }
     }
-
-
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
         // Set thread name for easier debugging
@@ -475,7 +473,6 @@ internal static class CallManager
         }
     }
     private static readonly SemaphoreSlim _dbLock = new SemaphoreSlim(1, 1);
-
     public static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
     {
         if (string.IsNullOrWhiteSpace(doCall.adress))

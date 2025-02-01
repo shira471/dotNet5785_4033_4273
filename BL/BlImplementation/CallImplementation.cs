@@ -365,30 +365,27 @@ public class CallImplementation : ICall
 
     public IEnumerable<CallInList> GetCallsList(CallField? filterField, object? filterValue, CallField? sortField)
     {
-        // טוען את כל הקריאות וההקצאות משכבת ה-DAL
         IEnumerable<DO.Call> calls;
         IEnumerable<Assignment> assignments;
-        lock (AdminManager.BlMutex)
+        Dictionary<int, Assignment?> latestAssignments;
+
+        lock (AdminManager.BlMutex) // 🔒 כל הקריאות ל-DAL בתוך lock
         {
-            calls = _dal.call.ReadAll();
-            assignments = _dal.assignment.ReadAll();
+            calls = _dal.call.ReadAll().ToList();
+            assignments = _dal.assignment.ReadAll().ToList();
+
+            latestAssignments = assignments
+                .GroupBy(a => a.callId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.OrderByDescending(a => a.id).FirstOrDefault()
+                );
         }
+
         var risk = new AdminImplementation().GetRiskTimeSpan();
-        // שליפת סטטוסים לכל קריאה
         var statuses = GetStatusesByCall(calls, assignments, risk);
+        var systemClock = new AdminImplementation().GetSystemClock();
 
-        // מציאת ההקצאה האחרונה לכל קריאה לפי ה-Id של ההקצאה
-        var latestAssignments = assignments
-            .GroupBy(a => a.callId) // קיבוץ ההקצאות לפי מזהה הקריאה
-            .ToDictionary(
-                g => g.Key,
-                g => g.OrderByDescending(a => a.id).FirstOrDefault()
-            );
-
-        AdminImplementation admin = new();
-        var adminImplementation = new AdminImplementation();
-        var systemClock = adminImplementation.GetSystemClock();
-        // מיזוג נתוני הקריאות עם ההקצאות
         var callAssignments = from call in calls
                               let assign = latestAssignments.TryGetValue(call.id, out var latestAssign) ? latestAssign : null
                               select new CallInList
@@ -396,43 +393,27 @@ public class CallImplementation : ICall
                                   CallId = call.id,
                                   CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
-                                  TimeRemaining = call.maximumTime.HasValue ? new TimeSpan(
-                                                                                             (call.maximumTime.Value - systemClock).Days,
-                                                                                             (call.maximumTime.Value - systemClock).Hours,
-                                                                                             (call.maximumTime.Value - systemClock).Minutes, 0)
-                                                                                                : (TimeSpan?)null,
-                                  LastVolunteerName = assign?.volunteerId != null &&
-                                                      (assign.assignKind != DO.Hamal.cancelByManager && assign.assignKind != DO.Hamal.cancelByVolunteer)
-                                      ? _dal.volunteer.Read(assign.volunteerId)?.name
-                                      : null,
-                                  CompletionTime = assign?.finishTime != null
+                                  TimeRemaining = call.maximumTime.HasValue
+                                      ? call.maximumTime.Value - systemClock
+                                      : (TimeSpan?)null,
+                                  LastVolunteerName = GetVolunteerName(assign),
+                                  CompletionTime = assign?.finishTime.HasValue == true
                                       ? assign.finishTime.Value - (call.startTime ?? systemClock)
                                       : null,
                                   TotalAssignments = assignments.Count(a => a.callId == call.id),
-                                  Status = statuses[call.id]
+                                  Status = statuses.TryGetValue(call.id, out var status) ? status : BO.Status.None
                               };
 
-        // סינון הקריאות לפי שדה וערך (אם נבחרו)
         if (filterField != null)
         {
             switch (filterField)
             {
                 case CallField.Status:
+                    if (filterValue is BO.Status statusFilter && statusFilter != BO.Status.None)
                     {
-                        //if (filterValue is object Status)
-                        //{
-                        //    callAssignments = callAssignments.Where(c => c.Status == BO.Status.open);
-                        //}
-                        if (filterValue is BO.Status statusFilter)
-                        {
-                            if(BO.Status.None== statusFilter)
-                            {
-                                break;
-                            }
-                            callAssignments = callAssignments.Where(c => c.Status == statusFilter);
-                        }
-                            break;
+                        callAssignments = callAssignments.Where(c => c.Status == statusFilter);
                     }
+                    break;
 
                 case CallField.AssignedTo:
                     if (filterValue is string assignedTo)
@@ -440,15 +421,12 @@ public class CallImplementation : ICall
                         callAssignments = callAssignments.Where(c => c.LastVolunteerName != null);
                     }
                     break;
-                
 
-                // הוסף סינונים נוספים אם יש צורך
                 default:
                     break;
             }
         }
 
-        // מיון הקריאות לפי שדה שנבחר
         if (sortField != null)
         {
             switch (sortField)
@@ -474,7 +452,20 @@ public class CallImplementation : ICall
         return callAssignments;
     }
 
-
+    // 🔹 פונקציה נפרדת לקריאה ל-DAL עם `lock`
+    private string? GetVolunteerName(Assignment? assign)
+    {
+        if (assign?.volunteerId != null &&
+            assign.assignKind != DO.Hamal.cancelByManager &&
+            assign.assignKind != DO.Hamal.cancelByVolunteer)
+        {
+            lock (AdminManager.BlMutex) // 🔒 הקריאה ל-Volunteer צריכה גם היא להיות נעולה
+            {
+                return _dal.volunteer.Read(assign.volunteerId)?.name;
+            }
+        }
+        return null;
+    }
     public Status UpdateStatus(BO.Call call, TimeSpan riskTime)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
