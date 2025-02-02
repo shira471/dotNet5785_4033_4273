@@ -4,7 +4,56 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Volunteer List Window" Height="640" Width="800" Background="AliceBlue" FontFamily="Segoe UI" Loaded="Window_Loaded" Closed="Window_Closed">
+        Title="Volunteer List Window" Height="640" Width="800" Background="#F0F8FF" FontFamily="Segoe UI" Loaded="Window_Loaded" Closed="Window_Closed">
+
+    <Window.Resources>
+        <!-- עיצוב כפתורים מעוגלים -->
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B0E0E6"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2E5A9F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- עיצוב DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F0F8FF"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#D3D3D3"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#D3D3D3"/>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,7 +63,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Text="List of all volunteers" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" Foreground="Green" />
+        <TextBlock Text="List of all volunteers" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" Foreground="#2E8B57" />
 
         <!-- Filters and Sorting -->
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
@@ -35,7 +84,7 @@
                   Grid.Row="1" 
                   Margin="10,25,10,45" 
                   Background="White" 
-                  BorderBrush="Gray"
+                  BorderBrush="#4682B4"
                   Foreground="Black"
                   MouseDoubleClick="DataGrid_MouseDoubleClick" Grid.RowSpan="2">
             <DataGrid.Columns>
@@ -50,9 +99,8 @@
 
         <!-- Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Add" Width="139" Margin="5" Click="btnAdd_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
-            <!--<Button Content="View" Width="150" Margin="5" Click="btnView_Click" IsEnabled="{Binding SelectedVolunteer}" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>-->
-            <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
+            <Button Content="Add" Margin="5" Click="btnAdd_Click" />
+            <Button Content="Back" Margin="5" Click="btnBack_Click" />
         </StackPanel>
     </Grid>
 </Window>

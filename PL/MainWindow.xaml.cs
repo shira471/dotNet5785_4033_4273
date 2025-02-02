@@ -39,6 +39,10 @@ namespace PL.Volunteer
                 });
             }
         }
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // סוגר את החלון
+        }
 
         // Handle Login button click event
         private void Login_Click(object sender, RoutedEventArgs e)

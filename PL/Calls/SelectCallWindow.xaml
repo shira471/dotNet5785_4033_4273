@@ -8,8 +8,57 @@
         Title="Select Call Window"
         Height="640"
         Width="800"
-        Background="Lavender"
+        Background="#F0F8FF"
         FontFamily="Segoe UI" Loaded="Window_Loaded" Closed="Window_Closed">
+
+    <Window.Resources>
+        <!-- Button Styling -->
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5A9FD4"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2E5A9F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- DataGrid Styling -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F0F8FF"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#D3D3D3"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#D3D3D3"/>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -19,7 +68,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- כותרת -->
+        <!-- Header -->
         <TextBlock Text="Select a Call" 
                    FontSize="24" 
                    FontWeight="Bold" 
@@ -55,7 +104,7 @@
                   BorderBrush="Gray" 
                   BorderThickness="1" 
                   Background="White" 
-                  AlternatingRowBackground="LightGray" 
+                  AlternatingRowBackground="#F0F8FF" 
                   RowHeaderWidth="0"
                   IsReadOnly="True"
                    MouseDoubleClick="CallsDataGrid_MouseDoubleClick">
@@ -72,7 +121,7 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Back" Width="150" Margin="5" Click="btnBack_Click" Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold"/>
+            <Button Content="Back" Click="btnBack_Click" />
         </StackPanel>
     </Grid>
 </Window>
