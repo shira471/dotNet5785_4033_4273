@@ -50,6 +50,7 @@ public class VolunteerImplementation : IVolunteer
 
         try
         {
+            VolunteerManager.IsStrongPassword(volunteer.Password);
             var temp = VolunteerManager.GetCoordinatesFromGoogleAsync(volunteer.Address);
 
           
@@ -85,7 +86,7 @@ public class VolunteerImplementation : IVolunteer
         }
         catch (Exception ex)
         {
-            throw new BlInvalidValueException("Failed to add volunteer.", ex);
+            throw new BlInvalidValueException($"Failed to add volunteer.{ex.Message}");
         }
     }
    

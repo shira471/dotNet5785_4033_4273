@@ -141,7 +141,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left">
             <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 DisplayDateStart="{x:Static sys:DateTime.Today}" Width="200" />
-            <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
+            <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                      Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" LostFocus="MaxEndTimeTextBox_LostFocus"/>
         </StackPanel>
 

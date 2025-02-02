@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Net;
 using BO;
 using BlImplementation;
+using System.Text.RegularExpressions;
 
 internal static class VolunteerManager
 {
@@ -337,7 +338,7 @@ internal static class VolunteerManager
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");
         }
-
+       
         // וידוא פורמט תקין של המייל, הטלפון וה-ID
         ValidateVolunteer(volunteer);
         DO.Volunteer existingVolunteer;
@@ -357,6 +358,7 @@ internal static class VolunteerManager
 
         try
         {
+            IsStrongPassword(volunteer.Password);
             lock (AdminManager.BlMutex)  // נעילה סביב גישה ל-DAL
             {
                 // יצירת המתנדב המעודכן
@@ -388,7 +390,7 @@ internal static class VolunteerManager
         }
         catch (Exception ex)
         {
-            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
+            throw new BlInvalidValueException($"Failed to update the volunteer details.{ex.Message}");
         }
     }
 
@@ -458,7 +460,31 @@ internal static class VolunteerManager
                 Console.WriteLine($"[ERROR] Failed to fetch coordinates: {ex.Message}");
             }
         }
-    }
 
+
+    }
+    internal static bool IsStrongPassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+            throw new ArgumentException("Password cannot be empty.");
+
+        if (password.Length < 8)
+            throw new ArgumentException("Password must be at least 8 characters long.");
+
+        if (!password.Any(char.IsUpper))
+            throw new ArgumentException("Password must contain at least one uppercase letter (A-Z).");
+
+        if (!password.Any(char.IsLower))
+            throw new ArgumentException("Password must contain at least one lowercase letter (a-z).");
+
+        if (!password.Any(char.IsDigit))
+            throw new ArgumentException("Password must contain at least one number (0-9).");
+
+        // לפחות תו מיוחד
+        if (!Regex.IsMatch(password, @"[!@#$%^&*(),.?\:|<>]"))
+            throw new ArgumentException("Password must contain at least one special character (!@#$%^&* etc.).");
+
+        return true; // הסיסמה חזקה
+    }
 }
 
