@@ -141,21 +141,29 @@ public class VolunteerImplementation : IVolunteer
             throw new BlDoesNotExistException("Failed to retrieve volunteer details.", ex);
         }
     }
-   
+
 
     public IEnumerable<VolunteerInList> GetVolunteersList(bool? isActive = null, VolunteerSortBy? sortBy = null)
     {
         try
         {
             IEnumerable<DO.Volunteer> volunteers;
-            lock (AdminManager.BlMutex)
-                  volunteers = _dal.volunteer.ReadAll();
+            IEnumerable<DO.Assignment> assignments;
 
+            // 🔒 קריאה מבסיס הנתונים בתוך `lock`
+            lock (AdminManager.BlMutex)
+            {
+                volunteers = _dal.volunteer.ReadAll().ToList();
+                assignments = _dal.assignment.ReadAll().ToList();
+            }
+
+            // סינון לפי סטטוס פעילות (אם נדרש)
             if (isActive.HasValue)
             {
                 volunteers = volunteers.Where(v => v.isActive == isActive.Value);
             }
 
+            // מיון לפי סוג מיון שנבחר
             if (sortBy.HasValue)
             {
                 volunteers = sortBy switch
@@ -171,28 +179,39 @@ public class VolunteerImplementation : IVolunteer
                 volunteers = volunteers.OrderBy(v => v.idVol);
             }
 
-            return volunteers.Select(v => new VolunteerInList()
-            {
-                Id = v.idVol,
-                FullName = v.name,
-                Phone = v.phoneNumber,
-                mail = v.email,
-                IsActive = v.isActive,
-                CurrentCallId = _dal.assignment.ReadAll()
-                .Count(a =>
-                    a.volunteerId == v.idVol &&
-                    a.assignKind != DO.Hamal.cancelByManager && // לא בוטל על ידי מנהל
-                    a.assignKind != DO.Hamal.cancelByVolunteer // לא בוטל על ידי מתנדב
-                )
-            });
+            // יצירת רשימת המתנדבים עם נתוני הקריאה הפעילה
+            List<VolunteerInList> volunteerList = new List<VolunteerInList>();
 
+            foreach (var v in volunteers)
+            {
+                int activeCalls;
+                lock (AdminManager.BlMutex) // 🔒 מניעת גישה כפולה ל-DAL
+                {
+                    activeCalls = _dal.assignment.ReadAll().Count(a =>
+                        a.volunteerId == v.idVol &&
+                        a.assignKind != DO.Hamal.cancelByManager && // לא בוטל על ידי מנהל
+                        a.assignKind != DO.Hamal.cancelByVolunteer // לא בוטל על ידי מתנדב
+                    );
+                }
+
+                volunteerList.Add(new VolunteerInList()
+                {
+                    Id = v.idVol,
+                    FullName = v.name,
+                    Phone = v.phoneNumber,
+                    mail = v.email,
+                    IsActive = v.isActive,
+                    CurrentCallId = activeCalls
+                });
+            }
+
+            return volunteerList; // ✅ `return` מחוץ ל-lock
         }
         catch (Exception ex)
         {
             throw new BlInvalidValueException("Failed to retrieve volunteers list.", ex);
         }
     }
-
     public string Login(string username, string password)
     {
         int userId = int.Parse(username);
