@@ -33,6 +33,11 @@ public class CallImplementation : ICall
 
         if (call.MaxEndTime == null)
             throw new ArgumentException("End time cannot be null.");
+        if (call.Address == null)
+            throw new ArgumentException("Adress can not be null");
+        if(call.Description==null)
+            throw new ArgumentException("Description can not be null");
+
 
         // ✔ קריאה אסינכרונית לקבלת ה-ID הגבוה ביותר
         int maxId = 0;

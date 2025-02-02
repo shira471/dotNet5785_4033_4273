@@ -114,16 +114,6 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
-        <!-- כותרת -->
-        <TextBlock Text="Add Call"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Foreground="DarkSlateBlue"
-                   HorizontalAlignment="Center"
-                   Grid.ColumnSpan="2"
-                   Margin="0,0,0,20" />
-
         <!-- Description -->
         <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="White" BorderBrush="Gray" />
@@ -132,18 +122,16 @@
         <Label Content="Open Time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left">
             <DatePicker SelectedDate="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Width="200" />
-            <TextBox Text="{Binding CurrentCall.OpenTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
         </StackPanel>
 
         <!-- Max End Time -->
         <Label Content="Maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left">
-            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
+            <!-- DatePicker עבור התאריך -->
+            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 DisplayDateStart="{x:Static sys:DateTime.Today}" Width="200" />
-            <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
         </StackPanel>
+
 
         <!-- Address -->
         <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
