@@ -93,7 +93,7 @@ internal static class CallManager
 
         // Step 2: Process calls and perform updates
         foreach (var call in activeCalls)
-        { 
+        {
 
             // Add the call ID to the local list for notifications
             expiredCallIds.Add(call.id);
@@ -319,8 +319,12 @@ internal static class CallManager
         {
             // בדיקת השיוך
             assignments = s_dal.assignment.ReadAll()
-                .Where(a => a.volunteerId == volunteerId && a.callId == callId)
+                .Where(a => a.volunteerId == volunteerId
+                            && a.callId == callId
+                            && a.assignKind != DO.Hamal.cancelByVolunteer
+                            && a.assignKind != DO.Hamal.cancelByManager)
                 .ToList();
+
         }
         if (!assignments.Any())
         {
@@ -331,13 +335,9 @@ internal static class CallManager
         {
             throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
         }
-        lock (AdminManager.BlMutex)
-        {
-            // בדיקת הקריאה
-            call = s_dal.call.Read(callId);
-        }
-        if (call == null)
-        {
+
+        // בדיקת הקריאה
+        call = s_dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
 
 
@@ -377,45 +377,46 @@ internal static class CallManager
         // קריאה ל-DAL עם נעילה
         lock (AdminManager.BlMutex)
         {
-            // חיפוש השיוך לפי מתנדב וקריאה
+            // בדיקת השיוך
             assignments = s_dal.assignment.ReadAll()
-                .Where(a => a.volunteerId == volunteerId && a.callId == callId)
+                .Where(a => a.volunteerId == volunteerId
+                            && a.callId == callId
+                            && a.assignKind != DO.Hamal.cancelByVolunteer
+                            && a.assignKind != DO.Hamal.cancelByManager)
                 .ToList();
-        }
-            if (!assignments.Any())
-            {
-                throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
-            }
 
-            // בדיקת שיוכים מרובים
-            if (assignments.Count > 1)
-            {
-                throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
-            }
+        }
+        if (!assignments.Any())
+        {
+            throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
+        }
+
+        // בדיקת שיוכים מרובים
+        if (assignments.Count > 1)
+        {
+            throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
+        }
 
         // בדיקת סטטוס השיוך
         var assign = assignments.First();
         if (assign.assignKind != DO.Hamal.inTreatment)
-            {
-                throw new Exception($"Assignment for Volunteer ID={volunteerId} and Call ID={callId} has already been closed.");
-            }
-            var adminImplementation = new AdminImplementation();
-            var systemClock = adminImplementation.GetSystemClock();
-            // עדכון זמן סיום השיוך
-            var updatedAssignment = assign with
-            {
-                finishTime = systemClock,
-                assignKind = DO.Hamal.handeled
-            };
-        lock (AdminManager.BlMutex) {
-            s_dal.assignment.Update(updatedAssignment);
-
-            // שליפת הקריאה ועדכון סטטוס הקריאה
-            call = s_dal.call.Read(callId);
+        {
+            throw new Exception($"Assignment for Volunteer ID={volunteerId} and Call ID={callId} has already been closed.");
         }
-        if (call == null)
+        var adminImplementation = new AdminImplementation();
+        var systemClock = adminImplementation.GetSystemClock();
+        // עדכון זמן סיום השיוך
+        var updatedAssignment = assign with
+        {
+            finishTime = systemClock,
+            assignKind = DO.Hamal.handeled
+        };
+        s_dal.assignment.Update(updatedAssignment);
+
+        // שליפת הקריאה ועדכון סטטוס הקריאה
+        call = s_dal.call.Read(callId) ??
             throw new Exception($"Call with ID={callId} does not exist.");
-        
+
 
         // עדכון סטטוס הקריאה
         var x = ConvertToBOCall(call);
@@ -436,7 +437,7 @@ internal static class CallManager
         {
             throw new ArgumentException("MaxEndTime must be greater than OpenTime.");
         }
-        if (call.MaxEndTime !=null)
+        if (call.MaxEndTime != null)
         {
             throw new ArgumentException("MaxEndTime cannot be null.");
         }
@@ -468,13 +469,13 @@ internal static class CallManager
         {
             throw new Exception("Failed to update call.", ex);
         }
-        
+
 
         // עדכון תצפיתנים (מחוץ לנעילה)
         CallManager.Observers.NotifyItemUpdated(call.Id);
         CallManager.Observers.NotifyListUpdated();
 
-        // ✔ חישוב קואורדינטות ברקע **רק אם הכתובת שונתה**
+        // ✔ חישוב קואורדינטות ברקע *רק אם הכתובת שונתה*
         if (addressChanged)
         {
             _ = Task.Run(() => UpdateCallCoordinatesAsync(doCall));

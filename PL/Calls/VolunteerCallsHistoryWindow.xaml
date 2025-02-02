@@ -4,7 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Volunteer Calls History" Height="640" Width="800" Background="AliceBlue" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="Volunteer Calls History" Height="640" Width="800" Background="#F0F8FF" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <!-- עיצוב כפתורים ותיבות -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F0F8FF"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#D3D3D3"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#D3D3D3"/>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -42,10 +64,6 @@
                   AutoGenerateColumns="False" 
                   CanUserSortColumns="True" 
                   Margin="5" 
-                  BorderBrush="Gray" 
-                  BorderThickness="1" 
-                  Background="White" 
-                  AlternatingRowBackground="LightGray" 
                   RowHeaderWidth="0"
                   IsReadOnly="True">
             <DataGrid.Columns>

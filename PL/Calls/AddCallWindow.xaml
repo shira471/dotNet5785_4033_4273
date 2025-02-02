@@ -6,7 +6,51 @@
         xmlns:local="clr-namespace:PL.Volunteer"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Add Call" Height="450" Width="800" Background="LightYellow" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Louded">
+        Title="Add Call"
+        Height="450"
+        Width="800"
+        Background="#F0F8FF"
+        FontFamily="Segoe UI"
+        FontSize="14"
+        Closed="Window_Closed"
+        Loaded="Window_Louded">
+
+    <Window.Resources>
+        <!-- עיצוב כפתורים מעוגלים -->
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B0E0E6"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#4682B4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -34,14 +78,14 @@
 
         <!-- Description -->
         <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
-        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
+        <TextBox Text="{Binding CurrentCall.Description, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="White" BorderBrush="Gray" />
 
         <!-- Open Time -->
         <Label Content="Open Time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left">
             <DatePicker SelectedDate="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Width="200" />
             <TextBox Text="{Binding CurrentCall.OpenTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="WhiteSmoke" BorderBrush="Gray" />
+                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
         </StackPanel>
 
         <!-- Max End Time -->
@@ -49,35 +93,30 @@
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left">
             <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
                 DisplayDateStart="{x:Static sys:DateTime.Today}" Width="200" />
-
             <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-             Width="80" Margin="10,0,0,0" Background="WhiteSmoke" BorderBrush="Gray" />
-    
-
+                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
         </StackPanel>
 
         <!-- Address -->
         <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
-        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
+        <TextBox Text="{Binding CurrentCall.Address, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="White" BorderBrush="Gray" />
 
         <!-- Call Type -->
         <Label Content="Call Type:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <ComboBox ItemsSource="{Binding CallTypes,Mode=TwoWay}"
                   SelectedItem="{Binding CurrentCall.CallType,Mode=TwoWay}" 
-                  Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="WhiteSmoke" BorderBrush="Gray" />
+                  Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="300" Background="White" BorderBrush="Gray" />
 
         <!-- כפתורים -->
         <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20">
             <Button Content="Back" 
                     Click="btnBack_Click" 
-                    Height="40" Width="150" 
-                    Margin="10" Background="LightCoral" 
-                    Foreground="White" FontWeight="Bold" />
+                    Background="#DC143C"
+                    Foreground="White" />
             <Button Content="{Binding ButtonText,Mode=TwoWay}" 
                     Click="btnAddUpdate_Click" 
-                    Height="40" Width="150" 
-                    Margin="10" Background="DodgerBlue" 
-                    Foreground="White" FontWeight="Bold" />
+                    Background="#4682B4"
+                    Foreground="White" />
         </StackPanel>
 
     </Grid>

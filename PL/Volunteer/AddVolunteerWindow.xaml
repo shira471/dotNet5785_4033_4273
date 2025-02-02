@@ -1,7 +1,81 @@
 ﻿<Window x:Class="PL.Volunteer.AddVolunteerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="500" Width="800" Background="AliceBlue" FontFamily="Segoe UI"  Closed="Window_Closed" Loaded="Window_Louded">
+        Height="700" Width="800" Background="#F0F8FF" FontFamily="Segoe UI"  Closed="Window_Closed" Loaded="Window_Louded">
+
+    <Window.Resources>
+        <!-- עיצוב כפתורים מעוגלים -->
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B0E0E6"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2E5A9F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- עיצוב TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- עיצוב ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#4682B4"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- עיצוב CheckBox -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#2F4F4F"/>
+        </Style>
+
+        <!-- עיצוב Label -->
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2F4F4F"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="10">
         <!-- הגדרת שורות וטורים -->
@@ -27,52 +101,51 @@
         <!-- כותרת -->
         <TextBlock Text="Add Volunteer" FontSize="24" FontWeight="Bold" 
                    HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0,0,0,20" 
-                   Foreground="Green" />
+                   Foreground="#2E8B57" />
 
         <!-- ID -->
-        <Label Content="ID:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="ID:" Grid.Row="1" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.Id, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Full Name -->
-        <Label Content="Full Name:" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Full Name:" Grid.Row="2" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.FullName, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Phone -->
-        <Label Content="Phone:" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Phone:" Grid.Row="3" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Address -->
-        <Label Content="Address:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Address:" Grid.Row="4" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Email -->
-        <Label Content="Email:" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Email:" Grid.Row="5" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.Email, Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Is Active -->
-        <Label Content="Is Active:" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Is Active:" Grid.Row="6" Grid.Column="0" />
+        <CheckBox IsChecked="{Binding CurrentVolunteer.IsActive, Mode=TwoWay}" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" />
 
         <!-- Role -->
-        <Label Content="Role:" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
+        <Label Content="Role:" Grid.Row="7" Grid.Column="0" />
         <ComboBox ItemsSource="{Binding Roles}" 
                   SelectedItem="{Binding CurrentVolunteer.Role, Mode=TwoWay}" 
-                  Grid.Row="7" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+                  Grid.Row="7" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Max Distance -->
-        <Label Content="Max Distance:" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
-        <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+        <Label Content="Max Distance:" Grid.Row="8" Grid.Column="0" />
+        <TextBox Text="{Binding CurrentVolunteer.MaxDistance, Mode=TwoWay}" Grid.Row="8" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
         <!-- Password -->
-        <Label Content="Password:" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5" />
+        <Label Content="Password:" Grid.Row="9" Grid.Column="0" />
         <TextBox Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" 
-                 Grid.Row="9" Grid.Column="1" Width="300" HorizontalAlignment="Left" Margin="5" />
+                 Grid.Row="9" Grid.Column="1" Width="300" HorizontalAlignment="Left" />
 
+        <!-- Buttons -->
         <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
-            <Button Content="Back" Click="btnBack_Click" Height="40" Width="150" Margin="5"
-            Background="LightCoral" Foreground="White" FontWeight="Bold" />
-            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" Height="40" Width="150" Margin="5"
-            Background="LightBlue" Foreground="DarkBlue" FontWeight="Bold" />
+            <Button Content="Back" Click="btnBack_Click" />
+            <Button Content="{Binding ButtonText}" Click="btnAddUpdate_Click" />
         </StackPanel>
     </Grid>
 </Window>
