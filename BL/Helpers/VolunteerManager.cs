@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Net;
 using BO;
 using BlImplementation;
+using System.Text.RegularExpressions;
 
 internal static class VolunteerManager
 {
@@ -29,31 +30,50 @@ internal static class VolunteerManager
         Thread.CurrentThread.Name = $"Periodic{++s_periodicCounter}"; //stage 7 (optional)
 
         List<DO.Volunteer> volunteers;
-
+        List<DO.Assignment> assigmnet;
         // Lock for reading all volunteers, converting to concrete list to avoid deferred query execution
         lock (AdminManager.BlMutex) // Stage 7
         {
             volunteers = s_dal.volunteer.ReadAll().ToList(); // ToList() makes it a concrete list
+            assigmnet = s_dal.assignment.ReadAll().ToList();
         }
 
         List<int> updatedVolunteersIds = new List<int>(); // Collect IDs for notification
-
+       
         foreach (var volunteer in volunteers)
         {
-            // Example: Check if a volunteer has been inactive for a certain period
-            if (!volunteer.isActive && (newClock - oldClock).Days > 30)
+            // שליפת ההשמה האחרונה של המתנדב
+            var lastAssignment = assigmnet
+                .Where(a => a.volunteerId == volunteer.idVol)
+                .OrderByDescending(a => a.finishTime ?? DateTime.MinValue) // מסדר לפי הזמן האחרון שהסתיימה
+                .FirstOrDefault();
+
+            // אם אין השמות, מדלגים
+            if (lastAssignment == null)
+                continue;
+            bool isClosedOrCancelled = lastAssignment.assignKind == DO.Hamal.cancelByManager ||
+                                 lastAssignment.assignKind == DO.Hamal.cancelByVolunteer ||
+                                 lastAssignment.assignKind == DO.Hamal.handeled;
+
+            // בדיקה אם עברו יותר מ-30 יום מאז שהסתיימה או בוטלה
+            if (isClosedOrCancelled && lastAssignment.finishTime.HasValue &&
+                (newClock - lastAssignment.finishTime.Value).Days > 30)
             {
-                // Create a new copy of the volunteer with updated isActive property
+                // אם המתנדב כבר לא פעיל, אין צורך לעדכן שוב
+                if (!volunteer.isActive)
+                    continue;
+
+                // יצירת עותק חדש של המתנדב עם `isActive = false`
                 var updatedVolunteer = volunteer with { isActive = false };
 
-                // Lock for updating the volunteer in DAL
-                lock (AdminManager.BlMutex) // Stage 7
+                // נעילה ועדכון המתנדב ב-DAL
+                lock (AdminManager.BlMutex)
                 {
                     s_dal.volunteer.Update(updatedVolunteer);
                 }
 
-                // Collect updated volunteer's ID for notification
-                updatedVolunteersIds.Add(updatedVolunteer.idVol); // Stage 5
+                // הוספת ה-ID של המתנדב לרשימת העדכונים
+                updatedVolunteersIds.Add(updatedVolunteer.idVol);
             }
         }
 
@@ -318,7 +338,7 @@ internal static class VolunteerManager
         {
             throw new BlNullPropertyException("Volunteer object cannot be null.");
         }
-
+       
         // וידוא פורמט תקין של המייל, הטלפון וה-ID
         ValidateVolunteer(volunteer);
         DO.Volunteer existingVolunteer;
@@ -338,6 +358,7 @@ internal static class VolunteerManager
 
         try
         {
+            IsStrongPassword(volunteer.Password);
             lock (AdminManager.BlMutex)  // נעילה סביב גישה ל-DAL
             {
                 // יצירת המתנדב המעודכן
@@ -369,7 +390,7 @@ internal static class VolunteerManager
         }
         catch (Exception ex)
         {
-            throw new BlInvalidValueException("Failed to update the volunteer details.", ex);
+            throw new BlInvalidValueException($"Failed to update the volunteer details.{ex.Message}");
         }
     }
 
@@ -439,7 +460,31 @@ internal static class VolunteerManager
                 Console.WriteLine($"[ERROR] Failed to fetch coordinates: {ex.Message}");
             }
         }
-    }
 
+
+    }
+    internal static bool IsStrongPassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+            throw new ArgumentException("Password cannot be empty.");
+
+        if (password.Length < 8)
+            throw new ArgumentException("Password must be at least 8 characters long.");
+
+        if (!password.Any(char.IsUpper))
+            throw new ArgumentException("Password must contain at least one uppercase letter (A-Z).");
+
+        if (!password.Any(char.IsLower))
+            throw new ArgumentException("Password must contain at least one lowercase letter (a-z).");
+
+        if (!password.Any(char.IsDigit))
+            throw new ArgumentException("Password must contain at least one number (0-9).");
+
+        // לפחות תו מיוחד
+        if (!Regex.IsMatch(password, @"[!@#$%^&*(),.?\:|<>]"))
+            throw new ArgumentException("Password must contain at least one special character (!@#$%^&* etc.).");
+
+        return true; // הסיסמה חזקה
+    }
 }
 

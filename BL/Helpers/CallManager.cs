@@ -120,7 +120,7 @@ internal static class CallManager
             DO.Volunteer volunteer;
             DO.Assignment volunteerCancelledAssignment;
             DO.Assignment existingAssignment;
-
+            DO.Assignment volunteerActiveAssignment;
             // ✅ נעילה אחת לכל הגישות ל-DAL
             lock (AdminManager.BlMutex)
             {
@@ -141,6 +141,11 @@ internal static class CallManager
                     .FirstOrDefault(a => a.callId == callId &&
                                          a.assignKind != DO.Hamal.cancelByManager &&
                                          (a.assignKind == DO.Hamal.inTreatment || a.assignKind == DO.Hamal.handeled));
+
+                volunteerActiveAssignment = s_dal.assignment
+                                                         .ReadAll()
+                                                           .FirstOrDefault(a => a.volunteerId == volunteerId &&
+                                                         a.assignKind == DO.Hamal.inTreatment);
             }
 
             // 🔒 כל ה-throw נמצאים מחוץ ל-lock
@@ -150,16 +155,13 @@ internal static class CallManager
             if (volunteer == null)
                 throw new Exception($"Volunteer with ID={volunteerId} does not exist.");
 
+            if (volunteer.isActive == false) throw new Exception($"Volunteer with ID={volunteerId} not active");
+
             if (volunteerCancelledAssignment != null)
                 throw new Exception($"Volunteer with ID={volunteerId} has already cancelled this call and cannot reassign it.");
+            if (volunteerActiveAssignment != null) throw new Exception($"Volunteer with ID ={volunteerId} Handles another call");
 
-            // בדיקה אם הקריאה כבר משויכת למתנדב אחר
-            if (existingAssignment != null)
-            {
-                // הוסף טיפול מתאים או זרוק חריגה בהתאם ללוגיקה העסקית שלך
-            }
-
-            if (existingAssignment != null)
+                if (existingAssignment != null)
                 throw new Exception($"Call with ID={callId} is already assigned to another volunteer.");
 
             // ✅ חישוב מרחק מחוץ ל-lock (אין צורך בנעילה עבור פונקציה חישובית)
@@ -187,6 +189,7 @@ internal static class CallManager
             x.Status = Status.inProgres;
 
             CallManager.Observers.NotifyListUpdated();
+            VolunteerManager.Observers.NotifyListUpdated();
         }
         catch (Exception ex)
         {
@@ -341,33 +344,34 @@ internal static class CallManager
             throw new Exception($"Call with ID={callId} does not exist.");
 
 
-        var assign = assignments.First();
+            var assign = assignments.First();
 
-        // קביעת סוג הביטול בהתאם לתפקיד
-        BO.Hamal newAssignKind = role switch
-        {
-            BO.Role.Manager => BO.Hamal.cancelByManager,
-            BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
-            _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
-        };
-
-        // שימוש בנעילה לעדכון ב-DAL
-        lock (AdminManager.BlMutex)
-        {
-            var updatedAssignment = assign with
+            // קביעת סוג הביטול בהתאם לתפקיד
+            BO.Hamal newAssignKind = role switch
             {
-                assignKind = (DO.Hamal)newAssignKind
+                BO.Role.Manager => BO.Hamal.cancelByManager,
+                BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
+                _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
             };
-            s_dal.assignment.Update(updatedAssignment);
+
+            // שימוש בנעילה לעדכון ב-DAL
+            lock (AdminManager.BlMutex)
+            {
+                var updatedAssignment = assign with
+                {
+                    assignKind = (DO.Hamal)newAssignKind
+                };
+                s_dal.assignment.Update(updatedAssignment);
+            }
+
+            // עדכון סטטוס הקריאה
+            var x = ConvertToBOCall(call);
+            x.Status = Status.open;
+
+            // עדכון צופים מחוץ לנעילה
+            CallManager.Observers.NotifyListUpdated(); // שלב 5
         }
-
-        // עדכון סטטוס הקריאה
-        var x = ConvertToBOCall(call);
-        x.Status = Status.open;
-
-        // עדכון צופים מחוץ לנעילה
-        CallManager.Observers.NotifyListUpdated(); // שלב 5
-    }
+ 
     internal static void CloseCallAssignment(int volunteerId, int callId)
     {
         List<DO.Assignment> assignments;

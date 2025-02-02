@@ -393,20 +393,23 @@ public class CallImplementation : ICall
 
         var callAssignments = from call in calls
                               let assign = latestAssignments.TryGetValue(call.id, out var latestAssign) ? latestAssign : null
+                              let status = statuses.TryGetValue(call.id, out var s) ? s : BO.Status.None
                               select new CallInList
                               {
                                   CallId = call.id,
                                   CallType = (BO.CallType)(call.callType ?? 0),
                                   OpenTime = call.startTime ?? DateTime.MinValue,
-                                  TimeRemaining = call.maximumTime.HasValue
-                                      ? call.maximumTime.Value - systemClock
-                                      : (TimeSpan?)null,
+                                  TimeRemaining = (status == BO.Status.closed)
+                                      ? TimeSpan.Zero  // אם הקריאה סגורה - הזמן שנשאר הוא 0
+                                      : call.maximumTime.HasValue
+                                          ? call.maximumTime.Value - systemClock
+                                          : (TimeSpan?)null,
                                   LastVolunteerName = GetVolunteerName(assign),
                                   CompletionTime = assign?.finishTime.HasValue == true
                                       ? assign.finishTime.Value - (call.startTime ?? systemClock)
                                       : null,
                                   TotalAssignments = assignments.Count(a => a.callId == call.id),
-                                  Status = statuses.TryGetValue(call.id, out var status) ? status : BO.Status.None
+                                  Status = status
                               };
 
         if (filterField != null)
@@ -453,7 +456,7 @@ public class CallImplementation : ICall
         {
             callAssignments = callAssignments.OrderBy(c => c.CallId);
         }
-
+      
         return callAssignments;
     }
 
@@ -535,14 +538,29 @@ public class CallImplementation : ICall
         var adminImplementation = new AdminImplementation();
         var systemClock = adminImplementation.GetSystemClock();
 
-        // אם הזמן עבר ואין הקצאה
-        if (assign == null && call.maximumTime < systemClock)
+        if (call == null)
         {
-            return Status.expired;
+            throw new ArgumentNullException(nameof(call), "הקריאה לא יכולה להיות null");
         }
 
-        // אם הזמן עבר ויש הקצאה פעילה
-        if (assign != null && call.maximumTime < systemClock && assign.finishTime == null)
+        if (assign == null)
+        {
+            // אם הזמן עבר ואין הקצאה
+            if (call.maximumTime.HasValue && call.maximumTime < systemClock)
+            {
+                return Status.expired;
+            }
+        }
+        else
+        {
+            // אם ההקצאה קיימת, בודקים את הסטטוס שלה
+            if (assign.assignKind == DO.Hamal.handelExpired)
+            {
+                return Status.expired;
+            }
+        }
+            // אם הזמן עבר ויש הקצאה פעילה
+            if (assign != null && call.maximumTime < systemClock && assign.finishTime == null)
         {
             var updatedAssignment = assign with { assignKind = DO.Hamal.handelExpired };
 
