@@ -322,48 +322,52 @@ internal static class CallManager
                 .Where(a => a.volunteerId == volunteerId && a.callId == callId)
                 .ToList();
         }
-            if (!assignments.Any())
-            {
-                throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
-            }
-
-            if (assignments.Count > 1)
-            {
-                throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
-            }
-        lock (AdminManager.BlMutex) {
-            // בדיקת הקריאה
-            call = s_dal.call.Read(callId); }
-        if (call == null) {
-            throw new Exception($"Call with ID={callId} does not exist.");
-        
-
-        var assign = assignments.First();
-
-        // קביעת סוג הביטול בהתאם לתפקיד
-        BO.Hamal newAssignKind = role switch
+        if (!assignments.Any())
         {
-            BO.Role.Manager => BO.Hamal.cancelByManager,
-            BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
-            _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
-        };
-
-        // שימוש בנעילה לעדכון ב-DAL
-        lock (AdminManager.BlMutex)
-        {
-            var updatedAssignment = assign with
-            {
-                assignKind = (DO.Hamal)newAssignKind
-            };
-            s_dal.assignment.Update(updatedAssignment);
+            throw new Exception($"No assignment found for Volunteer ID={volunteerId} and Call ID={callId}.");
         }
 
-        // עדכון סטטוס הקריאה
-        var x = ConvertToBOCall(call);
-        x.Status = Status.open;
+        if (assignments.Count > 1)
+        {
+            throw new Exception($"Multiple assignments found for Volunteer ID={volunteerId} and Call ID={callId}.");
+        }
+        lock (AdminManager.BlMutex)
+        {
+            // בדיקת הקריאה
+            call = s_dal.call.Read(callId);
+        }
+        if (call == null)
+        {
+            throw new Exception($"Call with ID={callId} does not exist.");
 
-        // עדכון צופים מחוץ לנעילה
-        CallManager.Observers.NotifyListUpdated(); // שלב 5
+
+            var assign = assignments.First();
+
+            // קביעת סוג הביטול בהתאם לתפקיד
+            BO.Hamal newAssignKind = role switch
+            {
+                BO.Role.Manager => BO.Hamal.cancelByManager,
+                BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
+                _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
+            };
+
+            // שימוש בנעילה לעדכון ב-DAL
+            lock (AdminManager.BlMutex)
+            {
+                var updatedAssignment = assign with
+                {
+                    assignKind = (DO.Hamal)newAssignKind
+                };
+                s_dal.assignment.Update(updatedAssignment);
+            }
+
+            // עדכון סטטוס הקריאה
+            var x = ConvertToBOCall(call);
+            x.Status = Status.open;
+
+            // עדכון צופים מחוץ לנעילה
+            CallManager.Observers.NotifyListUpdated(); // שלב 5
+        }
     }
     internal static void CloseCallAssignment(int volunteerId, int callId)
     {
