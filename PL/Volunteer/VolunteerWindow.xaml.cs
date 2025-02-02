@@ -25,8 +25,6 @@ namespace PL.Volunteer
         public ObservableCollection<BO.CallInList> Calls { get; set; } = new ObservableCollection<BO.CallInList>();
         private volatile DispatcherOperation? _volunteerObserverOperation = null;
         private volatile DispatcherOperation? _callObserverOperation = null;
-
-        // public ObservableCollection<BO.OpenCallInList> VolunteerCalls { get; set; } = new ObservableCollection<BO.OpenCallInList>();
         public bool IsVolunteerActive => CurrentVolunteer?.IsActive ?? true;
         public BO.Volunteer? CurrentVolunteer
         {

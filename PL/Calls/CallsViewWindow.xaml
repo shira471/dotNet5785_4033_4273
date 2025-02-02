@@ -79,8 +79,45 @@
                   BorderThickness="1"
                   MouseDoubleClick="CallDataGrid_MouseDoubleClick">
             <DataGrid.Columns>
+                <!-- עמודת ID -->
                 <DataGridTextColumn Header="Call ID" Binding="{Binding CallId,Mode=TwoWay}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status,Mode=TwoWay}" />
+
+                <!-- עמודת סטטוס עם CellStyle -->
+                <DataGridTextColumn Header="Status" Binding="{Binding Status,Mode=TwoWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <!-- סטטוס: closed -->
+                                <DataTrigger Binding="{Binding Status}" Value="closed">
+                                    <Setter Property="Background" Value="#DFF6DD" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </DataTrigger>
+                                <!-- סטטוס: inProgress -->
+                                <DataTrigger Binding="{Binding Status}" Value="inProgres">
+                                    <Setter Property="Background" Value="#FFF7CC" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </DataTrigger>
+                                <!-- סטטוס: closedInRisk -->
+                                <DataTrigger Binding="{Binding Status}" Value="closedInRisk">
+                                    <Setter Property="Background" Value="#FFD9B3" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                                <!-- סטטוס: open -->
+                                <DataTrigger Binding="{Binding Status}" Value="open">
+                                    <Setter Property="Background" Value="#DCEBFF" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                </DataTrigger>
+                                <!-- סטטוס: openInRisk -->
+                                <DataTrigger Binding="{Binding Status}" Value="openInRisk">
+                                    <Setter Property="Background" Value="#FFCCD2" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+
+                <!-- עמודות נוספות -->
                 <DataGridTextColumn Header="Call Type" Binding="{Binding CallType,Mode=TwoWay}" />
                 <DataGridTextColumn Header="Volunteer Name" Binding="{Binding LastVolunteerName,Mode=TwoWay}" />
                 <DataGridTextColumn Header="Total Allocations" Binding="{Binding TotalAssignments,Mode=TwoWay}" />

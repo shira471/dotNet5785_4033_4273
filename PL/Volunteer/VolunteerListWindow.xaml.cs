@@ -109,32 +109,6 @@ public partial class VolunteerListWindow : Window
         this.Close();
     }
 
-    // Function to view details of the selected volunteer
-    //private void btnView_Click(object sender, RoutedEventArgs e)
-    //{
-    //    if (vm.SelectedVolunteer == null)
-    //    {
-    //        MessageBox.Show("No volunteer selected for viewing.", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-    //        return;
-    //    }
-    //    try
-    //    {
-    //        var volunteerDetails = s_bl.Volunteer.GetVolunteerDetails(vm.SelectedVolunteer.Id); // Get volunteer details from BL
-
-    //        // Construct a string with the volunteer's details
-    //        string details = $"Name: {volunteerDetails.FullName}\n" +
-    //                         $"Phone Number: {volunteerDetails.Phone}\n" +
-    //                         $"Role: {volunteerDetails.Role}";
-
-    //        // Display the details in a message box
-    //        MessageBox.Show(details, "Volunteer Details", MessageBoxButton.OK, MessageBoxImage.Information);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        MessageBox.Show($"Unable to view volunteer details: {ex.Message}", "View Error", MessageBoxButton.OK, MessageBoxImage.Error);
-    //    }
-    //}
-
     private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (vm.SelectedVolunteer == null)

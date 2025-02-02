@@ -7,26 +7,109 @@
         Title="Volunteer Calls History" Height="640" Width="800" Background="#F0F8FF" FontFamily="Segoe UI" Closed="Window_Closed" Loaded="Window_Loaded">
 
     <Window.Resources>
-        <!-- עיצוב כפתורים ותיבות -->
-        <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="BorderBrush" Value="#4682B4"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Background" Value="White"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- טעינת ערכת הנושא -->
+                <ResourceDictionary Source="../DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style TargetType="DataGrid">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="BorderBrush" Value="#4682B4"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="RowBackground" Value="White"/>
-            <Setter Property="AlternatingRowBackground" Value="#F0F8FF"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#D3D3D3"/>
-            <Setter Property="VerticalGridLinesBrush" Value="#D3D3D3"/>
-        </Style>
+            <!-- עיצוב ComboBox מותאם אישית -->
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BorderBrush" Value="#4682B4"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Background" Value="White"/>
+            </Style>
+
+            <!-- עיצוב DataGrid מותאם אישית -->
+            <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="BorderBrush" Value="#4682B4"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="RowBackground" Value="White"/>
+                <Setter Property="AlternatingRowBackground" Value="#F0F8FF"/>
+                <Setter Property="HorizontalGridLinesBrush" Value="#D3D3D3"/>
+                <Setter Property="VerticalGridLinesBrush" Value="#D3D3D3"/>
+            </Style>
+
+            <!-- עיצוב כפתורים עם אנימציה -->
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <!-- עיצוב בסיסי -->
+                <Setter Property="Width" Value="150"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#4682B4"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- טרנספורמציה להגדלה -->
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- תבנית עיצוב -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- טריגרים -->
+                <Style.Triggers>
+                    <!-- אנימציה להגדלה בעת ריחוף -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#B0E0E6"/>
+                        <!-- צבע בריחוף -->
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1" Duration="0:0:0.2"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+
+                    <!-- צבע בעת לחיצה -->
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#4682B4"/>
+                        <!-- צבע כחול כהה בלחיצה -->
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
+
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

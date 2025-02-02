@@ -20,16 +20,12 @@ using BO;
 
 namespace PL.Volunteer
 {
-    /// <summary>
-    /// Interaction logic for AdminWindow.xaml
-    /// </summary>
     public partial class AdminWindow : Window, INotifyPropertyChanged
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private static VolunteerListWindow? _volunteerWindow = null;
         private static CallsViewWindow? _callsWindow = null;
         public ObservableCollection<CallInList> CallStatusSummaries { get; set; } = new();
-        //public bool IsSimulatorRunning { get; set; }
         public int Interval { get; set; } = 1;
         private bool _isSimulatorRunning;
         public bool IsSimulatorRunning
@@ -187,35 +183,6 @@ namespace PL.Volunteer
             popupDetails.IsOpen = false; // סגירת ה-Popup
         }
 
-        //private void ToggleSimulator_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (IsSimulatorRunning)
-        //    {
-        //        s_bl.Admin.StopSimulator();
-        //        IsSimulatorRunning = false;
-        //    }
-        //    else
-        //    {
-        //        s_bl.Admin.StartSimulator(Interval);
-        //        IsSimulatorRunning = true;
-        //    }
-        //}
-
-        //public DateTime CurrentTime
-        //{
-        //    get { return (DateTime)GetValue(CurrentTimeProperty); }
-        //    set
-        //    {
-        //        if (Dispatcher.CheckAccess())
-        //        {
-        //            SetValue(CurrentTimeProperty, value); // Update from the UI thread
-        //        }
-        //        else
-        //        {
-        //            Dispatcher.Invoke(() => SetValue(CurrentTimeProperty, value)); // Update from a different thread
-        //        }
-        //    }
-        //}
 
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register(
@@ -316,30 +283,6 @@ namespace PL.Volunteer
             }
         }
 
-        //private void btnCallStatus_Click(object sender, RoutedEventArgs e)
-        //{
-        //    // קריאה למתודה שמחזירה את מספר הקריאות לפי סטטוסים
-        //    int[] temp = s_bl.Call.GetCallCountsByStatus();
-        //    // שליפת הסטטוסים על פי סדרם ב-Enum Status
-        //    int openCalls = temp[(int)Status.open];
-        //    int closeCalls = temp[(int)Status.closed];
-        //    int inProgressCalls = temp[(int)Status.inProgres];
-        //    int openInRiskCalls = temp[(int)Status.openInRisk];
-        //    int expiredCalls = temp[(int)Status.expired];
-        //    int closeInRiskCalls = temp[(int)Status.closeInRisk];
-
-        //    // בניית ההודעה להצגה
-        //    string message = $"Open calls: {openCalls}\n" +
-        //                     $"Close calls: {closeCalls}\n" +
-        //                     $"Calls in progress: {inProgressCalls}\n" +
-        //                     $"Open in risk calls: {openInRiskCalls}\n" +
-        //                     $"Close in risk calls: {closeInRiskCalls}\n" +
-        //                     $"Expired Calls: {expiredCalls}";
-
-        //    // הצגת ההודעה
-        //    MessageBox.Show(message, "Call Status", MessageBoxButton.OK, MessageBoxImage.Information);
-        //}
-
         private void btnCallManage_Click(object sender, RoutedEventArgs e)
         {
             if (_callsWindow == null)
@@ -370,73 +313,6 @@ namespace PL.Volunteer
 
         private volatile bool _isSimulationRunning = false;
         private CancellationTokenSource _cts;
-
-        //private async void btnStrSimulat_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Button btn = sender as Button;
-        //    if (btn == null) return;
-
-        //    if (_isSimulationRunning) // עצירת סימולטור אם פועל
-        //    {
-        //        _isSimulationRunning = false;
-        //        _cts?.Cancel();
-        //        IsSimulatorRunning = false;
-        //        btn.Content = "Start Simulator";
-        //        MessageBox.Show("The simulator has stopped successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        //        return;
-        //    }
-
-        //    // הפעלת הסימולטור
-        //    _isSimulationRunning = true;
-        //    IsSimulatorRunning = true;
-        //    btn.Content = "Stop Simulator";
-        //    MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-
-        //    if (_cts == null || _cts.Token.IsCancellationRequested)
-        //    {
-        //        _cts = new CancellationTokenSource();
-        //    }
-
-        //    try
-        //    {
-        //        await Task.Run(async () =>
-        //        {
-        //            try
-        //            {
-        //                while (_isSimulationRunning && !_cts.Token.IsCancellationRequested)
-        //                {
-        //                    var x = Interval;
-        //                    var y = s_bl;
-
-        //                    if (Interval != null)
-        //                    {
-        //                        // ✅ עדכון סימולטור
-        //                        s_bl.Admin.StartSimulator(Interval);
-        //                    }
-        //                    s_bl.Volunteer.SimulateVolunteers();
-        //                    PerformSimulationLogic();
-
-
-
-        //                    await Task.Delay(5000, _cts.Token);
-        //                }
-        //            }
-        //            catch (TaskCanceledException)
-        //            {
-        //                Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                Application.Current.Dispatcher.Invoke(() =>
-        //                    MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
-        //            }
-        //        }, _cts.Token);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error during simulation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //}
         private void btnStrSimulat_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -489,7 +365,7 @@ namespace PL.Volunteer
                         }
                         catch (TaskCanceledException)
                         {
-                            Console.WriteLine("⚠ סימולטור נעצר בצורה מסודרת.");
+                            Console.WriteLine("simulation stopped perfect");
                         }
                         catch (Exception ex)
                         {
@@ -514,34 +390,6 @@ namespace PL.Volunteer
             var clock = s_bl.Admin.GetSystemClock();
             Console.WriteLine($"Current system clock: {clock}");
         }
-
-        //private void SimulationTime_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        // קבלת הערך מה-TextBox
-        //        if (int.TryParse(SimulationIntervalTextBox.Text, out int newInterval) && newInterval > 0)
-        //        {
-        //            Interval = newInterval; // עדכון קצב הסימולציה
-        //            OnPropertyChanged(nameof(Interval)); // עדכון ה-Binding
-
-        //            if (IsSimulatorRunning)
-        //            {
-        //                // עדכון מהירות הסימולציה בזמן ריצה
-        //                s_bl.Admin.StartSimulator(Interval);
-        //                MessageBox.Show($"Simulation speed updated to {Interval} minutes per second.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Please enter a valid positive number for simulation speed.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error updating simulation speed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //}
         private void SimulationTime_Click(object sender, RoutedEventArgs e)
         {
             try

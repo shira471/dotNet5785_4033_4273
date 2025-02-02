@@ -21,12 +21,12 @@
         <local:MainWindowVM />
     </Window.DataContext>
 
-    <!-- משאבים (Resources) -->
+    <!-- משאבים (Resources) --><!--
     <Window.Resources>
         <converters:SimulatorButtonConverter x:Key="SimulatorButtonConverter"/>
         <converters:InverseBooleanConverter x:Key="BoolToVisibilityConverter"/>
 
-        <!-- עיצוב כפתורים מעוגלים -->
+        --><!-- עיצוב כפתורים מעוגלים --><!--
         <Style TargetType="Button">
             <Setter Property="Width" Value="280"/>
             <Setter Property="Height" Value="45"/>
@@ -61,6 +61,91 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+    </Window.Resources>-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DarkTheme.xaml"/>
+                <!-- טעינת ערכת הנושא -->
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- עיצוב הכפתור -->
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <!-- עיצוב בסיסי -->
+                <Setter Property="Width" Value="280"/>
+                <Setter Property="Height" Value="45"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#4682B4"/>
+                <!-- כחול כהה -->
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- אנימציה של הגדלת הכפתור -->
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- תבנית עיצוב (ControlTemplate) -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="20"
+                                Padding="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- טריגרים לשינוי צבעים ואנימציה -->
+                <Style.Triggers>
+                    <!-- צבע בריחוף -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#5A9FD4"/>
+                        <!-- כחול בהיר -->
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                                    <!-- הגדלה -->
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                 To="1" Duration="0:0:0.2"/>
+                                    <!-- חזרה לגודל המקורי -->
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                 To="1" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+
+                    <!-- צבע בלחיצה -->
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#2E5A9F"/>
+                        <!-- כחול כהה יותר -->
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid Margin="20">
