@@ -7,13 +7,14 @@
         xmlns:converters="clr-namespace:PL.Converters"
         mc:Ignorable="d"
         Title="Admin Window" Loaded="AdminWindow_Loaded" Closed="AdminWindow_Closed" 
-        Height="900" Width="900"
+        Height="900" Width="1000"
         Background="#F0F8FF" FontFamily="Segoe UI">
     <Window.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
-        <!-- עיצוב כפתורים מעוגלים -->
+        <!-- עיצוב כפתורים מעוגלים עם אנימציה -->
         <Style TargetType="Button">
+            <!-- עיצוב בסיסי -->
             <Setter Property="Width" Value="150"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="FontSize" Value="14"/>
@@ -27,21 +28,58 @@
                     <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
                 </Setter.Value>
             </Setter>
+
+            <!-- הגדרת RenderTransform עבור אנימציה -->
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+
+            <!-- תבנית עיצוב (ControlTemplate) -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="20"
-                                Padding="10">
+                            CornerRadius="20"
+                            Padding="10">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+
+            <!-- טריגרים לעיצוב דינמי ואנימציה -->
             <Style.Triggers>
+                <!-- שינוי צבע בעת ריחוף -->
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#5A9FD4"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- אנימציה של הגדלה -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1.1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1.1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- חזרה לגודל המקורי -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
+
+                <!-- שינוי צבע בעת לחיצה -->
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="#2E5A9F"/>
                 </Trigger>
@@ -60,6 +98,7 @@
             <Setter Property="Height" Value="30"/>
         </Style>
 
+        <!-- עיצוב תיבות סיסמה -->
         <Style TargetType="PasswordBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10"/>
@@ -94,6 +133,7 @@
         </Style>
     </Window.Resources>
 
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -106,9 +146,20 @@
         </Grid.RowDefinitions>
 
         <!-- תוכן ראשי -->
-        <StackPanel Grid.Column="0" Margin="10">
+        <StackPanel Grid.Column="0" Margin="0,0,20,20">
             <!-- כפתורי ניהול זמן -->
-            <GroupBox Header="Time Management" Margin="5">
+            <!-- הצגת השעון -->
+
+            <!-- כפתורי ניהול זמן -->
+            <!-- הצגת השעון -->
+
+            <!-- כפתורי ניהול זמן -->
+            <!-- הצגת השעון -->
+
+            <!-- כפתורי ניהול זמן -->
+            <!-- הצגת השעון -->
+            <!-- כפתורי ניהול זמן -->
+            <GroupBox Header="Time Management">
                 <StackPanel>
                     <Label Content="Simulation Interval (minutes)" VerticalAlignment="Center" Margin="5"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -126,10 +177,13 @@
                 </StackPanel>
             </GroupBox>
 
+            <!-- הצגת השעון -->
+           
+
             <!-- Risk Time Span -->
             <GroupBox Header="Risk Time Span" Margin="5">
                 <StackPanel>
-                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Height="49"/>
                     <Button Content="Update Risk Time Span" Click="UpdateMaxRange_Click" Width="200" Margin="5"/>
                 </StackPanel>
             </GroupBox>
@@ -148,7 +202,7 @@
             <!-- עדכון זמן הסימולציה -->
             <GroupBox Header="Simulation Interval Update" Margin="5">
                 <StackPanel>
-                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                    <TextBox Text="{Binding MaxYearRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Height="45"/>
                     <Button Content="Update Simulation Interval" IsEnabled="{Binding IsSimulatorRunning, Converter={StaticResource InverseBooleanConverter}}" Click="SimulationTime_Click" Width="200" Margin="5"/>
                 </StackPanel>
             </GroupBox>
@@ -160,12 +214,11 @@
             </StackPanel>
 
             <!-- הצגת השעון -->
-            <Label Content="{Binding CurrentTime}" HorizontalAlignment="Center"
-                   VerticalAlignment="Top" Margin="10" FontSize="20" FontWeight="Bold"/>
+
         </StackPanel>
 
         <!-- DataGrid בצד ימין -->
-        <StackPanel Grid.Column="1" Margin="10">
+        <StackPanel Grid.Column="1" Margin="10,10,10,450">
             <TextBlock Text="Call Status Summary" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
             <DataGrid Name="dgCallStatus" ItemsSource="{Binding CallStatusSummaries}"
                       AutoGenerateColumns="False" MouseDoubleClick="DataGrid_MouseDoubleClick"
@@ -174,8 +227,18 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="2*" />
                     <DataGridTextColumn Header="Count" Binding="{Binding TotalAssignments}" Width="*" />
+
                 </DataGrid.Columns>
             </DataGrid>
+
+
+            <!-- הצגת התאריך והשעה -->
+            <Label Content="{Binding CurrentTime}" 
+           HorizontalAlignment="Center" 
+           Margin="0,10,0,0" 
+           FontSize="20" 
+           FontWeight="Bold" 
+           Foreground="#4682B4"/>
         </StackPanel>
         <!-- Popup להצגת פרטי הקריאה -->
         <Popup Name="popupDetails" Placement="Mouse" StaysOpen="True">

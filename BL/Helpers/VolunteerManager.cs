@@ -76,17 +76,6 @@ internal static class VolunteerManager
             }
         }
 
-        //// Send notifications outside the lock for all updated volunteers
-        //foreach (var volunteerId in updatedVolunteersIds)
-        //{
-        //    Observers.NotifyItemUpdated(volunteerId); // Stage 5
-        //}
-
-        //// Optionally, notify list updated if there were changes
-        //if (updatedVolunteersIds.Any())
-        //{
-        //    Observers.NotifyListUpdated(); // Stage 5
-        //}
         NotifyObservers(updatedVolunteersIds);
     }
     internal static void SimulateVolunteerActivity(DateTime startClock, DateTime endClock)
@@ -125,18 +114,6 @@ internal static class VolunteerManager
                 }
             }
         }
-
-        //// Send notifications outside the lock for all updated volunteers
-        //foreach (var volunteerId in updatedVolunteersIds)
-        //{
-        //    Observers.NotifyItemUpdated(volunteerId); // Stage 5
-        //}
-
-        //// Optionally, notify list updated if there were changes
-        //if (updatedVolunteersIds.Any())
-        //{
-        //    Observers.NotifyListUpdated(); // Stage 5
-        //}
         NotifyObservers(updatedVolunteersIds);
     }
 

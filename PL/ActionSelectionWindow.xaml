@@ -5,8 +5,9 @@
         Background="#F0F8FF" FontFamily="Segoe UI">
 
     <Window.Resources>
-        <!-- עיצוב כפתורים מעוגלים -->
+        <!-- עיצוב כפתורים מעוגלים עם אנימציה -->
         <Style TargetType="Button">
+            <!-- מאפיינים בסיסיים -->
             <Setter Property="Width" Value="150"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="FontSize" Value="14"/>
@@ -19,27 +20,67 @@
                     <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="10"/>
                 </Setter.Value>
             </Setter>
+
+            <!-- הגדרת RenderTransform עבור האנימציה -->
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+
+            <!-- תבנית עיצוב (ControlTemplate) -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="20"
-                                Padding="10">
+                            CornerRadius="20"
+                            Padding="10">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+
+            <!-- טריגרים לעיצוב דינמי ואנימציה -->
             <Style.Triggers>
+                <!-- שינוי צבע והגדלה בעת ריחוף -->
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#B0E0E6"/>
+                    <!-- צבע בהיר -->
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- הגדלה בעת ריחוף -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1.1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1.1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- חזרה לגודל המקורי -->
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                             To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                             To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
+
+                <!-- שינוי צבע בעת לחיצה -->
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="#4682B4"/>
+                    <!-- צבע כחול כהה -->
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
+
 
     <Grid Margin="10">
         <!-- הגדרת שורות וטורים -->

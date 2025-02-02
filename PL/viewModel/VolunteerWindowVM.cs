@@ -46,18 +46,6 @@ internal class VolunteerWindowVM : ViewModelBase
             OnPropertyChanged(nameof(CurrentVolunteer));
         }
     }
-    //private BO.Call? _currentCall;
-    //public BO.Call? CurrentCall
-    //{
-    //    get => _currentCall;
-    //    set
-    //    {
-    //        _currentCall = value;
-    //        OnPropertyChanged(nameof(CurrentCall));
-            
-    //    }
-   // }
-
 
     private BO.Call _assignedCall;
     public BO.Call AssignedCall
@@ -89,19 +77,6 @@ internal class VolunteerWindowVM : ViewModelBase
             MessageBox.Show($"Error loading volunteer details: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-
-    //private void LoadAssignedCall()
-    //{
-    //    try
-    //    {
-    //        AssignedCall = _bl.Call.GetAssignedCallByVolunteer(_volunteerId);
-
-    //    }
-    //    catch (Exception)
-    //    {
-    //        AssignedCall = null;
-    //    }
-    //}
 
     private void LoadAssignedCall()
     {
