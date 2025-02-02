@@ -456,6 +456,7 @@ namespace PL.Volunteer
             // הפעלת הסימולטור
             _isSimulationRunning = true;
             IsSimulatorRunning = true;
+            s_bl.Admin.StartSimulator(Interval);
             btn.Content = "Stop Simulator";
             s_bl.Admin.StartSimulator(Interval);
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -474,13 +475,13 @@ namespace PL.Volunteer
                     {
                         try
                         {
-                            s_bl.Admin.StartSimulator(Interval);
                             try
                             {
                                 s_bl.Volunteer.SimulateVolunteers();
                             }
-                            catch(Exception ex) { 
-                                MessageBox.Show($"Error: {ex.Message}","ERROR",MessageBoxButton.OK, MessageBoxImage.Error);
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Error: {ex.Message}", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             PerformSimulationLogic();
 

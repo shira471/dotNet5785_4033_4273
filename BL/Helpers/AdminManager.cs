@@ -169,28 +169,6 @@ internal static class AdminManager //stage 4
             }
         }
     }
-
-    //internal static void Stop()
-    //{
-    //    if (s_thread is not null)
-    //    {
-    //        try
-    //        {
-    //            s_stop = true;
-    //            _cancellationTokenSource.Cancel();
-    //            s_thread.Interrupt();
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Console.WriteLine($"Error stopping thread: {ex.Message}");
-    //        }
-    //        finally
-    //        {
-    //            s_thread = null;
-    //        }
-    //    }
-    //}
-
     private static Task? _simulateTask = null;
 
     private static void clockRunner()
@@ -221,31 +199,6 @@ internal static class AdminManager //stage 4
             }
         }
     }
-    //private static async Task clockRunnerAsync()
-    //{
-    //    var cancellationToken = _cancellationTokenSource.Token;
-
-    //    while (!cancellationToken.IsCancellationRequested)
-    //    {
-    //        DateTime oldClock = Now; // שומר את הזמן לפני העדכון
-    //        DateTime newClock = Now.AddMinutes(s_interval); // מחשב את הזמן החדש
-
-    //        UpdateClock(newClock); // מעדכן את השעון
-
-    //        // קריאה לפונקציה עם הפרמטרים המתאימים
-    //        await PerformPeriodicTasksAsync(oldClock, newClock);
-    //        // השהיה של שנייה
-    //        try
-    //        {
-    //            await Task.Delay(1000, cancellationToken);
-    //        }
-    //        catch (TaskCanceledException) 
-    //        {
-    //            break;
-    //        }
-    //    }
-    //}
-
     private static async Task PerformPeriodicTasksAsync(DateTime oldClock, DateTime newClock)
     {
         if (_simulateTask is null || _simulateTask.IsCompleted)

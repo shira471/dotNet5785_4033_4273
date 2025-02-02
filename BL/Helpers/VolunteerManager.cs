@@ -241,13 +241,12 @@ internal static class VolunteerManager
             if (AdminManager.BlMutex != null)
             {
                     BO.CallInProgress? callInProgress;
-                    lock (AdminManager.BlMutex)
-                    {
-
-                        callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
-                    }
-                    // אם אין למתנדב קריאה בטיפולו
-                    if (callInProgress == null)
+                lock (AdminManager.BlMutex)
+                { 
+                    callInProgress = converterFromDoToBoVolunteer(doVolunteer).CurrentCall;
+                }
+                // אם אין למתנדב קריאה בטיפולו
+                if (callInProgress == null)
                     {
                         IEnumerable<BO.OpenCallInList> openCallsOfVolunteer = CallManager.GetOpenCallsByVolunteer(doVolunteer.idVol);
                         int openCalls = openCallsOfVolunteer.Count();
@@ -256,7 +255,6 @@ internal static class VolunteerManager
                             int callId = openCallsOfVolunteer.Skip(s_rand.Next(0, openCalls)).First().Id;
                         try
                         {
-                            lock(AdminManager.BlMutex)
                                 CallManager.AssignCallToVolunteer(doVolunteer.idVol, callId);
                         }
                         catch (Exception ex)
@@ -267,25 +265,30 @@ internal static class VolunteerManager
                     }
                     else // אם למתנדב יש קריאה בטיפולו
                     {
-                        int VolunteerSpeed = s_rand.Next(5, 50);
-                        var arrivingTime = TimeSpan.FromHours(callInProgress.DistanceFromVolunteer / VolunteerSpeed);
+                    int VolunteerSpeed = s_rand.Next(10, 60); // מהירות הליכה בקמ"ש
+                    var arrivingTime = TimeSpan.FromHours(callInProgress.DistanceFromVolunteer / VolunteerSpeed);
                         var handleTime = TimeSpan.FromMinutes(s_rand.Next(5, 30));
                         var totalTime = arrivingTime + handleTime;
 
-                        if (callInProgress.OpenTime + totalTime < callInProgress.MaxCloseTime)
-                        {
-                                CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.CallId, BO.Role.Manager);
-                        }
-                        else if (s_rand.Next(0, 10) != 0) // 10% סיכוי לביטול
+
+                    if (callInProgress.OpenTime + totalTime > callInProgress.MaxCloseTime)
+                    {
+                        CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.CallId, BO.Role.Manager);
+                    }
+                    else
+                    {
+                        // 95% סיכוי לסגירה מוצלחת, 5% סיכוי לביטול
+                        if (s_rand.Next(0, 100) < 95)  // 95% מהפעמים
                         {
                             CallManager.CloseCallAssignment(doVolunteer.idVol, callInProgress.CallId);
                         }
-                        else // 90% סיכוי לסגירה מוצלחת
+                        else // 5% סיכוי לביטול מוצלחת
                         {
                             CallManager.CancelCallAssignment(doVolunteer.idVol, callInProgress.CallId, (BO.Role)doVolunteer.role);
-                           
+
                         }
                     }
+                }
             }
         }
     }
