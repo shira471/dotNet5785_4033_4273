@@ -131,18 +131,18 @@
         <!-- Open Time -->
         <Label Content="Open Time:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left">
-            <DatePicker SelectedDate="{Binding CurrentCall.OpenTime, Mode=TwoWay}" Width="200" />
-            <TextBox Text="{Binding CurrentCall.OpenTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
+            <DatePicker SelectedDate="{Binding CurrentCall.OpenTime, Mode=OneWay}" Width="200" IsEnabled="False"/>
+            <TextBox Text="{Binding CurrentCall.OpenTime, StringFormat='{}{0:HH:mm}', Mode=OneWay}" 
+                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" IsReadOnly="True" />
         </StackPanel>
 
         <!-- Max End Time -->
         <Label Content="Maximum Time:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" FontWeight="Bold" />
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left">
-            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay}" 
+            <DatePicker SelectedDate="{Binding CurrentCall.MaxEndTime, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 DisplayDateStart="{x:Static sys:DateTime.Today}" Width="200" />
             <TextBox Text="{Binding CurrentCall.MaxEndTime, StringFormat='{}{0:HH:mm}', Mode=TwoWay}" 
-                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" />
+                     Width="80" Margin="10,0,0,0" Background="White" BorderBrush="Gray" LostFocus="MaxEndTimeTextBox_LostFocus"/>
         </StackPanel>
 
         <!-- Address -->

@@ -28,7 +28,7 @@ namespace PL.Call
         public ObservableCollection<CallType> CallTypes { get; set; }
         private volatile DispatcherOperation? _updateCallListOperation = null;
         private volatile DispatcherOperation? _callUpdatedOperation = null;
-
+        
         public BO.Call? CurrentCall
         {
             get { return (BO.Call?)GetValue(CurrentCallProperty); }
@@ -37,7 +37,7 @@ namespace PL.Call
 
         public static readonly DependencyProperty CurrentCallProperty =
             DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(AddCallWindow), new PropertyMetadata(null));
-
+       
         public string ButtonText
         {
             get { return (string)GetValue(ButtonTextProperty); }
@@ -57,6 +57,7 @@ namespace PL.Call
             s_bl = BlApi.Factory.Get(); // Factory pattern for BL
                                         // רישום משקיף לעדכון רשימת הקריאות
                                         // רישום משקיף לעדכון רשימת הקריאות
+            DateTime systemClock = s_bl.Admin.GetSystemClock();
             s_bl.Call.AddObserver(UpdateCallList);
             if (id == 0)
             {
@@ -64,7 +65,8 @@ namespace PL.Call
                 CurrentCall = new BO.Call
                 {
                     CallType = CallType.Breakfast,            // חמל לארוחת בוקר
-                    OpenTime = DateTime.Now
+                    OpenTime = systemClock,
+                    MaxEndTime = systemClock.AddDays(1),
                 }; // ברירת מחדל
                 ButtonText = "Add";
             }
@@ -85,7 +87,20 @@ namespace PL.Call
 
             DataContext = this;
         }
+        private void MaxEndTimeTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (CurrentCall?.MaxEndTime == null)
+                return;
 
+            if (sender is TextBox textBox)
+            {
+                if (TimeSpan.TryParse(textBox.Text, out TimeSpan newTime))
+                {
+                    DateTime currentDate = CurrentCall.MaxEndTime.Value.Date; // שומר את התאריך
+                    CurrentCall.MaxEndTime = currentDate.Add(newTime);
+                }
+            }
+        }
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
