@@ -64,7 +64,6 @@ public class AdminImplementation : IAdmin
             AdminManager.InitializeDB(); // Stage 7
         }
         AdminManager.ThrowOnSimulatorIsRunning(); // Stage 7
-
     }
 
     // Reset the database

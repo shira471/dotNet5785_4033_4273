@@ -68,7 +68,19 @@ public partial class CallsViewWindow : Window
 
     private void btnBack_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        foreach (Window window in Application.Current.Windows)
+        {
+            if (window is AdminWindow adminWindow) // מחפש את AdminWindow בלבד
+            {
+                adminWindow.Show(); // מבטיח שהחלון גלוי
+                adminWindow.Activate(); // מביא אותו לקדמת המסך
+                this.Close(); // סוגר את VolunteerListWindow
+                return;
+            }
+        }
+
+        // אם לא נמצא AdminWindow, ניתן להציג הודעה
+        MessageBox.Show("Admin window is not open.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 
     private void CallDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -101,7 +113,7 @@ public partial class CallsViewWindow : Window
                     {
                         var updateWindow = new AddCallWindow(selectedCall.CallId); // חלון לעדכון
                         updateWindow.Show();
-                        vm.LoadCalls(); // רענון הרשימה
+                   //     vm.LoadCalls(); // רענון הרשימה
                     }
                     catch (Exception ex)
                     {

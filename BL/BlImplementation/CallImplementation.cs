@@ -207,11 +207,13 @@ public class CallImplementation : ICall
     public BO.Call GetCallDetails(string calld)
     {
         IEnumerable<DO.Call> calls;
+        DO.Call call;
+        int callId = 0;
         lock (AdminManager.BlMutex)
         {
             calls = _dal.call.ReadAll();
-        }
-        int callId = 0;
+        
+        
         foreach (var call2 in calls)
         {
             if (call2.detail == calld)
@@ -219,9 +221,8 @@ public class CallImplementation : ICall
                 callId = call2.id;
             }
         }
-        DO.Call call;
-        lock (AdminManager.BlMutex)
-        {
+      
+        
             // קריאת הקריאה הספציפית משכבת ה-DAL לפי המזהה
             call = _dal.call.Read(int.Parse(calld));
         }

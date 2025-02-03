@@ -25,55 +25,55 @@ internal static class CallManager
     /// <param name="oldClock">The previous clock.</param>
     /// <param name="newClock">The new clock.</param>
 
-    internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
-    {
-        Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; // Optional for debugging
+    //internal static void SimulateCallActivity(DateTime startClock, DateTime endClock)
+    //{
+    //    Thread.CurrentThread.Name = $"SimulationThread{++s_periodicCounter}"; // Optional for debugging
 
-        List<DO.Call> calls;
+    //    List<DO.Call> calls;
 
-        // Lock for reading all calls, converting to concrete list to avoid deferred query execution
-        lock (AdminManager.BlMutex) // Lock for DAL access
-        {
-            calls = s_dal.call.ReadAll().ToList(); // Convert to a concrete list
-        }
+    //    // Lock for reading all calls, converting to concrete list to avoid deferred query execution
+    //    lock (AdminManager.BlMutex) // Lock for DAL access
+    //    {
+    //        calls = s_dal.call.ReadAll().ToList(); // Convert to a concrete list
+    //    }
 
-        List<int> updatedCallIds = new List<int>(); // Collect IDs for notification
+    //    List<int> updatedCallIds = new List<int>(); // Collect IDs for notification
 
-        // Perform simulation over the time period
-        for (DateTime currentTime = startClock; currentTime <= endClock; currentTime = currentTime.AddDays(1))
-        {
-            foreach (var call in calls)
-            {
-                // Example: Automatically close calls if they exceed the maximum time
-                if (call.maximumTime.HasValue && currentTime > call.maximumTime)
-                {
-                    var updatedCall = call with { maximumTime = null }; // Example: Set maximumTime to null to indicate closure
+    //    // Perform simulation over the time period
+    //    for (DateTime currentTime = startClock; currentTime <= endClock; currentTime = currentTime.AddDays(1))
+    //    {
+    //        foreach (var call in calls)
+    //        {
+    //            // Example: Automatically close calls if they exceed the maximum time
+    //            if (call.maximumTime.HasValue && currentTime > call.maximumTime)
+    //            {
+    //                var updatedCall = call with { maximumTime = null }; // Example: Set maximumTime to null to indicate closure
 
-                    // Lock for updating the call in DAL
-                    lock (AdminManager.BlMutex) // Lock per update
-                    {
-                        s_dal.call.Update(updatedCall);
-                    }
+    //                // Lock for updating the call in DAL
+    //                lock (AdminManager.BlMutex) // Lock per update
+    //                {
+    //                    s_dal.call.Update(updatedCall);
+    //                }
 
-                    // Collect the updated call's ID for notification
-                    updatedCallIds.Add(updatedCall.id);
-                }
-            }
+    //                // Collect the updated call's ID for notification
+    //                updatedCallIds.Add(updatedCall.id);
+    //            }
+    //        }
 
-        }
+    //    }
 
-        // Notify observers outside the lock
-        foreach (var callId in updatedCallIds)
-        {
-            Observers.NotifyItemUpdated(callId);
-        }
+    //    // Notify observers outside the lock
+    //    foreach (var callId in updatedCallIds)
+    //    {
+    //        Observers.NotifyItemUpdated(callId);
+    //    }
 
-        // Optionally, notify that the whole list was updated if there were changes
-        if (updatedCallIds.Any())
-        {
-            Observers.NotifyListUpdated();
-        }
-    }
+    //    // Optionally, notify that the whole list was updated if there were changes
+    //    if (updatedCallIds.Any())
+    //    {
+    //        Observers.NotifyListUpdated();
+    //    }
+    //}
     internal static void PeriodicCallUpdates(DateTime oldClock, DateTime newClock)
     {
         // Set thread name for easier debugging
@@ -224,22 +224,7 @@ internal static class CallManager
         return R * c;
     }
     internal static double DegreesToRadians(double degrees) => degrees * (Math.PI / 180);
-    internal static bool IsVolunteerBusy(int volunteerId)
-    {
-        List<DO.Assignment> assignments;
-        DO.Volunteer v;
 
-        // שימוש ב-lock אחד כדי להבטיח גישה בטוחה
-        lock (AdminManager.BlMutex)
-        {
-            v = s_dal.volunteer.Read(volunteerId); // קריאת המתנדב
-            assignments = s_dal.assignment.ReadAll()
-                            .Where(a => a.volunteerId == volunteerId && a.assignKind == null)
-                            .ToList(); // טוען את כל הנתונים לזיכרון
-        }
-
-        return assignments.Any(); // חיפוש מחוץ ל-lock, בטוח כעת
-    }
     internal static IEnumerable<OpenCallInList> GetOpenCallsByVolunteer(int volunteerId, BO.CallType? callType = null, Enum? sortField = null)
     {
         List<DO.Call> calls;

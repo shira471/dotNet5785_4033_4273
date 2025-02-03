@@ -1,4 +1,5 @@
 ﻿using PL.viewModel;
+using PL.Volunteer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +33,24 @@ public partial class VolunteerCallsHistoryWindow : Window
 
     // ID of the volunteer whose call history is displayed
     private int VolunteerId;
+    private void BackButton_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (Window window in Application.Current.Windows)
+        {
+            if (window is VolunteerWindow volunteerWindow) // מחפש את VolunteerWindow בלבד
+            {
+                volunteerWindow.Show();   // מבטיח שהחלון יהיה גלוי
+                volunteerWindow.Activate(); // מביא אותו לקדמת המסך
+                this.Close(); // סוגר את החלון הנוכחי
+                return;
+            }
+        }
+
+        // אם VolunteerWindow לא פתוח, ניתן לפתוח אותו מחדש
+        var newVolunteerWindow = new VolunteerWindow();
+        newVolunteerWindow.Show();
+        this.Close();
+    }
 
     /// <summary>
     /// Constructor for the VolunteerCallsHistoryWindow.

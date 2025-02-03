@@ -82,9 +82,23 @@ namespace PL.Volunteer
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            // סגור את החלון וחזור לחלון הקודם
-            Close();
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is VolunteerListWindow volunteerListWindow) // מחפש את CallsViewWindow בלבד
+                {
+                    volunteerListWindow.Show();   // מבטיח שהחלון יהיה גלוי
+                    volunteerListWindow.Activate(); // מביא אותו לקדמת המסך
+                    this.Close(); // סוגר את VolunteerListWindow
+                    return;
+                }
+            }
+
+            // אם לא נמצא CallsViewWindow, ניתן לפתוח אותו מחדש
+            var newCallsViewWindow = new CallsViewWindow();
+            newCallsViewWindow.Show();
+            this.Close();
         }
+
 
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {

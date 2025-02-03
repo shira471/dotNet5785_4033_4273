@@ -116,7 +116,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+        <!-- כפתור אחורה -->
+        <Button Content="⬅ Back" 
+                Width="100" 
+                Height="35" 
+                FontSize="14" 
+                FontWeight="Bold" 
+                Background="#4682B4" 
+                Foreground="White" 
+                BorderThickness="0" 
+                Cursor="Hand"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Click="BackButton_Click" 
+                Margin="0,0,0,10"/>
         <!-- כותרת -->
         <TextBlock Text="Volunteer Calls History" 
                    FontSize="24" FontWeight="Bold" 

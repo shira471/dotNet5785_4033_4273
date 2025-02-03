@@ -129,9 +129,23 @@ namespace PL.Call
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            // סגור את החלון וחזור לחלון הקודם
-            Close();
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is CallsViewWindow callsViewWindow) // מחפש את CallsViewWindow בלבד
+                {
+                    callsViewWindow.Show();   // מבטיח שהחלון יהיה גלוי
+                    callsViewWindow.Activate(); // מביא אותו לקדמת המסך
+                    this.Close(); // סוגר את VolunteerListWindow
+                    return;
+                }
+            }
+
+            // אם לא נמצא CallsViewWindow, ניתן לפתוח אותו מחדש
+            var newCallsViewWindow = new CallsViewWindow();
+            newCallsViewWindow.Show();
+            this.Close();
         }
+
         private void Window_Louded(object sender, RoutedEventArgs e)
         {
             if (CurrentCall != null)

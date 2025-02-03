@@ -38,10 +38,10 @@ public static class Initialization
         double latitude = coordinates[0];
         double longitude = coordinates[1];
         //יצירת מנהל 1
-        s_dal!.volunteer.Create(new Volunteer(212314033, "jerusalem", "shira alfasi", "syrhlpsy7@gmail.com", "0584084178", "58850090", latitude, longitude, 10, true, Role.Manager, TypeDistance.air));
+        s_dal!.volunteer.Create(new Volunteer(212314033, "jerusalem", "shira alfasi", "syrhlpsy7@gmail.com", "0584084178", "58850090Aa@", latitude, longitude, 10, true, Role.Manager, TypeDistance.air));
         // הוספת מזהה המתנדב לרשימה
         volunteerIds.Add(212314033);
-        s_dal!.volunteer.Create(new Volunteer(325004273, "jerusalem", "ahuvi winkler", "a@gmail.com", "0507678050", "1234567", latitude, longitude, 10, true, Role.Manager, TypeDistance.air));
+        s_dal!.volunteer.Create(new Volunteer(325004273, "jerusalem", "ahuvi winkler", "a@gmail.com", "0507678050", "1234567Zz@", latitude, longitude, 10, true, Role.Manager, TypeDistance.air));
         // הוספת מזהה המתנדב לרשימה
         volunteerIds.Add(325004273);
         string[] addresses = new string[]
@@ -99,17 +99,43 @@ public static class Initialization
         }
     }
 
+        private static string GenerateRandomPassword(int minLength, int maxLength)
+        {
+            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+            const string specialChars = "!@#$%^&*(),.?\\:|<>";
 
-    // Helper method to generate a random alphanumeric password
-    private static string GenerateRandomPassword(int minLength, int maxLength)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int length = s_rand.Next(minLength, maxLength + 1);
-        return new string(Enumerable.Repeat(chars, length).Select(s => s[s_rand.Next(s.Length)]).ToArray());
-    }
+            // Ensure at least one of each required character type
+            char upper = upperChars[s_rand.Next(upperChars.Length)];
+            char lower = lowerChars[s_rand.Next(lowerChars.Length)];
+            char digit = digits[s_rand.Next(digits.Length)];
+            char special = specialChars[s_rand.Next(specialChars.Length)];
 
-    // Helper method to get a random value of the Hamal enum, or null
-    private static CallType? GetRandomHamalValue()
+            // Determine the remaining length of the password
+            int length = s_rand.Next(minLength, maxLength + 1);
+            int remainingLength = length - 4; // We already selected 4 mandatory characters
+
+            const string allChars = upperChars + lowerChars + digits + specialChars;
+            char[] password = new char[length];
+
+            // Place the mandatory characters
+            password[0] = upper;
+            password[1] = lower;
+            password[2] = digit;
+            password[3] = special;
+
+            // Fill the rest randomly
+            for (int i = 4; i < length; i++)
+            {
+                password[i] = allChars[s_rand.Next(allChars.Length)];
+            }
+
+            // Shuffle the password to ensure randomness
+            return new string(password.OrderBy(x => s_rand.Next()).ToArray());
+        }
+        // Helper method to get a random value of the Hamal enum, or null
+        private static CallType? GetRandomHamalValue()
     {
         var validValues = Enum.GetValues(typeof(CallType))
                  .Cast<CallType>()

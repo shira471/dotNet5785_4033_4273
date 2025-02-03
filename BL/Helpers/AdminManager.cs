@@ -61,9 +61,10 @@ internal static class AdminManager //stage 4
         lock (BlMutex) //stage 7
         {
             s_dal.ResetDB();
-            UpdateClock(Now);
+            UpdateClock(DateTime.Now);
+          //  AdminManager.UpdateClock(AdminManager.Now); //stage 5 - needed since we want the label on Pl to be updated
+
             MaxRange = MaxRange;
-            //AdminManager.UpdateClock(AdminManager.Now); //stage 5 - needed since we want the label on Pl to be updated
             //AdminManager.MaxRange = AdminManager.MaxRange; // stage 5 - needed to update PL 
         }
     }
@@ -73,9 +74,9 @@ internal static class AdminManager //stage 4
         lock (BlMutex) //stage 7
         {
             DalTest.Initialization.Do();
-            //AdminManager.UpdateClock(AdminManager.Now);  //stage 5 - needed since we want the label on Pl to be updated
+          //  AdminManager.UpdateClock(AdminManager.Now);  //stage 5 - needed since we want the label on Pl to be updated
             //AdminManager.MaxRange = AdminManager.MaxRange; // stage 5 - needed for update the PL 
-            UpdateClock(Now);
+            UpdateClock(DateTime.Now);
             MaxRange = MaxRange;
         }
     }
