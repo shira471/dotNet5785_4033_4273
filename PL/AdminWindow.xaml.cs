@@ -334,7 +334,7 @@ namespace PL.Volunteer
             IsSimulatorRunning = true;
             s_bl.Admin.StartSimulator(Interval);
             btn.Content = "Stop Simulator";
-            s_bl.Admin.StartSimulator(Interval);
+           
             MessageBox.Show("The simulator has started successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
             if (_cts == null || _cts.Token.IsCancellationRequested)
