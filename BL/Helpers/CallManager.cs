@@ -329,34 +329,37 @@ internal static class CallManager
             throw new Exception($"Call with ID={callId} does not exist.");
 
 
-            var assign = assignments.First();
+        var assign = assignments.First();
 
-            // קביעת סוג הביטול בהתאם לתפקיד
-            BO.Hamal newAssignKind = role switch
-            {
-                BO.Role.Manager => BO.Hamal.cancelByManager,
-                BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
-                _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
-            };
-
-            // שימוש בנעילה לעדכון ב-DAL
-            lock (AdminManager.BlMutex)
-            {
-                var updatedAssignment = assign with
-                {
-                    assignKind = (DO.Hamal)newAssignKind
-                };
-                s_dal.assignment.Update(updatedAssignment);
-            }
-
-            // עדכון סטטוס הקריאה
-            var x = ConvertToBOCall(call);
-            x.Status = Status.open;
-
-            // עדכון צופים מחוץ לנעילה
-            CallManager.Observers.NotifyListUpdated(); // שלב 5
+        // קביעת סוג הביטול בהתאם לתפקיד
+        BO.Hamal newAssignKind = role switch
+        {
+            BO.Role.Manager => BO.Hamal.cancelByManager,
+            BO.Role.Volunteer => BO.Hamal.cancelByVolunteer,
+            _ => throw new Exception($"Role {role} is not authorized to cancel assignments.")
+        };
+        var updatedAssignment = assign with
+        {
+            assignKind = (DO.Hamal)newAssignKind
+        };
+        // שימוש בנעילה לעדכון ב-DAL
+        lock (AdminManager.BlMutex)
+        {
+            s_dal.assignment.Update(updatedAssignment);
         }
- 
+
+        // עדכון סטטוס הקריאה
+        var x = ConvertToBOCall(call);
+        x.Status = Status.open;
+
+        // עדכון צופים מחוץ לנעילה
+        CallManager.Observers.NotifyListUpdated(); // שלב 5
+        if (newAssignKind == BO.Hamal.cancelByManager)
+        {
+            _ = Task.Run(() => SendCancelationMail(updatedAssignment));
+        }
+    }
+
     internal static void CloseCallAssignment(int volunteerId, int callId)
     {
         List<DO.Assignment> assignments;
@@ -425,7 +428,7 @@ internal static class CallManager
         {
             throw new ArgumentException("MaxEndTime must be greater than OpenTime.");
         }
-        if (call.MaxEndTime != null)
+        if (call.MaxEndTime == null)
         {
             throw new ArgumentException("MaxEndTime cannot be null.");
         }
@@ -469,6 +472,76 @@ internal static class CallManager
             _ = Task.Run(() => UpdateCallCoordinatesAsync(doCall));
         }
     }
+    internal static async Task SendCancelationMail(DO.Assignment a)
+    {
+        var fromAddress = new MailAddress("auviwin3@gmail.com");
+        MailAddress? toAddress = null;
+        lock (AdminManager.BlMutex)
+            toAddress = new MailAddress(s_dal.volunteer.Read(a.volunteerId)!.email, s_dal.volunteer.Read(a.volunteerId)!.name);
+        const string fromPassword = "etpx fizt uusf yhic";
+        const string subject = "Assignment Cancelation";
+        string body = "Your assignment is no longer under your treatment!\nThank you for your service.\nReason: " + a.assignKind.ToString();
+
+        var smtp = new SmtpClient
+        {
+            Host = "smtp.gmail.com",
+            Port = 587,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+        };
+        using (var message = new MailMessage(fromAddress, toAddress)
+        {
+            Subject = subject,
+            Body = body
+        })
+        {
+            await smtp.SendMailAsync(message);
+        }
+    }
+
+
+    internal static async Task SendCallOpenMail(BO.Call call)
+    {
+        IEnumerable<DO.Volunteer> doVolunteers;
+        lock (AdminManager.BlMutex) //stage 7
+            doVolunteers = s_dal.volunteer.ReadAll();
+
+        var Volunteers = from Volunteer in doVolunteers
+                         where Volunteer.limitDestenation <= CalculateDistance((double)Volunteer.latitude, (double)Volunteer.longitude, (double)call.Latitude, (double)call.Longitude)
+                         where Volunteer.isActive == true
+                         select Volunteer;
+
+        foreach (var Volunteer in Volunteers)
+        {
+            var fromAddress = new MailAddress("auviwin3@gmail.com");
+            MailAddress? toAddress = null;
+            lock (AdminManager.BlMutex)
+                toAddress = new MailAddress(s_dal.volunteer.Read(Volunteer.idVol)!.email, s_dal.volunteer.Read(Volunteer.idVol)!.name);
+            const string fromPassword = "etpx fizt uusf yhic";
+            const string subject = "New Call Open in your area";
+            string body = "This call is open in your area!\n" + call.ToString();
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                await smtp.SendMailAsync(message);
+            }
+        }
+    }
     private static readonly SemaphoreSlim _dbLock = new SemaphoreSlim(1, 1);
     public static async Task UpdateCallCoordinatesAsync(DO.Call doCall)
     {
@@ -496,6 +569,9 @@ internal static class CallManager
                 // עדכון הצופים שהתהליך הושלם
                 CallManager.Observers.NotifyItemUpdated(doCall.id);
                 CallManager.Observers.NotifyListUpdated();
+                var bocall=ConvertToBOCall(doCall);
+                _ = CallManager.SendCallOpenMail(bocall);
+
             }
         }
         catch (Exception ex)

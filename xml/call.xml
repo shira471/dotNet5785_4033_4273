@@ -3,371 +3,172 @@
   <Call>
     <id>1</id>
     <detail>Call for assistance</detail>
-<<<<<<< HEAD
-    <adress>20 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7840373</latitude>
-    <longitude>35.2269206</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-29T09:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-22T06:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
     <callType>medicalEquipment</callType>
-    <startTime>2025-01-25T19:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-03-03T06:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <startTime>2025-01-27T23:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-05T11:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>2</id>
     <detail>Emergency call</detail>
-<<<<<<< HEAD
-    <adress>5 Hahistadrut St, Jerusalem, Israel</adress>
-    <latitude>31.7816053</latitude>
-    <longitude>35.217046</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2025-01-25T17:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-18T00:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>28 Emek Refaim St, Jerusalem, Israel</adress>
-    <latitude>31.7641853</latitude>
-    <longitude>35.2200972</longitude>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
     <callType>OriginLocation</callType>
-    <startTime>2025-01-26T22:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-04T00:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <startTime>2025-01-26T23:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-22T22:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>3</id>
     <detail>Routine check-in</detail>
-<<<<<<< HEAD
-    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
-    <latitude>31.7807877</latitude>
-    <longitude>35.2147251</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-28T12:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-15T23:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
-    <latitude>31.7797312</latitude>
-    <longitude>35.2179737</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-29T22:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-03-02T14:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <adress>40 Hillel St, Jerusalem, Israel</adress>
+    <latitude>31.7792301</latitude>
+    <longitude>35.220033</longitude>
+    <callType>medicalEquipment</callType>
+    <startTime>2025-02-02T06:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-24T10:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>4</id>
     <detail>Follow-up call</detail>
-<<<<<<< HEAD
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-27T09:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-05T05:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
-    <latitude>31.7750888</latitude>
-    <longitude>35.218195</longitude>
-    <callType>madication</callType>
-    <startTime>2025-01-30T13:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-22T00:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <adress>14 Agron St, Jerusalem, Israel</adress>
+    <latitude>31.7760473</latitude>
+    <longitude>35.2193304</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-02-01T00:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-19T13:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>5</id>
     <detail>Service request</detail>
-<<<<<<< HEAD
-    <adress>15 King David St, Jerusalem, Israel</adress>
-    <latitude>31.7757159</latitude>
-    <longitude>35.2221845</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-02-01T11:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-23T14:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
-    <latitude>31.7750888</latitude>
-    <longitude>35.218195</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-27T23:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-24T20:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-30T21:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-22T21:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>6</id>
     <detail>Technical support</detail>
-<<<<<<< HEAD
-    <adress>34 Ein Karem, Jerusalem, Israel</adress>
-    <latitude>31.7673945</latitude>
-    <longitude>35.1620779</longitude>
-    <callType>dinner</callType>
-    <startTime>2025-02-02T02:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-26T03:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>15 King David St, Jerusalem, Israel</adress>
-    <latitude>31.7757159</latitude>
-    <longitude>35.2221845</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2025-02-01T00:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-10T12:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
-  </Call>
-  <Call>
-    <id>7</id>
-    <detail>Customer inquiry</detail>
-<<<<<<< HEAD
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-02-02T16:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-03-04T19:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>18 Shmuel HaNagid St, Jerusalem, Israel</adress>
-    <latitude>31.779519</latitude>
-    <longitude>35.2144685</longitude>
-    <callType>madication</callType>
-    <startTime>2025-02-01T00:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-22T06:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
-  </Call>
-  <Call>
-    <id>8</id>
-    <detail>Appointment reminder</detail>
-<<<<<<< HEAD
-    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
-    <latitude>31.7750888</latitude>
-    <longitude>35.218195</longitude>
-    <callType>madication</callType>
-    <startTime>2025-01-27T08:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-24T07:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>25 Yaffo Rd, Jerusalem, Israel</adress>
-    <latitude>31.7805362</latitude>
-    <longitude>35.2217499</longitude>
-    <callType>dinner</callType>
-    <startTime>2025-01-26T01:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-24T14:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
-  </Call>
-  <Call>
-    <id>9</id>
-    <detail>Complaint report</detail>
-<<<<<<< HEAD
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
-    <callType>madication</callType>
-    <startTime>2025-01-31T22:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-03-01T15:36:09.5201509+02:00</maximumTime>
-=======
-    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
-    <latitude>31.7750888</latitude>
-    <longitude>35.218195</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-28T19:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-05T04:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
-  </Call>
-  <Call>
-    <id>10</id>
-    <detail>Survey feedback</detail>
-    <adress>12 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7826843</latitude>
-    <longitude>35.2283058</longitude>
-<<<<<<< HEAD
-    <callType>medicalEquipment</callType>
-    <startTime>2025-01-27T13:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-03-04T18:36:09.5201509+02:00</maximumTime>
-=======
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-24T22:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-08T17:46:53.4548659+02:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
-  </Call>
-  <Call>
-    <id>11</id>
-    <detail>Medical emergency assistance</detail>
-<<<<<<< HEAD
-    <adress>5 Hahistadrut St, Jerusalem, Israel</adress>
-    <latitude>31.7816053</latitude>
-    <longitude>35.217046</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-29T20:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-25T04:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>12</id>
-    <detail>Lost child at park</detail>
-    <adress>16 Herzl St, Jerusalem, Israel</adress>
-    <latitude>31.7865094</latitude>
-    <longitude>35.1985783</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-29T03:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-10T20:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>13</id>
-    <detail>Car accident report</detail>
-    <adress>14 Agron St, Jerusalem, Israel</adress>
-    <latitude>31.7760473</latitude>
-    <longitude>35.2193304</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-25T16:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-14T21:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>14</id>
-    <detail>House fire alert</detail>
-    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
-    <latitude>31.7797312</latitude>
-    <longitude>35.2179737</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2025-01-30T04:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-03-02T18:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>15</id>
-    <detail>Tree blocking road</detail>
-    <adress>15 King David St, Jerusalem, Israel</adress>
-    <latitude>31.7757159</latitude>
-    <longitude>35.2221845</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-30T10:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-27T02:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>16</id>
-    <detail>Water pipe burst</detail>
-    <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
-    <latitude>31.7776609</latitude>
-    <longitude>35.2249756</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-28T16:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-09T20:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>17</id>
-    <detail>Animal rescue request</detail>
-    <adress>7 Zion Square, Jerusalem, Israel</adress>
-    <latitude>31.77298219999999</latitude>
-    <longitude>35.2302499</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-26T10:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-03-01T00:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>18</id>
-    <detail>Missing person report</detail>
-    <adress>7 Zion Square, Jerusalem, Israel</adress>
-    <latitude>31.77298219999999</latitude>
-    <longitude>35.2302499</longitude>
-    <callType>medicalEquipment</callType>
-    <startTime>2025-01-31T12:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-17T01:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>19</id>
-    <detail>Flooded street cleanup</detail>
-    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
-    <latitude>31.7797312</latitude>
-    <longitude>35.2179737</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-02-02T16:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-20T07:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>20</id>
-    <detail>Electric outage report</detail>
-    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
-    <latitude>31.7797312</latitude>
-    <longitude>35.2179737</longitude>
-    <callType>madication</callType>
-    <startTime>2025-01-29T20:36:09.5201509+02:00</startTime>
-    <maximumTime>2025-02-08T23:36:09.5201509+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>21</id>
-    <detail>'lklmn</detail>
-=======
-    <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
-    <latitude>31.7776609</latitude>
-    <longitude>35.2249756</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-28T10:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-28T23:46:53.4548659+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>12</id>
-    <detail>Lost child at park</detail>
-    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
-    <latitude>31.7681613</latitude>
-    <longitude>35.2127055</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-30T08:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-14T23:46:53.4548659+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>13</id>
-    <detail>Car accident report</detail>
-    <adress>52 Jaffa St, Jerusalem, Israel</adress>
-    <latitude>31.7831622</latitude>
-    <longitude>35.2182885</longitude>
-    <callType>madication</callType>
-    <startTime>2025-01-29T15:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-26T23:46:53.4548659+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>14</id>
-    <detail>House fire alert</detail>
-    <adress>20 HaNevi'im St, Jerusalem, Israel</adress>
-    <latitude>31.7840373</latitude>
-    <longitude>35.2269206</longitude>
-    <callType>Breakfast</callType>
-    <startTime>2025-01-28T11:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-26T05:46:53.4548659+02:00</maximumTime>
-  </Call>
-  <Call>
-    <id>15</id>
-    <detail>Tree blocking road</detail>
     <adress>9 Yitzhak Rabin Blvd, Jerusalem, Israel</adress>
     <latitude>31.9607929</latitude>
     <longitude>34.9400171</longitude>
     <callType>Breakfast</callType>
-    <startTime>2025-01-30T00:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-12T12:46:53.4548659+02:00</maximumTime>
+    <startTime>2025-01-30T05:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-19T20:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>8</id>
+    <detail>Appointment reminder</detail>
+    <adress>27 Ben Yehuda St, Jerusalem, Israel</adress>
+    <latitude>31.7807877</latitude>
+    <longitude>35.2147251</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-02-01T10:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-26T04:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>9</id>
+    <detail>Complaint report</detail>
+    <adress>20 HaNevi'im St, Jerusalem, Israel</adress>
+    <latitude>31.7840373</latitude>
+    <longitude>35.2269206</longitude>
+    <callType>madication</callType>
+    <startTime>2025-01-26T08:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-26T14:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>10</id>
+    <detail>Survey feedback</detail>
+    <adress>14 Agron St, Jerusalem, Israel</adress>
+    <latitude>31.7760473</latitude>
+    <longitude>35.2193304</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2025-01-30T07:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-15T17:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>11</id>
+    <detail>Medical emergency assistance</detail>
+    <adress>9 Yitzhak Rabin Blvd, Jerusalem, Israel</adress>
+    <latitude>31.9607929</latitude>
+    <longitude>34.9400171</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-02-01T08:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-14T03:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>12</id>
+    <detail>Lost child at park</detail>
+    <adress>40 Hillel St, Jerusalem, Israel</adress>
+    <latitude>31.7792301</latitude>
+    <longitude>35.220033</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-02-02T01:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-05T07:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>13</id>
+    <detail>Car accident report</detail>
+    <adress>15 King David St, Jerusalem, Israel</adress>
+    <latitude>31.7757159</latitude>
+    <longitude>35.2221845</longitude>
+    <callType>madication</callType>
+    <startTime>2025-02-02T03:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-10T02:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>14</id>
+    <detail>House fire alert</detail>
+    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
+    <latitude>31.7681613</latitude>
+    <longitude>35.2127055</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-30T08:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-09T00:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>15</id>
+    <detail>Tree blocking road</detail>
+    <adress>22 Mamilla Mall, Jerusalem, Israel</adress>
+    <latitude>31.7776609</latitude>
+    <longitude>35.2249756</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-30T17:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-23T16:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>16</id>
     <detail>Water pipe burst</detail>
-    <adress>10 HaPalmach St, Jerusalem, Israel</adress>
-    <latitude>31.7681613</latitude>
-    <longitude>35.2127055</longitude>
-    <callType>dinner</callType>
-    <startTime>2025-01-25T14:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-21T01:46:53.4548659+02:00</maximumTime>
+    <adress>40 Hillel St, Jerusalem, Israel</adress>
+    <latitude>31.7792301</latitude>
+    <longitude>35.220033</longitude>
+    <callType>militaryEquipment</callType>
+    <startTime>2025-01-29T09:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-16T01:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>17</id>
     <detail>Animal rescue request</detail>
-    <adress>25 Yaffo Rd, Jerusalem, Israel</adress>
-    <latitude>31.7805362</latitude>
-    <longitude>35.2217499</longitude>
+    <adress>34 Ein Karem, Jerusalem, Israel</adress>
+    <latitude>31.7673945</latitude>
+    <longitude>35.1620779</longitude>
     <callType>medicalEquipment</callType>
-    <startTime>2025-02-01T01:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-19T16:46:53.4548659+02:00</maximumTime>
+    <startTime>2025-02-01T23:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-07T07:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>18</id>
     <detail>Missing person report</detail>
-    <adress>6 Rabbi Akiva St, Jerusalem, Israel</adress>
-    <latitude>31.7797312</latitude>
-    <longitude>35.2179737</longitude>
-    <callType>militaryEquipment</callType>
-    <startTime>2025-01-24T20:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-06T19:46:53.4548659+02:00</maximumTime>
+    <adress>40 Hillel St, Jerusalem, Israel</adress>
+    <latitude>31.7792301</latitude>
+    <longitude>35.220033</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-31T10:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-22T15:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>19</id>
@@ -375,54 +176,78 @@
     <adress>40 Hillel St, Jerusalem, Israel</adress>
     <latitude>31.7792301</latitude>
     <longitude>35.220033</longitude>
-    <callType>lunch</callType>
-    <startTime>2025-01-25T03:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-11T04:46:53.4548659+02:00</maximumTime>
+    <callType>Breakfast</callType>
+    <startTime>2025-01-30T08:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-10T07:58:50.1974069+02:00</maximumTime>
   </Call>
   <Call>
     <id>20</id>
     <detail>Electric outage report</detail>
-    <adress>4 David Remez St, Jerusalem, Israel</adress>
-    <latitude>31.7672265</latitude>
-    <longitude>35.22462170000001</longitude>
-    <callType>OriginLocation</callType>
-    <startTime>2025-01-29T08:46:53.4548659+02:00</startTime>
-    <maximumTime>2025-02-25T04:46:53.4548659+02:00</maximumTime>
+    <adress>3 Keren Hayesod St, Jerusalem, Israel</adress>
+    <latitude>31.7750888</latitude>
+    <longitude>35.218195</longitude>
+    <callType>lunch</callType>
+    <startTime>2025-01-25T18:58:50.1974069+02:00</startTime>
+    <maximumTime>2025-02-27T22:58:50.1974069+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>7</id>
+    <detail>Customer inquiry</detail>
+    <adress>52 Jaffa St, Jerusalem, Israel</adress>
+    <latitude>31.7831622</latitude>
+    <longitude>35.2182885</longitude>
+    <callType>dinner</callType>
+    <startTime>2025-02-02T11:58:50.1974069+02:00</startTime>
+    <maximumTime>2026-02-19T00:00:00</maximumTime>
   </Call>
   <Call>
     <id>21</id>
-    <detail>דינבידח</detail>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <detail>plpiou</detail>
     <adress>jerusalem</adress>
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
     <callType>Breakfast</callType>
-<<<<<<< HEAD
-    <startTime>2025-02-03T13:36:15.815663+02:00</startTime>
-    <maximumTime>2025-02-05T00:00:00</maximumTime>
+    <startTime>2025-02-03T18:58:53.5287531+02:00</startTime>
+    <maximumTime>2026-02-04T00:00:00</maximumTime>
   </Call>
   <Call>
     <id>22</id>
-    <detail>לםחויו</detail>
-    <adress>jerusalem</adress>
-    <latitude>31.768319</latitude>
-    <longitude>35.21371</longitude>
+    <detail>;oiuyt</detail>
+    <adress>tel aviv</adress>
+    <latitude>32.0852999</latitude>
+    <longitude>34.78176759999999</longitude>
     <callType>Breakfast</callType>
-    <startTime>2025-02-03T15:59:56.0310953+02:00</startTime>
-    <maximumTime>2025-02-06T00:00:00</maximumTime>
+    <startTime>2025-02-03T19:02:26.8609424+02:00</startTime>
+    <maximumTime>2025-02-08T00:00:00</maximumTime>
   </Call>
   <Call>
     <id>23</id>
-    <detail>ln;bdsl</detail>
+    <detail>khjgyhg</detail>
     <adress>jerusalem</adress>
     <latitude>31.768319</latitude>
     <longitude>35.21371</longitude>
     <callType>Breakfast</callType>
-    <startTime>2025-02-03T16:04:55.3754823+02:00</startTime>
-    <maximumTime>2025-04-04T00:00:00</maximumTime>
-=======
-    <startTime>2025-02-02T17:56:48.0664337+02:00</startTime>
-    <maximumTime>2025-02-04T00:00:00</maximumTime>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
+    <startTime>2025-02-03T19:15:37.0498321+02:00</startTime>
+    <maximumTime>2025-02-04T19:15:37.0498321+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>24</id>
+    <detail>liikytr</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-02-03T19:20:56.3622198+02:00</startTime>
+    <maximumTime>2025-02-04T19:20:56.3622198+02:00</maximumTime>
+  </Call>
+  <Call>
+    <id>25</id>
+    <detail>;kliuytt</detail>
+    <adress>jerusalem</adress>
+    <latitude>31.768319</latitude>
+    <longitude>35.21371</longitude>
+    <callType>Breakfast</callType>
+    <startTime>2025-02-03T19:20:56.3622198+02:00</startTime>
+    <maximumTime>2025-02-04T19:20:56.3622198+02:00</maximumTime>
   </Call>
 </ArrayOfCall>

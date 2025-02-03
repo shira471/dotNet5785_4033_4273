@@ -1,25 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
-<<<<<<< HEAD
-  <NextAssignmentId>11</NextAssignmentId>
-=======
+  <NextAssignmentId>5</NextAssignmentId>
   <NextAssignmentId>19</NextAssignmentId>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
   <NextAssignmentId>1</NextAssignmentId>
   <NextAssignmentId>23</NextAssignmentId>
   <NextAssignmentId>18</NextAssignmentId>
   <NextAssignmentId>15</NextAssignmentId>
   <!-- מזהה רץ למשימה הבא -->
-  <NextCallId>22</NextCallId>
+  <NextCallId>26</NextCallId>
   <NextCallId>22</NextCallId>
   <!-- מזהה רץ לקריאה הבאה -->
   <NextVolunteerId>1</NextVolunteerId>
   <!-- מזהה רץ למתנדב הבא -->
-<<<<<<< HEAD
-  <Clock>03/02/2025 13:36:02</Clock>
-=======
+  <Clock>03/02/2025 18:58:46</Clock>
   <Clock>02/02/2025 17:46:50</Clock>
->>>>>>> db5a221068c8d2f4244b8aa6f19224b1fc402029
   <Clock>01/02/2025 22:38:25</Clock>
   <Clock>01/02/2025 16:35:55</Clock>
   <Clock>28/01/2025 22:44:55</Clock>

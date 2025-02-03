@@ -35,19 +35,19 @@ public class CallImplementation : ICall
             throw new ArgumentException("End time cannot be null.");
         if (call.Address == null)
             throw new ArgumentException("Adress can not be null");
-        if(call.Description==null)
+        if (call.Description == null)
             throw new ArgumentException("Description can not be null");
 
 
         // ✔ קריאה אסינכרונית לקבלת ה-ID הגבוה ביותר
         int maxId = 0;
-        var calls =  _dal.call.ReadAll(); // נדרש await במקרה שזה async
+        var calls = _dal.call.ReadAll(); // נדרש await במקרה שזה async
         if (calls != null && calls.Any())
         {
             maxId = calls.Max(c => c.id) + 1; // מחזירה את ה-ID הגבוה ביותר ומוסיפה 1
         }
 
-        // ✔ שליחה מיידית ל-DAL *בלי* הקואורדינטות
+        // ✔ שליחה מיידית ל-DAL בלי הקואורדינטות
         var doCall = new DO.Call(
             id: maxId,
             detail: call.Description,
@@ -58,7 +58,7 @@ public class CallImplementation : ICall
             startTime: call.OpenTime,
             maximumTime: call.MaxEndTime
         );
-        
+
         lock (AdminManager.BlMutex)
         {
             _dal.call.Create(doCall);
@@ -73,7 +73,7 @@ public class CallImplementation : ICall
         _ = CallManager.UpdateCallCoordinatesAsync(doCall);
     }
 
-    
+
     public void  AssignCallToVolunteer(int volunteerId, int callId)
     {
         
