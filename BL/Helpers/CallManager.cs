@@ -502,26 +502,50 @@ internal static class CallManager
     }
 
 
+    private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
     internal static async Task SendCallOpenMail(BO.Call call)
     {
-        IEnumerable<DO.Volunteer> doVolunteers;
-        lock (AdminManager.BlMutex) //stage 7
-            doVolunteers = s_dal.volunteer.ReadAll();
+        List<DO.Volunteer> doVolunteers;
+        await _semaphore.WaitAsync(); // מחכה לנעילה אסינכרונית
+        try
+        {
+            doVolunteers = s_dal.volunteer.ReadAll().ToList();
+        }
+        finally
+        {
+            _semaphore.Release(); // משחרר את הנעילה
+        }
 
-        var Volunteers = from Volunteer in doVolunteers
-                         where Volunteer.limitDestenation <= CalculateDistance((double)Volunteer.latitude, (double)Volunteer.longitude, (double)call.Latitude, (double)call.Longitude)
-                         where Volunteer.isActive == true
-                         select Volunteer;
+        var Volunteers = doVolunteers
+    .Where(volunteer => volunteer.limitDestenation >= CalculateDistance(
+        (double)volunteer.latitude,
+        (double)volunteer.longitude,
+        (double)call.Latitude,
+        (double)call.Longitude))
+    .Where(volunteer => volunteer.isActive)
+    .ToList();
 
         foreach (var Volunteer in Volunteers)
         {
             var fromAddress = new MailAddress("auviwin3@gmail.com");
             MailAddress? toAddress = null;
-            lock (AdminManager.BlMutex)
-                toAddress = new MailAddress(s_dal.volunteer.Read(Volunteer.idVol)!.email, s_dal.volunteer.Read(Volunteer.idVol)!.name);
+            await _semaphore.WaitAsync(); // נעילה אסינכרונית
+            try
+            {
+                var volunteerData = s_dal.volunteer.Read(Volunteer.idVol);
+                if (volunteerData == null)
+                    continue;
+
+                toAddress = new MailAddress(volunteerData.email, volunteerData.name);
+            }
+            finally
+            {
+                _semaphore.Release(); // שחרור הנעילה
+            }
+            toAddress = new MailAddress(s_dal.volunteer.Read(Volunteer.idVol)!.email, s_dal.volunteer.Read(Volunteer.idVol)!.name);
             const string fromPassword = "etpx fizt uusf yhic";
             const string subject = "New Call Open in your area";
-            string body = "This call is open in your area!\n" + call.ToString();
+            string body = "This call is open in your area!\n" + call.Description.ToString();
 
             var smtp = new SmtpClient
             {
@@ -569,9 +593,8 @@ internal static class CallManager
                 // עדכון הצופים שהתהליך הושלם
                 CallManager.Observers.NotifyItemUpdated(doCall.id);
                 CallManager.Observers.NotifyListUpdated();
-                var bocall=ConvertToBOCall(doCall);
-                _ = CallManager.SendCallOpenMail(bocall);
-
+                var bocall = ConvertToBOCall(doCall);
+                await SendCallOpenMail(bocall);
             }
         }
         catch (Exception ex)
